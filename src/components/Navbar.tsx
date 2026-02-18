@@ -1,5 +1,5 @@
 import { ChevronDown, Search, Globe } from "lucide-react";
-import zohoLogo from "@/assets/zoho-logo.png";
+import zohoLogo from "@/assets/zoho-logo.svg";
 
 const navItems = [
   { label: "Products", hasDropdown: true },
