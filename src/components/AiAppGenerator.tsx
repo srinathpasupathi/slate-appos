@@ -30,7 +30,7 @@ const AiAppGenerator = () => {
 
           {/* Heading */}
           <h2 className="text-center text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-3 leading-tight">
-            What do you want to build?
+            Generate your own app using AI
           </h2>
           <p className="text-center text-muted-foreground text-base md:text-lg mb-8 max-w-xl mx-auto leading-relaxed">
             Describe your idea and watch it come to life — no coding required.
