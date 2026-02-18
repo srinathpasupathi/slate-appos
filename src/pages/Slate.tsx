@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User,
+  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, Briefcase,
 } from "lucide-react";
 import zohoLogo from "@/assets/zoho-logo.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -35,6 +35,7 @@ const projectCards = [
 const SlateDashboard = () => {
   const [prompt, setPrompt] = useState("");
   const [activeTab, setActiveTab] = useState("my");
+  const [mode, setMode] = useState<"business" | "developer">("business");
   const navigate = useNavigate();
 
   const tabs = [
@@ -79,6 +80,36 @@ const SlateDashboard = () => {
 
       {/* Main content */}
       <main className="flex-1 flex flex-col overflow-y-auto">
+        {/* Top bar with mode toggle */}
+        <div className="flex items-center justify-end px-6 py-3">
+          <div className="flex items-center gap-1 bg-muted rounded-full p-1">
+            <button
+              onClick={() => setMode("business")}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+                mode === "business"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Briefcase className="h-3.5 w-3.5" />
+              Business
+            </button>
+            <button
+              onClick={() => setMode("developer")}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+                mode === "developer"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Code2 className="h-3.5 w-3.5" />
+              Developer
+            </button>
+          </div>
+        </div>
+
+        {mode === "business" ? (
+        <>
         {/* Hero gradient area - fills available space */}
         <div className="relative flex-1 flex flex-col min-h-[60vh]">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/8 to-primary/5 pointer-events-none" />
@@ -163,6 +194,21 @@ const SlateDashboard = () => {
             ))}
           </div>
         </div>
+        </>
+        ) : (
+        /* Developer Mode Placeholder */
+        <div className="flex-1 flex flex-col items-center justify-center px-6">
+          <div className="max-w-md text-center space-y-4">
+            <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center mx-auto">
+              <Code2 className="h-8 w-8 text-muted-foreground" />
+            </div>
+            <h2 className="text-2xl font-semibold text-foreground">Developer Mode</h2>
+            <p className="text-muted-foreground text-sm">
+              Advanced development tools and configurations coming soon.
+            </p>
+          </div>
+        </div>
+        )}
       </main>
     </div>
   );
