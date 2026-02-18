@@ -1,52 +1,61 @@
 import { useState, useEffect, useRef } from "react";
 
-const GENERATED_CODE = `import React from "react";
+const GENERATED_CODE = `import React, { useState, useMemo } from "react";
+import { Search, Filter, TrendingUp, Globe, Users, DollarSign } from "lucide-react";
 
-const App = () => {
-  const [count, setCount] = useState(0);
+interface Franchise {
+  id: string;
+  name: string;
+  country: string;
+  region: string;
+  revenue: number;
+  status: "active" | "pending" | "inactive";
+  outlets: number;
+}
+
+const franchises: Franchise[] = [
+  { id: "1", name: "Metro Bites NYC", country: "USA", region: "North America", revenue: 2400000, status: "active", outlets: 12 },
+  { id: "2", name: "Tokyo Express", country: "Japan", region: "Asia Pacific", revenue: 1850000, status: "active", outlets: 8 },
+  { id: "3", name: "Berlin Eats", country: "Germany", region: "Europe", revenue: 1200000, status: "active", outlets: 5 },
+  { id: "4", name: "Sydney Grill", country: "Australia", region: "Asia Pacific", revenue: 980000, status: "pending", outlets: 3 },
+  { id: "5", name: "Dubai Flavors", country: "UAE", region: "Middle East", revenue: 3100000, status: "active", outlets: 15 },
+];
+
+const Dashboard = () => {
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+
+  const filtered = useMemo(() =>
+    franchises.filter(f =>
+      f.name.toLowerCase().includes(search.toLowerCase()) &&
+      (statusFilter === "all" || f.status === statusFilter)
+    ), [search, statusFilter]);
+
+  const totalRevenue = franchises.reduce((s, f) => s + f.revenue, 0);
+  const totalOutlets = franchises.reduce((s, f) => s + f.outlets, 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
-      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-4">
-        <div className="text-center space-y-6">
-          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto">
-            <span className="text-3xl">✨</span>
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Your App
-            </h1>
-            <p className="text-gray-500 mt-2">
-              Built with Zoho Slate
-            </p>
-          </div>
-          <div className="flex items-center justify-center gap-4">
-            <button
-              onClick={() => setCount(c => c - 1)}
-              className="h-10 w-10 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-600 hover:border-primary hover:text-primary transition-colors"
-            >
-              −
-            </button>
-            <span className="text-4xl font-bold text-gray-900 tabular-nums w-20 text-center">
-              {count}
-            </span>
-            <button
-              onClick={() => setCount(c => c + 1)}
-              className="h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center hover:opacity-90 transition-opacity"
-            >
-              +
-            </button>
-          </div>
-          <p className="text-sm text-gray-400">
-            Click the buttons to change the counter
-          </p>
-        </div>
+    <div className="min-h-screen bg-background">
+      <header className="border-b px-6 py-4">
+        <h1 className="text-2xl font-bold">Franchise Sales Management</h1>
+        <p className="text-muted-foreground">Manage franchises across the globe</p>
+      </header>
+
+      <div className="p-6 grid grid-cols-4 gap-4">
+        <KPICard icon={<DollarSign />} label="Total Revenue" value={"$" + (totalRevenue / 1e6).toFixed(1) + "M"} />
+        <KPICard icon={<Globe />} label="Countries" value="12" />
+        <KPICard icon={<Users />} label="Total Outlets" value={totalOutlets.toString()} />
+        <KPICard icon={<TrendingUp />} label="Growth" value="+18.2%" />
+      </div>
+
+      <div className="px-6">
+        <FranchiseTable data={filtered} search={search} onSearch={setSearch} />
       </div>
     </div>
   );
 };
 
-export default App;`;
+export default Dashboard;`;
 
 const StreamingCode = ({ isGenerating }: { isGenerating: boolean }) => {
   const [visibleLines, setVisibleLines] = useState(0);

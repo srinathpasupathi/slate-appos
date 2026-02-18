@@ -15,10 +15,19 @@ interface Message {
   timestamp: Date;
 }
 
+const DEFAULT_PROMPT = "Create a Franchise Sales Management app to manage all the franchises across the globe with a rich UI and UX";
+
+const ASSISTANT_STEPS: { delay: number; content: string }[] = [
+  { delay: 2000, content: "I'll start by setting up the **project structure** with a modern React + TypeScript stack, Tailwind CSS for styling, and a clean component architecture." },
+  { delay: 5000, content: "Now I'm building the **core components**:\n\n• `FranchiseTable` – sortable data grid with search & filters\n• `SalesOverview` – KPI cards for total revenue, active franchises, growth rate\n• `GlobalMap` – interactive map showing franchise locations\n• `FranchiseDetail` – detail drawer with sales history chart" },
+  { delay: 8000, content: "Adding the **dashboard layout** with a sidebar navigation, top metrics bar, and responsive grid. Wiring up mock data for 24 franchise locations across 12 countries." },
+  { delay: 10500, content: "✅ **Your Franchise Sales Management app is ready!**\n\nHere's what I built:\n• Dashboard with real-time KPI cards\n• Searchable franchise directory with status badges\n• Sales analytics with interactive charts\n• Responsive layout that works on all devices\n\nYou can check the **Preview** tab to see it live." },
+];
+
 const SlateWorkspace = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const initialPrompt = searchParams.get("prompt") || "";
+  const initialPrompt = searchParams.get("prompt") || DEFAULT_PROMPT;
 
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -35,25 +44,40 @@ const SlateWorkspace = () => {
     setPreviewTab("preview");
   }, []);
 
-  // Seed initial prompt as first message
+  // Seed initial prompt and schedule assistant messages
   useEffect(() => {
-    if (initialPrompt) {
-      const userMsg: Message = {
-        id: "1",
-        role: "user",
-        content: initialPrompt,
-        timestamp: new Date(),
-      };
-      const assistantMsg: Message = {
-        id: "2",
-        role: "assistant",
-        content: `I'll help you build that! Let me start creating your app: **"${initialPrompt}"**.\n\nSetting up the project now...`,
-        timestamp: new Date(),
-      };
-      setMessages([userMsg, assistantMsg]);
-      setIsGenerating(true);
-      setPreviewTab("code");
-    }
+    const userMsg: Message = {
+      id: "1",
+      role: "user",
+      content: initialPrompt,
+      timestamp: new Date(),
+    };
+    const firstAssistant: Message = {
+      id: "2",
+      role: "assistant",
+      content: `Great choice! I'll build a **Franchise Sales Management** app for you. Let me analyze the requirements and start generating the code...`,
+      timestamp: new Date(),
+    };
+    setMessages([userMsg, firstAssistant]);
+    setIsGenerating(true);
+    setPreviewTab("code");
+
+    // Schedule follow-up assistant messages
+    const timers = ASSISTANT_STEPS.map((step, i) =>
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `step-${i}`,
+            role: "assistant" as const,
+            content: step.content,
+            timestamp: new Date(),
+          },
+        ]);
+      }, step.delay)
+    );
+
+    return () => timers.forEach(clearTimeout);
   }, []);
 
   // Progress ticker during generation
