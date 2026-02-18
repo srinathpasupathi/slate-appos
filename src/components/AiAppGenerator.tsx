@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Sparkles, ArrowRight, Zap, Layers, Globe } from "lucide-react";
-import FeaturedApps from "./FeaturedApps";
 
 const suggestions = [
   "A project management tool with Kanban boards",
@@ -94,10 +93,6 @@ const AiAppGenerator = () => {
         </div>
       </div>
 
-      {/* Featured Apps below */}
-      <div className="mt-10 max-w-md mx-auto lg:max-w-none lg:mx-0">
-        <FeaturedApps />
-      </div>
     </section>
   );
 };
