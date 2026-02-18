@@ -4,32 +4,27 @@ const apps = [
   {
     name: "CRM",
     description: "Comprehensive CRM platform for customer-facing teams.",
-    color: "hsl(220, 70%, 50%)",
-    icon: "📊",
+    icon: "https://www.zohowebstatic.com/sites/zweb/images/zoho_general_pages/zhome-crm.svg",
   },
   {
     name: "Mail",
     description: "Secure email service for teams of all sizes.",
-    color: "hsl(200, 70%, 50%)",
-    icon: "✉️",
+    icon: "https://www.zohowebstatic.com/sites/zweb/images/zoho_general_pages/zhome-mail.svg",
   },
   {
     name: "Books",
     description: "Powerful accounting platform for growing businesses.",
-    color: "hsl(200, 70%, 50%)",
-    icon: "📘",
+    icon: "https://www.zohowebstatic.com/sites/zweb/images/zoho_general_pages/zhome-books.svg",
   },
   {
     name: "People",
     description: "Organize, automate, and simplify your HR processes.",
-    color: "hsl(0, 70%, 50%)",
-    icon: "👥",
+    icon: "https://www.zohowebstatic.com/sites/zweb/images/zoho_general_pages/zhome-people.svg",
   },
   {
-    name: "Projects",
-    description: "Manage, track, and collaborate on projects with teams.",
-    color: "hsl(145, 60%, 40%)",
-    icon: "✅",
+    name: "Desk",
+    description: "Helpdesk software to deliver great customer support.",
+    icon: "https://www.zohowebstatic.com/sites/zweb/images/zoho_general_pages/zhome-desk.svg",
   },
 ];
 
@@ -49,7 +44,7 @@ const FeaturedApps = () => {
             href="#"
             className="flex items-center gap-4 px-6 py-4 hover:bg-muted/50 transition-colors group"
           >
-            <span className="text-2xl flex-shrink-0">{app.icon}</span>
+            <img src={app.icon} alt={app.name} className="h-10 w-10 flex-shrink-0" />
             <div className="flex-1 min-w-0">
               <h3 className="text-base font-semibold text-foreground font-sans">
                 {app.name}
