@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, Briefcase,
+  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, Briefcase, GitBranch, ChevronUp, ChevronDown, Copy, Rocket,
 } from "lucide-react";
 import zohoLogo from "@/assets/zoho-logo.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -31,6 +31,114 @@ const projectCards = [
     color: "from-primary/10 to-secondary",
   },
 ];
+
+const devApps = [
+  {
+    name: "catalyst-app-forge",
+    stack: "React + Vite",
+    source: "GitHub",
+    initial: "C",
+    deployments: [
+      { label: "initial", branch: "main", commitId: "4a835e1", deployedOn: "Dec 29, 2025 11:02 AM", url: "catalyst-appos.onslate.in" },
+    ],
+  },
+  {
+    name: "franchise-sales-mgmt",
+    stack: "React + Vite",
+    source: "GitHub",
+    initial: "F",
+    deployments: [
+      { label: "v2.1-release", branch: "main", commitId: "b92fa03", deployedOn: "Feb 14, 2026 3:45 PM", url: "franchise-app.onslate.com" },
+      { label: "staging-hotfix", branch: "develop", commitId: "e1c74d8", deployedOn: "Feb 10, 2026 9:20 AM", url: "franchise-staging.onslate.com" },
+    ],
+  },
+  {
+    name: "crm-analytics-dashboard",
+    stack: "React + Vite",
+    source: "GitHub",
+    initial: "A",
+    deployments: [
+      { label: "production", branch: "main", commitId: "7df21a9", deployedOn: "Jan 18, 2026 1:30 PM", url: "crm-analytics.onslate.com" },
+    ],
+  },
+];
+
+type DevApp = typeof devApps[number];
+
+const DevAppCard = ({ app }: { app: DevApp }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="rounded-xl border border-border bg-card overflow-hidden">
+      {/* App header */}
+      <div className="flex items-center gap-4 px-5 py-4">
+        <div className="h-10 w-10 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center text-primary font-bold text-sm shrink-0">
+          {app.initial}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-foreground">{app.name}</p>
+          <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+            <span className="uppercase tracking-wide font-medium">GIT</span>
+            <span className="text-muted-foreground/40">•</span>
+            <Code2 className="h-3 w-3" />
+            {app.stack}
+            <span className="text-muted-foreground/40">•</span>
+            {app.source}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button className="flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 font-medium transition-colors">
+            <Settings className="h-3.5 w-3.5" />
+            App Settings
+          </button>
+          <button className="h-8 px-4 rounded-lg border border-input text-xs font-medium text-foreground hover:bg-muted transition-colors">
+            Create Deployment
+          </button>
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="h-8 w-8 rounded-lg border border-input flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          >
+            {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Deployments - expanded */}
+      {expanded && (
+        <div className="border-t border-border">
+          {app.deployments.map((dep, i) => (
+            <div key={i} className="flex items-center gap-6 px-5 py-3.5 ml-7 border-l-2 border-primary/20">
+              <div className="h-8 w-8 rounded-full border-2 border-primary/20 flex items-center justify-center shrink-0">
+                <GitBranch className="h-3.5 w-3.5 text-primary/60" />
+              </div>
+              <div className="min-w-[140px]">
+                <p className="text-sm font-medium text-foreground">{dep.label}</p>
+                <p className="text-xs text-muted-foreground">Branch : {dep.branch}</p>
+              </div>
+              <div className="min-w-[120px]">
+                <p className="text-[11px] text-muted-foreground uppercase tracking-wide">Commit ID</p>
+                <p className="text-sm font-mono text-foreground">{dep.commitId}</p>
+              </div>
+              <div className="min-w-[180px]">
+                <p className="text-[11px] text-muted-foreground uppercase tracking-wide">Last Deployed On</p>
+                <p className="text-sm text-foreground">{dep.deployedOn}</p>
+              </div>
+              <div className="flex-1 flex items-center gap-2 min-w-0">
+                <p className="text-[11px] text-muted-foreground uppercase tracking-wide shrink-0">Invocation URL :</p>
+                <div className="flex-1 flex items-center gap-2 rounded-lg border border-input bg-muted/50 px-3 py-1.5">
+                  <span className="text-sm text-foreground truncate">{dep.url}</span>
+                  <button className="shrink-0 text-muted-foreground hover:text-foreground transition-colors">
+                    <Copy className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const SlateDashboard = () => {
   const [prompt, setPrompt] = useState("");
@@ -196,16 +304,29 @@ const SlateDashboard = () => {
         </div>
         </>
         ) : (
-        /* Developer Mode Placeholder */
-        <div className="flex-1 flex flex-col items-center justify-center px-6">
-          <div className="max-w-md text-center space-y-4">
-            <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center mx-auto">
-              <Code2 className="h-8 w-8 text-muted-foreground" />
+        /* Developer Mode */
+        <div className="flex-1 flex flex-col px-6 lg:px-16 py-6 overflow-y-auto">
+          {/* Top bar */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Search app"
+                className="h-9 w-60 rounded-lg border border-input bg-card pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              />
             </div>
-            <h2 className="text-2xl font-semibold text-foreground">Developer Mode</h2>
-            <p className="text-muted-foreground text-sm">
-              Advanced development tools and configurations coming soon.
-            </p>
+            <button className="h-9 px-5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors flex items-center gap-2">
+              <Rocket className="h-4 w-4" />
+              Deploy App
+            </button>
+          </div>
+
+          {/* App list */}
+          <div className="space-y-4">
+            {devApps.map((app) => (
+              <DevAppCard key={app.name} app={app} />
+            ))}
           </div>
         </div>
         )}
