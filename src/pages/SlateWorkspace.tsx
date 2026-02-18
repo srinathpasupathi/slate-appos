@@ -464,41 +464,46 @@ const PublishButton = () => {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="h-8 px-4 rounded-md bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
+        className="h-8 px-5 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-all shadow-sm shadow-primary/25"
       >
         Publish
       </button>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-md bg-card border-border">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
-              <span>Website address</span>
-              <button className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1">
-                ⓘ Docs
-              </button>
-            </DialogTitle>
-            <DialogDescription>Choose your app's URL or use the generated one</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 pt-2">
-            <div className="rounded-lg border border-border p-3 flex items-center gap-3">
-              <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center shrink-0">
-                <Link2 className="h-4 w-4 text-muted-foreground" />
+        <DialogContent className="sm:max-w-[420px] bg-card border-border rounded-2xl p-0 overflow-hidden">
+          <div className="p-6 pb-0">
+            <DialogHeader>
+              <DialogTitle className="flex items-center justify-between text-lg">
+                <span>Website address</span>
+                <button className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 font-normal">
+                  <Globe className="h-3.5 w-3.5" />
+                  Docs
+                </button>
+              </DialogTitle>
+              <DialogDescription className="text-muted-foreground">
+                Choose your app's URL or use the generated one
+              </DialogDescription>
+            </DialogHeader>
+          </div>
+          <div className="p-6 pt-4 space-y-3">
+            <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-3.5 flex items-center gap-3 transition-colors">
+              <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center shrink-0">
+                <Link2 className="h-4 w-4 text-foreground" />
               </div>
-              <span className="text-sm text-foreground flex-1 truncate">franchise-app.lovable.app</span>
-              <button className="text-muted-foreground hover:text-foreground">
+              <span className="text-sm font-medium text-foreground flex-1 truncate">franchise-app.onslate.com</span>
+              <button className="h-7 w-7 rounded-md hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
                 <Pencil className="h-3.5 w-3.5" />
               </button>
             </div>
-            <button className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              <div className="h-8 w-8 rounded-full border border-dashed border-muted-foreground flex items-center justify-center">
-                <Plus className="h-3.5 w-3.5" />
+            <button className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors w-full py-2 px-1 rounded-lg hover:bg-muted/50">
+              <div className="h-9 w-9 rounded-full border-2 border-dashed border-muted-foreground/40 flex items-center justify-center">
+                <Plus className="h-4 w-4" />
               </div>
               Add custom domain
             </button>
-            <div className="flex justify-end">
+            <div className="flex justify-end pt-2">
               <button
                 onClick={() => setOpen(false)}
-                className="h-9 px-6 rounded-md bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
+                className="h-10 px-8 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors shadow-sm shadow-primary/25"
               >
                 Continue
               </button>
