@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Home, Search, Clock, Grid3X3, Star, Users, Compass, LayoutTemplate,
-  ChevronDown, Plus, ArrowRight, Sparkles, Share2, Zap,
+  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User,
 } from "lucide-react";
 import zohoLogo from "@/assets/zoho-logo.svg";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const recentProjects = [
   { name: "CRM Analytics Dashboard" },
@@ -47,17 +48,8 @@ const SlateDashboard = () => {
       {/* Sidebar */}
       <aside className="hidden lg:flex flex-col w-[240px] border-r border-border bg-card flex-shrink-0">
         {/* Logo */}
-        <div className="flex items-center justify-between px-4 py-4">
+        <div className="flex items-center px-4 py-4">
           <img src={zohoLogo} alt="Zoho" className="h-6 w-auto" />
-        </div>
-
-        {/* Workspace selector */}
-        <div className="px-3 mb-2">
-          <button className="w-full flex items-center gap-2 px-3 py-2 rounded-md bg-muted text-sm font-medium text-foreground">
-            <span className="h-5 w-5 rounded bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">S</span>
-            My Slate
-            <ChevronDown className="h-3.5 w-3.5 ml-auto text-muted-foreground" />
-          </button>
         </div>
 
         {/* Nav links */}
@@ -77,32 +69,12 @@ const SlateDashboard = () => {
             ))}
           </div>
           <SidebarLink icon={Grid3X3} label="All projects" />
-          <SidebarLink icon={Star} label="Starred" />
           <SidebarLink icon={Users} label="Shared with me" />
-
-          <div className="pt-4 pb-1">
-            <p className="px-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Resources</p>
-          </div>
-          <SidebarLink icon={Compass} label="Discover" />
-          <SidebarLink icon={LayoutTemplate} label="Templates" />
         </nav>
 
-        {/* Bottom section */}
-        <div className="border-t border-border px-3 py-3 space-y-2">
-          <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors text-sm text-foreground">
-            <Share2 className="h-4 w-4 text-muted-foreground" />
-            <div className="text-left">
-              <p className="font-medium">Share Slate</p>
-              <p className="text-xs text-muted-foreground">Get 10 credits each</p>
-            </div>
-          </button>
-          <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors text-sm text-foreground">
-            <Zap className="h-4 w-4 text-primary" />
-            <div className="text-left">
-              <p className="font-medium">Upgrade to Business</p>
-              <p className="text-xs text-muted-foreground">Unlock more benefits</p>
-            </div>
-          </button>
+        {/* Profile popover at bottom */}
+        <div className="border-t border-border px-3 py-3">
+          <ProfilePopover />
         </div>
       </aside>
 
@@ -114,18 +86,9 @@ const SlateDashboard = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
 
           <div className="relative px-6 lg:px-16 pt-16 pb-10">
-            {/* Announcement */}
-            <div className="flex justify-center mb-5">
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                <span className="px-1.5 py-0.5 bg-primary text-primary-foreground rounded text-[10px] uppercase font-bold">New</span>
-                Introducing a smarter Slate
-                <ArrowRight className="h-3 w-3" />
-              </span>
-            </div>
-
             {/* Heading */}
             <h1 className="text-center text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-8">
-              Ready to build?
+              Start Building Srinath
             </h1>
 
             {/* Prompt box */}
@@ -199,6 +162,78 @@ const SlateDashboard = () => {
     </div>
   );
 };
+
+const ProfilePopover = () => (
+  <Popover>
+    <PopoverTrigger asChild>
+      <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors">
+        <Avatar className="h-8 w-8">
+          <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">S</AvatarFallback>
+        </Avatar>
+        <span className="text-sm font-medium text-foreground truncate">Srinath</span>
+      </button>
+    </PopoverTrigger>
+    <PopoverContent side="top" align="start" className="w-72 p-0">
+      {/* Workspace info */}
+      <div className="p-4 border-b border-border">
+        <div className="flex items-center gap-3 mb-3">
+          <Avatar className="h-10 w-10">
+            <AvatarFallback className="bg-primary text-primary-foreground font-bold">S</AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="text-sm font-semibold text-foreground">Srinath's Workspace</p>
+            <p className="text-xs text-muted-foreground">Pro Plan • 1 member</p>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-muted text-xs font-medium text-foreground hover:bg-muted/80 transition-colors">
+            <Settings className="h-3.5 w-3.5" /> Settings
+          </button>
+          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-muted text-xs font-medium text-foreground hover:bg-muted/80 transition-colors">
+            <UserPlus className="h-3.5 w-3.5" /> Invite members
+          </button>
+        </div>
+      </div>
+
+      {/* Credits */}
+      <div className="p-4 border-b border-border">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-semibold text-foreground">Credits</span>
+          <span className="text-xs text-muted-foreground">15.5 left →</span>
+        </div>
+        <div className="w-full h-1.5 rounded-full bg-muted overflow-hidden">
+          <div className="h-full w-1/4 rounded-full bg-primary" />
+        </div>
+        <p className="text-xs text-muted-foreground mt-1.5 flex items-center gap-1.5">
+          <span className="h-1.5 w-1.5 rounded-full bg-primary inline-block" /> Using topup credits
+        </p>
+      </div>
+
+      {/* Workspaces */}
+      <div className="p-4 border-b border-border">
+        <p className="text-xs text-muted-foreground mb-2">All workspaces</p>
+        <div className="flex items-center gap-3 px-1 py-1.5">
+          <Avatar className="h-8 w-8">
+            <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">S</AvatarFallback>
+          </Avatar>
+          <span className="text-sm font-medium text-foreground flex-1">Srinath's Workspace</span>
+          <span className="text-[10px] font-bold bg-primary/20 text-primary px-1.5 py-0.5 rounded">PRO</span>
+          <Check className="h-4 w-4 text-foreground" />
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="p-2">
+        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+          <Plus className="h-4 w-4" /> Create new workspace
+        </button>
+        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+          <Globe className="h-4 w-4" /> Find workspaces
+        </button>
+      </div>
+    </PopoverContent>
+  </Popover>
+);
 
 const SidebarLink = ({ icon: Icon, label, active }: { icon: any; label: string; active?: boolean }) => (
   <a
