@@ -181,8 +181,8 @@ const ProfilePopover = () => (
             <AvatarFallback className="bg-primary text-primary-foreground font-bold">S</AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-sm font-semibold text-foreground">Srinath's Workspace</p>
-            <p className="text-xs text-muted-foreground">Pro Plan • 1 member</p>
+            <p className="text-sm font-semibold text-foreground">Srinath's Org</p>
+            <p className="text-xs text-muted-foreground">Pro Plan · 1 member</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -195,28 +195,28 @@ const ProfilePopover = () => (
         </div>
       </div>
 
-      {/* Credits */}
+      {/* Tokens */}
       <div className="p-4 border-b border-border">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-semibold text-foreground">Credits</span>
-          <span className="text-xs text-muted-foreground">15.5 left →</span>
+          <span className="text-sm font-semibold text-foreground">Tokens</span>
+          <span className="text-xs text-muted-foreground">7.6M left →</span>
         </div>
         <div className="w-full h-1.5 rounded-full bg-muted overflow-hidden">
           <div className="h-full w-1/4 rounded-full bg-primary" />
         </div>
         <p className="text-xs text-muted-foreground mt-1.5 flex items-center gap-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-primary inline-block" /> Using topup credits
+          <span className="h-1.5 w-1.5 rounded-full bg-primary inline-block" /> Using topup tokens
         </p>
       </div>
 
       {/* Workspaces */}
       <div className="p-4 border-b border-border">
-        <p className="text-xs text-muted-foreground mb-2">All workspaces</p>
+        <p className="text-xs text-muted-foreground mb-2">All orgs</p>
         <div className="flex items-center gap-3 px-1 py-1.5">
           <Avatar className="h-8 w-8">
             <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">S</AvatarFallback>
           </Avatar>
-          <span className="text-sm font-medium text-foreground flex-1">Srinath's Workspace</span>
+          <span className="text-sm font-medium text-foreground flex-1">Srinath's Org</span>
           <span className="text-[10px] font-bold bg-primary/20 text-primary px-1.5 py-0.5 rounded">PRO</span>
           <Check className="h-4 w-4 text-foreground" />
         </div>
@@ -225,10 +225,10 @@ const ProfilePopover = () => (
       {/* Actions */}
       <div className="p-2">
         <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
-          <Plus className="h-4 w-4" /> Create new workspace
+          <Plus className="h-4 w-4" /> Create new org
         </button>
         <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
-          <Globe className="h-4 w-4" /> Find workspaces
+          <Globe className="h-4 w-4" /> Manage Orgs
         </button>
       </div>
     </PopoverContent>
