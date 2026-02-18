@@ -149,6 +149,7 @@ const SlateDashboard = () => {
             {projectCards.map((card) => (
               <div
                 key={card.title}
+                onClick={() => navigate(`/slate/workspace?prompt=${encodeURIComponent(card.title)}`)}
                 className="group rounded-xl border border-border bg-card overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className={`h-40 bg-gradient-to-br ${card.color} flex items-center justify-center`}>
