@@ -34,11 +34,10 @@ const projectCards = [
 
 const SlateDashboard = () => {
   const [prompt, setPrompt] = useState("");
-  const [activeTab, setActiveTab] = useState("recent");
+  const [activeTab, setActiveTab] = useState("my");
   const navigate = useNavigate();
 
   const tabs = [
-    { id: "recent", label: "Recently viewed" },
     { id: "my", label: "My projects" },
     { id: "templates", label: "Templates" },
   ];
@@ -119,7 +118,7 @@ const SlateDashboard = () => {
 
         {/* Tabs + Projects */}
         <div className="px-6 lg:px-16 py-8">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center mb-6">
             <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
               {tabs.map((tab) => (
                 <button
@@ -135,9 +134,6 @@ const SlateDashboard = () => {
                 </button>
               ))}
             </div>
-            <a href="#" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Browse all <ArrowRight className="h-3.5 w-3.5" />
-            </a>
           </div>
 
           {/* Project cards */}
