@@ -1,30 +1,32 @@
 import { ChevronRight } from "lucide-react";
 
+const SPRITE_URL = "https://www.zohowebstatic.com/sites/zweb/images/commonroot/product-icons.svg";
+
 const apps = [
   {
     name: "CRM",
     description: "Comprehensive CRM platform for customer-facing teams.",
-    icon: "https://www.zohowebstatic.com/sites/zweb/images/zoho_general_pages/zhome-crm.svg",
+    sprite: { x: -241, y: -6, w: 28, h: 18 },
   },
   {
     name: "Mail",
     description: "Secure email service for teams of all sizes.",
-    icon: "https://www.zohowebstatic.com/sites/zweb/images/zoho_general_pages/zhome-mail.svg",
+    sprite: { x: -271, y: -31, w: 28, h: 28 },
   },
   {
     name: "Books",
     description: "Powerful accounting platform for growing businesses.",
-    icon: "https://www.zohowebstatic.com/sites/zweb/images/zoho_general_pages/zhome-books.svg",
+    sprite: { x: -1, y: -31, w: 28, h: 28 },
   },
   {
     name: "People",
     description: "Organize, automate, and simplify your HR processes.",
-    icon: "https://www.zohowebstatic.com/sites/zweb/images/zoho_general_pages/zhome-people.svg",
+    sprite: { x: -211, y: -31, w: 28, h: 28 },
   },
   {
-    name: "Desk",
-    description: "Helpdesk software to deliver great customer support.",
-    icon: "https://www.zohowebstatic.com/sites/zweb/images/zoho_general_pages/zhome-desk.svg",
+    name: "Projects",
+    description: "Plan, track, and collaborate on every project.",
+    sprite: { x: -391, y: -34, w: 28, h: 22 },
   },
 ];
 
@@ -44,7 +46,18 @@ const FeaturedApps = () => {
             href="#"
             className="flex items-center gap-4 px-6 py-4 hover:bg-muted/50 transition-colors group"
           >
-            <img src={app.icon} alt={app.name} className="h-10 w-10 flex-shrink-0" />
+            <span
+              className="flex-shrink-0"
+              style={{
+                display: "inline-block",
+                width: app.sprite.w * 1.4,
+                height: app.sprite.h * 1.4,
+                background: `url('${SPRITE_URL}') no-repeat ${app.sprite.x * 1.4}px ${app.sprite.y * 1.4}px`,
+                backgroundSize: "auto",
+                transform: "scale(1.4)",
+                transformOrigin: "center",
+              }}
+            />
             <div className="flex-1 min-w-0">
               <h3 className="text-base font-semibold text-foreground font-sans">
                 {app.name}
