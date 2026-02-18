@@ -38,7 +38,7 @@ const SlateDashboard = () => {
   const navigate = useNavigate();
 
   const tabs = [
-    { id: "my", label: "My projects" },
+    { id: "my", label: "My apps" },
     { id: "templates", label: "Templates" },
   ];
 
@@ -57,7 +57,7 @@ const SlateDashboard = () => {
           <SidebarLink icon={Search} label="Search" />
 
           <div className="pt-4 pb-1">
-            <p className="px-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Projects</p>
+            <p className="px-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Apps</p>
           </div>
           <SidebarLink icon={Clock} label="Recent" />
           <div className="pl-8 space-y-0.5">
@@ -67,7 +67,7 @@ const SlateDashboard = () => {
               </a>
             ))}
           </div>
-          <SidebarLink icon={Grid3X3} label="All projects" />
+  <SidebarLink icon={Grid3X3} label="All apps" />
           <SidebarLink icon={Users} label="Shared with me" />
         </nav>
 
