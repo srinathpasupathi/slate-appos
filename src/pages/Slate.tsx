@@ -85,10 +85,10 @@ const SlateDashboard = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/8 to-primary/5 pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
 
-          <div className="relative px-6 lg:px-16 pt-16 pb-10">
+          <div className="relative px-6 lg:px-16 pt-24 lg:pt-32 pb-16">
             {/* Heading */}
             <h1 className="text-center text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-8">
-              Start Building Srinath
+              Start Building, Srinath
             </h1>
 
             {/* Prompt box */}
