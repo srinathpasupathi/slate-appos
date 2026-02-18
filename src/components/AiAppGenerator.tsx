@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Sparkles, ArrowRight, Zap, Layers, Globe } from "lucide-react";
 
 const suggestions = [
@@ -10,6 +11,11 @@ const suggestions = [
 
 const AiAppGenerator = () => {
   const [prompt, setPrompt] = useState("");
+  const navigate = useNavigate();
+
+  const handleGenerate = () => {
+    navigate("/slate");
+  };
 
   return (
     <section className="w-full">
@@ -53,7 +59,7 @@ const AiAppGenerator = () => {
                     {prompt.length > 0 ? `${prompt.length} chars` : ""}
                   </span>
                 </div>
-                <button className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-all hover:shadow-md hover:shadow-primary/20 active:scale-[0.98]">
+                <button onClick={handleGenerate} className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-all hover:shadow-md hover:shadow-primary/20 active:scale-[0.98]">
                   <Sparkles className="h-3.5 w-3.5" />
                   Generate App
                   <ArrowRight className="h-3.5 w-3.5" />
