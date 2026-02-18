@@ -27,6 +27,15 @@ const HeroSection = () => {
             GET STARTED FOR FREE
             <ChevronRight className="h-4 w-4" />
           </a>
+
+          {/* Hero Illustration */}
+          <div className="mt-10">
+            <img
+              src={heroIllustration}
+              alt="Team collaboration illustration"
+              className="w-full max-w-lg"
+            />
+          </div>
         </div>
 
         {/* Right — Featured Apps */}
@@ -37,15 +46,6 @@ const HeroSection = () => {
 
       {/* AI App Generator — primary hero element */}
       <AiAppGenerator />
-
-      {/* Hero Illustration */}
-      <div className="mt-12">
-        <img
-          src={heroIllustration}
-          alt="Team collaboration illustration"
-          className="w-full max-w-2xl mx-auto"
-        />
-      </div>
     </section>
   );
 };
