@@ -106,7 +106,15 @@ const SlateDashboard = () => {
                   </button>
                   <div className="flex items-center gap-2">
                     <button className="text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded transition-colors">Plan</button>
-                    <button className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity">
+                    <button
+                      onClick={() => {
+                        if (prompt.trim()) {
+                          navigate(`/slate/workspace?prompt=${encodeURIComponent(prompt.trim())}`);
+                        }
+                      }}
+                      className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
+                      disabled={!prompt.trim()}
+                    >
                       <ArrowRight className="h-4 w-4" />
                     </button>
                   </div>
