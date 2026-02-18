@@ -65,15 +65,21 @@ const devApps = [
 
 type DevApp = typeof devApps[number];
 
-const DevAppCard = ({ app }: { app: DevApp }) => {
-  const [expanded, setExpanded] = useState(false);
+const DevAppCard = ({ app, defaultOpen = false }: { app: DevApp; defaultOpen?: boolean }) => {
+  const [expanded, setExpanded] = useState(defaultOpen);
 
   return (
-    <div className="rounded-xl border border-border bg-card overflow-hidden">
+    <div className={`rounded-xl border bg-card overflow-hidden transition-colors ${expanded ? 'border-primary/30' : 'border-border'}`}>
       {/* App header */}
-      <div className="flex items-center gap-4 px-5 py-4">
-        <div className="h-10 w-10 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center text-primary font-bold text-sm shrink-0">
-          {app.initial}
+      <div className="flex items-center gap-4 px-6 py-4">
+        <div className="relative">
+          <div className="h-10 w-10 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center text-primary font-bold text-sm shrink-0">
+            {app.initial}
+          </div>
+          {/* Vertical connector line */}
+          {expanded && app.deployments.length > 0 && (
+            <div className="absolute top-10 left-1/2 -translate-x-1/2 w-0.5 h-6 bg-primary/20" />
+          )}
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-foreground">{app.name}</p>
@@ -86,50 +92,61 @@ const DevAppCard = ({ app }: { app: DevApp }) => {
             {app.source}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <button className="flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 font-medium transition-colors">
-            <Settings className="h-3.5 w-3.5" />
+        <div className="flex items-center gap-3">
+          <button className="flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 font-medium transition-colors">
+            <Settings className="h-4 w-4" />
             App Settings
           </button>
-          <button className="h-8 px-4 rounded-lg border border-input text-xs font-medium text-foreground hover:bg-muted transition-colors">
+          <button className="h-9 px-5 rounded-lg border border-input text-sm font-medium text-foreground hover:bg-muted transition-colors">
             Create Deployment
           </button>
           <button
             onClick={() => setExpanded(!expanded)}
-            className="h-8 w-8 rounded-lg border border-input flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            className="h-8 w-8 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
           >
             {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </button>
         </div>
       </div>
 
-      {/* Deployments - expanded */}
+      {/* Deployments - accordion content */}
       {expanded && (
-        <div className="border-t border-border">
+        <div className="px-6 pb-5">
           {app.deployments.map((dep, i) => (
-            <div key={i} className="flex items-center gap-6 px-5 py-3.5 ml-7 border-l-2 border-primary/20">
-              <div className="h-8 w-8 rounded-full border-2 border-primary/20 flex items-center justify-center shrink-0">
-                <GitBranch className="h-3.5 w-3.5 text-primary/60" />
-              </div>
-              <div className="min-w-[140px]">
-                <p className="text-sm font-medium text-foreground">{dep.label}</p>
-                <p className="text-xs text-muted-foreground">Branch : {dep.branch}</p>
-              </div>
-              <div className="min-w-[120px]">
-                <p className="text-[11px] text-muted-foreground uppercase tracking-wide">Commit ID</p>
-                <p className="text-sm font-mono text-foreground">{dep.commitId}</p>
-              </div>
-              <div className="min-w-[180px]">
-                <p className="text-[11px] text-muted-foreground uppercase tracking-wide">Last Deployed On</p>
-                <p className="text-sm text-foreground">{dep.deployedOn}</p>
-              </div>
-              <div className="flex-1 flex items-center gap-2 min-w-0">
-                <p className="text-[11px] text-muted-foreground uppercase tracking-wide shrink-0">Invocation URL :</p>
-                <div className="flex-1 flex items-center gap-2 rounded-lg border border-input bg-muted/50 px-3 py-1.5">
-                  <span className="text-sm text-foreground truncate">{dep.url}</span>
-                  <button className="shrink-0 text-muted-foreground hover:text-foreground transition-colors">
-                    <Copy className="h-3.5 w-3.5" />
-                  </button>
+            <div key={i} className="relative flex items-center gap-0 ml-5">
+              {/* Vertical + horizontal connector */}
+              <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-primary/20" style={{ height: i < app.deployments.length - 1 ? '100%' : '50%' }} />
+              <div className="absolute left-0 top-1/2 w-5 h-0.5 bg-primary/20" />
+
+              <div className="ml-7 flex items-center gap-0 flex-1 py-3">
+                {/* Branch icon */}
+                <div className="h-9 w-9 rounded-full border-2 border-primary/20 flex items-center justify-center shrink-0 bg-card">
+                  <GitBranch className="h-4 w-4 text-primary/50" />
+                </div>
+
+                {/* Deployment info row */}
+                <div className="flex items-center flex-1 ml-4 gap-8">
+                  <div className="min-w-[130px]">
+                    <p className="text-sm font-semibold text-foreground">{dep.label}</p>
+                    <p className="text-xs text-muted-foreground">Branch : {dep.branch}</p>
+                  </div>
+                  <div className="min-w-[100px]">
+                    <p className="text-[11px] text-muted-foreground">Commit ID</p>
+                    <p className="text-sm font-mono font-semibold text-foreground">{dep.commitId}</p>
+                  </div>
+                  <div className="min-w-[170px]">
+                    <p className="text-[11px] text-muted-foreground">Last Deployed On</p>
+                    <p className="text-sm text-foreground">{dep.deployedOn}</p>
+                  </div>
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <p className="text-sm text-muted-foreground shrink-0">Invocation URL&nbsp;&nbsp;:</p>
+                    <div className="flex-1 flex items-center gap-2 rounded-lg border border-input bg-muted/30 px-3 py-2">
+                      <span className="text-sm text-foreground truncate flex-1">{dep.url}</span>
+                      <button className="shrink-0 text-muted-foreground hover:text-foreground transition-colors">
+                        <Copy className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -324,8 +341,8 @@ const SlateDashboard = () => {
 
           {/* App list */}
           <div className="space-y-4">
-            {devApps.map((app) => (
-              <DevAppCard key={app.name} app={app} />
+            {devApps.map((app, i) => (
+              <DevAppCard key={app.name} app={app} defaultOpen={i === 0} />
             ))}
           </div>
         </div>
