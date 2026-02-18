@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Send, Paperclip, Code, Eye, FolderTree, Terminal } from "lucide-react";
+import { ArrowLeft, Send, Paperclip, Code, Eye, FolderTree, Terminal, Share2, Github, Upload, Link2, Globe, UserPlus, ChevronRight, Pencil, Plus, ExternalLink } from "lucide-react";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import zohoLogo from "@/assets/zoho-logo.svg";
 import GenerationProgress from "@/components/slate/GenerationProgress";
 import StreamingCode from "@/components/slate/StreamingCode";
@@ -230,29 +232,55 @@ const SlateWorkspace = () => {
         <ResizablePanel defaultSize={65} minSize={40}>
           <div className="flex flex-col h-full">
             {/* Preview header with tabs */}
-            <div className="flex items-center gap-1 px-4 py-2 border-b border-border bg-card shrink-0">
-              <button
-                onClick={() => setPreviewTab("code")}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  previewTab === "code"
-                    ? "bg-muted text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Code className="h-3.5 w-3.5" />
-                Code
-              </button>
-              <button
-                onClick={() => setPreviewTab("preview")}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  previewTab === "preview"
-                    ? "bg-muted text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Eye className="h-3.5 w-3.5" />
-                Preview
-              </button>
+            <div className="flex items-center justify-between px-4 py-2 border-b border-border bg-card shrink-0">
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setPreviewTab("code")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    previewTab === "code"
+                      ? "bg-muted text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Code className="h-3.5 w-3.5" />
+                  Code
+                </button>
+                <button
+                  onClick={() => setPreviewTab("preview")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    previewTab === "preview"
+                      ? "bg-muted text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Eye className="h-3.5 w-3.5" />
+                  Preview
+                </button>
+              </div>
+
+              {/* Share, GitHub, Publish buttons */}
+              <div className="flex items-center gap-2">
+                {/* Share */}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="flex items-center gap-2 h-8 px-3 rounded-full bg-muted text-sm font-medium text-foreground hover:bg-muted/80 transition-colors">
+                      <span className="h-5 w-5 rounded-full bg-green-700 text-[10px] font-bold text-white flex items-center justify-center">S</span>
+                      Share
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent align="end" className="w-[380px] bg-card border-border p-0">
+                    <SharePanel />
+                  </PopoverContent>
+                </Popover>
+
+                {/* GitHub */}
+                <button className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-foreground hover:bg-muted/80 transition-colors">
+                  <Github className="h-4 w-4" />
+                </button>
+
+                {/* Publish */}
+                <PublishButton />
+              </div>
             </div>
 
             {/* Preview / Code content */}
@@ -368,5 +396,118 @@ const CodeLine = ({ num, text }: { num: number; text: string }) => (
     <span className="text-foreground/80">{text}</span>
   </div>
 );
+
+/* ---------- Share Panel ---------- */
+const SharePanel = () => (
+  <div className="py-4">
+    <h3 className="text-base font-semibold text-foreground px-4 mb-3">Share project</h3>
+    <div className="px-4 mb-4">
+      <div className="h-9 rounded-md border border-input bg-background px-3 flex items-center">
+        <span className="text-sm text-muted-foreground">Add people</span>
+      </div>
+    </div>
+    <div className="px-4 mb-2">
+      <p className="text-sm font-semibold text-foreground mb-3">Project access</p>
+      <button className="flex items-center justify-between w-full py-2 text-sm text-foreground hover:bg-muted/50 rounded-md px-1 transition-colors">
+        <div className="flex items-center gap-3">
+          <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+            <Globe className="h-4 w-4 text-muted-foreground" />
+          </div>
+          <span>People you invited</span>
+        </div>
+        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+      </button>
+      <div className="flex items-center justify-between py-2 px-1">
+        <div className="flex items-center gap-3">
+          <span className="h-8 w-8 rounded-full bg-destructive/80 text-[11px] font-bold text-white flex items-center justify-center">M</span>
+          <span className="text-sm text-foreground">My Workspace</span>
+        </div>
+        <span className="text-xs text-muted-foreground">Can edit ∨</span>
+      </div>
+      <div className="flex items-center justify-between py-2 px-1">
+        <div className="flex items-center gap-3">
+          <span className="h-8 w-8 rounded-full bg-primary text-[11px] font-bold text-primary-foreground flex items-center justify-center">S</span>
+          <span className="text-sm text-foreground">user@company.com (you)</span>
+        </div>
+        <span className="text-xs text-muted-foreground">Owner</span>
+      </div>
+      <div className="flex items-center justify-between py-2 px-1">
+        <div className="flex items-center gap-3">
+          <div className="h-8 w-8 rounded-full border border-dashed border-muted-foreground flex items-center justify-center">
+            <UserPlus className="h-3.5 w-3.5 text-muted-foreground" />
+          </div>
+          <span className="text-sm text-muted-foreground">Invite link</span>
+        </div>
+        <span className="text-xs text-muted-foreground">Disabled ∨</span>
+      </div>
+    </div>
+    <div className="px-4 pt-2 space-y-2">
+      <button className="w-full h-9 rounded-md bg-muted text-sm font-medium text-foreground hover:bg-muted/80 transition-colors">
+        Create invite link
+      </button>
+      <div className="border-t border-border pt-2 space-y-2">
+        <button className="w-full h-9 rounded-md border border-border text-sm font-medium text-foreground hover:bg-muted/50 flex items-center justify-center gap-2 transition-colors">
+          <Upload className="h-3.5 w-3.5" /> Publish project
+        </button>
+        <button className="w-full h-9 rounded-md border border-border text-sm font-medium text-foreground hover:bg-muted/50 flex items-center justify-center gap-2 transition-colors">
+          <ExternalLink className="h-3.5 w-3.5" /> Share preview
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+/* ---------- Publish Button ---------- */
+const PublishButton = () => {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="h-8 px-4 rounded-md bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
+      >
+        Publish
+      </button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-md bg-card border-border">
+          <DialogHeader>
+            <DialogTitle className="flex items-center justify-between">
+              <span>Website address</span>
+              <button className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1">
+                ⓘ Docs
+              </button>
+            </DialogTitle>
+            <DialogDescription>Choose your app's URL or use the generated one</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div className="rounded-lg border border-border p-3 flex items-center gap-3">
+              <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center shrink-0">
+                <Link2 className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <span className="text-sm text-foreground flex-1 truncate">franchise-app.lovable.app</span>
+              <button className="text-muted-foreground hover:text-foreground">
+                <Pencil className="h-3.5 w-3.5" />
+              </button>
+            </div>
+            <button className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <div className="h-8 w-8 rounded-full border border-dashed border-muted-foreground flex items-center justify-center">
+                <Plus className="h-3.5 w-3.5" />
+              </div>
+              Add custom domain
+            </button>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setOpen(false)}
+                className="h-9 px-6 rounded-md bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
 
 export default SlateWorkspace;
