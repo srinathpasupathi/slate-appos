@@ -79,20 +79,20 @@ const SlateDashboard = () => {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-y-auto">
-        {/* Hero gradient area */}
-        <div className="relative overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-y-auto">
+        {/* Hero gradient area - fills available space */}
+        <div className="relative flex-1 flex flex-col min-h-[60vh]">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/8 to-primary/5 pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
 
-          <div className="relative px-6 lg:px-16 pt-24 lg:pt-32 pb-16">
+          <div className="relative flex-1 flex flex-col items-center justify-center px-6 lg:px-16">
             {/* Heading */}
             <h1 className="text-center text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-8">
               Start Building, Srinath
             </h1>
 
             {/* Prompt box */}
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-2xl w-full mx-auto">
               <div className="rounded-xl border border-input bg-card shadow-lg focus-within:ring-2 focus-within:ring-ring focus-within:border-transparent transition-all">
                 <textarea
                   value={prompt}
