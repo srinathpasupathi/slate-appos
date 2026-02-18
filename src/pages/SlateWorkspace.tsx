@@ -1,8 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Send, Paperclip, Code, Eye, FolderTree, Terminal } from "lucide-react";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import zohoLogo from "@/assets/zoho-logo.svg";
+import GenerationProgress from "@/components/slate/GenerationProgress";
+import StreamingCode from "@/components/slate/StreamingCode";
+import PreviewLoading from "@/components/slate/PreviewLoading";
+import GeneratedPreview from "@/components/slate/GeneratedPreview";
 
 interface Message {
   id: string;
@@ -18,9 +22,18 @@ const SlateWorkspace = () => {
 
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const [previewTab, setPreviewTab] = useState<"preview" | "code">("preview");
+  const [previewTab, setPreviewTab] = useState<"preview" | "code">("code");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationDone, setGenerationDone] = useState(false);
+  const [generationProgress, setGenerationProgress] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleGenerationComplete = useCallback(() => {
+    setIsGenerating(false);
+    setGenerationDone(true);
+    setPreviewTab("preview");
+  }, []);
 
   // Seed initial prompt as first message
   useEffect(() => {
@@ -34,12 +47,27 @@ const SlateWorkspace = () => {
       const assistantMsg: Message = {
         id: "2",
         role: "assistant",
-        content: `I'll help you build that! Let me start creating your app: **"${initialPrompt}"**.\n\nI'm setting up the project structure, components, and styling now. You'll see the preview update on the right as I work.`,
+        content: `I'll help you build that! Let me start creating your app: **"${initialPrompt}"**.\n\nSetting up the project now...`,
         timestamp: new Date(),
       };
       setMessages([userMsg, assistantMsg]);
+      setIsGenerating(true);
+      setPreviewTab("code");
     }
   }, []);
+
+  // Progress ticker during generation
+  useEffect(() => {
+    if (!isGenerating) return;
+    setGenerationProgress(0);
+    const interval = setInterval(() => {
+      setGenerationProgress((prev) => {
+        if (prev >= 95) { clearInterval(interval); return prev; }
+        return prev + Math.random() * 12;
+      });
+    }, 800);
+    return () => clearInterval(interval);
+  }, [isGenerating]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -127,6 +155,13 @@ const SlateWorkspace = () => {
                     </div>
                   </div>
                 ))}
+                {isGenerating && (
+                  <div className="flex justify-start">
+                    <div className="max-w-[85%] rounded-xl px-4 py-2.5 bg-muted text-foreground">
+                      <GenerationProgress onComplete={handleGenerationComplete} />
+                    </div>
+                  </div>
+                )}
                 <div ref={messagesEndRef} />
               </div>
             </div>
@@ -199,19 +234,25 @@ const SlateWorkspace = () => {
             {/* Preview / Code content */}
             <div className="flex-1 overflow-hidden">
               {previewTab === "preview" ? (
-                <div className="h-full bg-background flex items-center justify-center">
-                  <div className="text-center space-y-4 px-8">
-                    <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
-                      <Eye className="h-7 w-7 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-foreground mb-1">Live Preview</h3>
-                      <p className="text-sm text-muted-foreground max-w-md">
-                        Your app preview will appear here as Slate generates and updates the code.
-                      </p>
+                generationDone ? (
+                  <GeneratedPreview />
+                ) : isGenerating ? (
+                  <PreviewLoading progress={Math.min(Math.round(generationProgress), 95)} />
+                ) : (
+                  <div className="h-full bg-background flex items-center justify-center">
+                    <div className="text-center space-y-4 px-8">
+                      <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+                        <Eye className="h-7 w-7 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-foreground mb-1">Live Preview</h3>
+                        <p className="text-sm text-muted-foreground max-w-md">
+                          Your app preview will appear here as Slate generates and updates the code.
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )
               ) : (
                 <div className="h-full flex">
                   {/* File tree */}
@@ -237,24 +278,12 @@ const SlateWorkspace = () => {
                     </div>
                   </div>
 
-                  {/* Code editor placeholder */}
-                  <div className="flex-1 bg-[hsl(var(--card))] overflow-auto">
+                  {/* Code editor - streaming */}
+                  <div className="flex-1 bg-[hsl(var(--card))] overflow-hidden flex flex-col">
                     <div className="px-4 py-3 border-b border-border">
                       <span className="text-xs text-muted-foreground font-mono">src / pages / Index.tsx</span>
                     </div>
-                    <div className="p-4 font-mono text-xs leading-6 text-muted-foreground">
-                      <CodeLine num={1} text='import React from "react";' />
-                      <CodeLine num={2} text="" />
-                      <CodeLine num={3} text="const Index = () => {" />
-                      <CodeLine num={4} text="  return (" />
-                      <CodeLine num={5} text='    <div className="min-h-screen">' />
-                      <CodeLine num={6} text="      {/* Your app content */}" />
-                      <CodeLine num={7} text="    </div>" />
-                      <CodeLine num={8} text="  );" />
-                      <CodeLine num={9} text="};" />
-                      <CodeLine num={10} text="" />
-                      <CodeLine num={11} text="export default Index;" />
-                    </div>
+                    <StreamingCode isGenerating={isGenerating} />
                   </div>
                 </div>
               )}
