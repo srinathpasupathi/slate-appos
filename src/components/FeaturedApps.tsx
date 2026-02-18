@@ -1,6 +1,5 @@
 import { ChevronRight } from "lucide-react";
-
-const SPRITE_URL = "https://www.zohowebstatic.com/sites/zweb/images/commonroot/product-icons.svg";
+import productIcons from "@/assets/product-icons.svg";
 
 const apps = [
   {
@@ -52,7 +51,7 @@ const FeaturedApps = () => {
                 display: "inline-block",
                 width: app.sprite.w * 1.4,
                 height: app.sprite.h * 1.4,
-                background: `url('${SPRITE_URL}') no-repeat ${app.sprite.x * 1.4}px ${app.sprite.y * 1.4}px`,
+                background: `url('${productIcons}') no-repeat ${app.sprite.x * 1.4}px ${app.sprite.y * 1.4}px`,
                 backgroundSize: "auto",
                 transform: "scale(1.4)",
                 transformOrigin: "center",
