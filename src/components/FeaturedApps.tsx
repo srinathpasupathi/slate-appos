@@ -1,31 +1,35 @@
 import { ChevronRight } from "lucide-react";
-import productIcons from "@/assets/product-icons.svg";
+import crmIcon from "@/assets/crm.svg";
+import mailIcon from "@/assets/mail.svg";
+import booksIcon from "@/assets/books.svg";
+import peopleIcon from "@/assets/people.svg";
+import projectsIcon from "@/assets/projects.svg";
 
 const apps = [
   {
     name: "CRM",
     description: "Comprehensive CRM platform for customer-facing teams.",
-    sprite: { x: -241, y: -6, w: 28, h: 18 },
+    icon: crmIcon,
   },
   {
     name: "Mail",
     description: "Secure email service for teams of all sizes.",
-    sprite: { x: -271, y: -31, w: 28, h: 28 },
+    icon: mailIcon,
   },
   {
     name: "Books",
     description: "Powerful accounting platform for growing businesses.",
-    sprite: { x: -1, y: -31, w: 28, h: 28 },
+    icon: booksIcon,
   },
   {
     name: "People",
     description: "Organize, automate, and simplify your HR processes.",
-    sprite: { x: -211, y: -31, w: 28, h: 28 },
+    icon: peopleIcon,
   },
   {
     name: "Projects",
     description: "Plan, track, and collaborate on every project.",
-    sprite: { x: -391, y: -34, w: 28, h: 22 },
+    icon: projectsIcon,
   },
 ];
 
@@ -45,18 +49,7 @@ const FeaturedApps = () => {
             href="#"
             className="flex items-center gap-4 px-6 py-4 hover:bg-muted/50 transition-colors group"
           >
-            <span
-              className="flex-shrink-0"
-              style={{
-                display: "inline-block",
-                width: app.sprite.w * 1.4,
-                height: app.sprite.h * 1.4,
-                background: `url('${productIcons}') no-repeat ${app.sprite.x * 1.4}px ${app.sprite.y * 1.4}px`,
-                backgroundSize: "auto",
-                transform: "scale(1.4)",
-                transformOrigin: "center",
-              }}
-            />
+            <img src={app.icon} alt={app.name} className="h-7 w-7 flex-shrink-0" />
             <div className="flex-1 min-w-0">
               <h3 className="text-base font-semibold text-foreground font-sans">
                 {app.name}
