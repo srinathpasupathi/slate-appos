@@ -1,13 +1,14 @@
 import { useState } from "react";
 import {
   X, Settings, Globe, BookOpen, Plug, GitBranch,
-  Users, CreditCard, ShieldCheck, ChevronRight,
+  Users, CreditCard, ShieldCheck, ChevronRight, Code2,
 } from "lucide-react";
 import GeneralSettings from "@/components/settings/GeneralSettings";
 import DomainsSettings from "@/components/settings/DomainsSettings";
 import KnowledgeSettings from "@/components/settings/KnowledgeSettings";
 import ConnectorsSettings from "@/components/settings/ConnectorsSettings";
 import GitHubSettings from "@/components/settings/GitHubSettings";
+import DeveloperSettings from "@/components/settings/DeveloperSettings";
 import TeamSettings from "@/components/settings/TeamSettings";
 import BillingSettings from "@/components/settings/BillingSettings";
 import PrivacySettings from "@/components/settings/PrivacySettings";
@@ -17,6 +18,7 @@ const projectMenuItems = [
   { id: "domains", label: "Domains & Hosting", icon: Globe },
   { id: "knowledge", label: "Knowledge", icon: BookOpen },
   { id: "connectors", label: "Connectors", icon: Plug },
+  { id: "developer", label: "Developer Settings", icon: Code2 },
   { id: "github", label: "GitHub", icon: GitBranch },
 ];
 
@@ -145,6 +147,8 @@ function renderContent(section: string) {
       return <KnowledgeSettings />;
     case "connectors":
       return <ConnectorsSettings />;
+    case "developer":
+      return <DeveloperSettings />;
     case "github":
       return <GitHubSettings />;
     case "team":
@@ -170,6 +174,7 @@ function getDescription(section: string): string {
     domains: "Configure custom domains and hosting for your application.",
     knowledge: "Add custom knowledge and guidelines to improve your app.",
     connectors: "Connect external services and data sources.",
+    developer: "Backend configuration, deployments, and Catalyst project details.",
     github: "Link and manage GitHub repositories for version control.",
     team: "Invite and manage team members in your organization.",
     billing: "View and manage your subscription, plans, and payment methods.",
