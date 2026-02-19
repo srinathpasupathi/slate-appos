@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plug, Plus, X, ExternalLink, Server } from "lucide-react";
+import { Plug, Plus, X, ExternalLink, Server, Check } from "lucide-react";
 
 const nativeConnectors = [
   { name: "Catalyst by Zoho", description: "Serverless platform for full-stack apps", connected: true, icon: "C" },
@@ -8,11 +8,18 @@ const nativeConnectors = [
   { name: "Shopify", description: "E-commerce storefront integration", connected: false, icon: "S" },
 ];
 
+const zohoMcpServers = [
+  { id: "crm-mcp", name: "Zoho CRM MCP", description: "Access CRM data, contacts, and deals", url: "https://mcp.zoho.com/crm" },
+  { id: "desk-mcp", name: "Zoho Desk MCP", description: "Support tickets and customer service", url: "https://mcp.zoho.com/desk" },
+  { id: "analytics-mcp", name: "Zoho Analytics MCP", description: "Dashboards, reports, and data insights", url: "https://mcp.zoho.com/analytics" },
+];
+
 const ConnectorsSettings = () => {
-  const [mcpStep, setMcpStep] = useState<"chooser" | "custom" | null>(null);
+  const [mcpStep, setMcpStep] = useState<"chooser" | "zoho" | "custom" | null>(null);
   const [mcpName, setMcpName] = useState("");
   const [mcpUrl, setMcpUrl] = useState("");
   const [mcpAuth, setMcpAuth] = useState("oauth");
+  const [selectedZohoMcp, setSelectedZohoMcp] = useState<string | null>(null);
 
   return (
     <div className="space-y-8">
@@ -72,7 +79,7 @@ const ConnectorsSettings = () => {
           <div className="relative w-full max-w-md bg-card border border-border rounded-2xl shadow-2xl p-6 animate-in zoom-in-95 fade-in-0 duration-200">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-base font-semibold text-foreground">
-                {mcpStep === "chooser" ? "Add MCP Server" : "Add Custom MCP Server"}
+                {mcpStep === "chooser" ? "Add MCP Server" : mcpStep === "zoho" ? "Configure with Zoho MCP" : "Add Custom MCP Server"}
               </h3>
               <button
                 onClick={() => setMcpStep(null)}
@@ -84,21 +91,18 @@ const ConnectorsSettings = () => {
 
             {mcpStep === "chooser" ? (
               <div className="space-y-3">
-                <a
-                  href="https://mcp.zoho.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full rounded-xl border border-border bg-card hover:bg-muted/50 p-4 flex items-center gap-4 transition-colors group block"
+                <button
+                  onClick={() => setMcpStep("zoho")}
+                  className="w-full rounded-xl border border-border bg-card hover:bg-muted/50 p-4 flex items-center gap-4 transition-colors text-left"
                 >
                   <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-sm shrink-0">
                     Z
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-foreground">Create via Zoho MCP</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">Build and deploy an MCP server using Zoho's MCP platform.</p>
+                    <p className="text-sm font-semibold text-foreground">Configure with Zoho MCP</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Choose from your existing Zoho MCP servers or create a new one.</p>
                   </div>
-                  <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-foreground shrink-0 transition-colors" />
-                </a>
+                </button>
 
                 <button
                   onClick={() => setMcpStep("custom")}
@@ -112,6 +116,63 @@ const ConnectorsSettings = () => {
                     <p className="text-xs text-muted-foreground mt-0.5">Connect your own remote MCP server with a URL and credentials.</p>
                   </div>
                 </button>
+              </div>
+            ) : mcpStep === "zoho" ? (
+              <div className="space-y-4">
+                <p className="text-xs text-muted-foreground">Select an MCP server from your Zoho account to connect.</p>
+                <div className="space-y-2">
+                  {zohoMcpServers.map((server) => (
+                    <button
+                      key={server.id}
+                      onClick={() => setSelectedZohoMcp(server.id)}
+                      className={`w-full text-left rounded-xl px-4 py-3 border transition-colors ${
+                        selectedZohoMcp === server.id
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:bg-muted/50"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`h-4 w-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          selectedZohoMcp === server.id ? "border-primary" : "border-muted-foreground/40"
+                        }`}>
+                          {selectedZohoMcp === server.id && (
+                            <div className="h-2 w-2 rounded-full bg-primary" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-foreground">{server.name}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">{server.description}</p>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                <a
+                  href="https://mcp.zoho.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+                >
+                  <Plus className="h-3 w-3" />
+                  Create a new MCP server on Zoho MCP
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+
+                <div className="flex items-center justify-end gap-3 pt-2 border-t border-border">
+                  <button
+                    onClick={() => { setMcpStep("chooser"); setSelectedZohoMcp(null); }}
+                    className="h-10 px-5 rounded-lg border border-input text-sm font-medium text-foreground hover:bg-muted transition-colors"
+                  >
+                    Back
+                  </button>
+                  <button
+                    disabled={!selectedZohoMcp}
+                    className="h-10 px-5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Add server
+                  </button>
+                </div>
               </div>
             ) : (
 
