@@ -1,4 +1,10 @@
-import { Server, ExternalLink, Link2, GitBranch } from "lucide-react";
+import { ExternalLink, Link2, GitBranch, MoreVertical, Pencil, RefreshCw, Settings2 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const DeveloperSettings = () => {
   return (
@@ -28,16 +34,6 @@ const DeveloperSettings = () => {
               <span className="text-xs text-muted-foreground">Project ID</span>
               <p className="text-sm font-mono text-foreground mt-0.5">4839201748302</p>
             </div>
-            <div>
-              <span className="text-xs text-muted-foreground">Environment</span>
-              <p className="mt-0.5">
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-600">Production</span>
-              </p>
-            </div>
-            <div>
-              <span className="text-xs text-muted-foreground">Region</span>
-              <p className="text-sm font-medium text-foreground mt-0.5">US (Ohio)</p>
-            </div>
           </div>
           <div className="pt-3 border-t border-border">
             <a
@@ -60,7 +56,9 @@ const DeveloperSettings = () => {
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">App Name</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">App URL</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">Deployment</th>
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">Environment</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">Status</th>
+                  <th className="w-10"></th>
                 </tr>
               </thead>
               <tbody>
@@ -78,10 +76,38 @@ const DeveloperSettings = () => {
                   </td>
                   <td className="px-4 py-3 font-mono text-xs text-muted-foreground">v2.4.1 — #a3f8c12</td>
                   <td className="px-4 py-3">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-600">
+                      Production
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
                     <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                       Live
                     </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="h-7 w-7 rounded-md flex items-center justify-center hover:bg-muted transition-colors">
+                          <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuItem className="gap-2 cursor-pointer">
+                          <Pencil className="h-3.5 w-3.5" />
+                          Edit App Details
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="gap-2 cursor-pointer">
+                          <RefreshCw className="h-3.5 w-3.5" />
+                          Change Deployment
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="gap-2 cursor-pointer">
+                          <Settings2 className="h-3.5 w-3.5" />
+                          Change Environment
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </td>
                 </tr>
               </tbody>
