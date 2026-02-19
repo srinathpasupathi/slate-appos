@@ -1,6 +1,6 @@
-import { Zap, ArrowUpRight, Plus, Server } from "lucide-react";
+import { Zap, ArrowUpRight, Plus, Server, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const BillingSettings = () => {
   const currentPlan = "Pro Plan";
@@ -22,6 +22,25 @@ const BillingSettings = () => {
 
   const [selectedAiBoost, setSelectedAiBoost] = useState<number | null>(null);
   const [selectedAppBoost, setSelectedAppBoost] = useState<number | null>(null);
+  const [capacityOpen, setCapacityOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const capacityOptions = [
+    { ai: 10, app: 5, label: "+$10 AI / +$5 App" },
+    { ai: 25, app: 10, label: "+$25 AI / +$10 App" },
+    { ai: 50, app: 25, label: "+$50 AI / +$25 App" },
+  ];
+  const [selectedCapacity, setSelectedCapacity] = useState<number | null>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setCapacityOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -127,58 +146,49 @@ const BillingSettings = () => {
       </div>
 
       {/* Expand Capacity */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* AI Capacity */}
-        <div className="rounded-xl border border-border p-5 space-y-3">
-          <h4 className="text-sm font-semibold text-foreground">Increase AI Capacity</h4>
-          <div className="flex gap-2">
-            {[10, 25, 50].map((amt) => (
-              <button
-                key={amt}
-                onClick={() => setSelectedAiBoost(selectedAiBoost === amt ? null : amt)}
-                className={`flex-1 rounded-lg border py-2 text-xs font-medium transition-colors ${
-                  selectedAiBoost === amt
-                    ? "border-primary bg-primary/5 text-primary"
-                    : "border-border text-muted-foreground hover:bg-muted/60"
-                }`}
-              >
-                +${amt}
-              </button>
-            ))}
+      <div className="rounded-xl border border-border p-5 space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h4 className="text-sm font-semibold text-foreground">Expand Capacity</h4>
+            <p className="text-xs text-muted-foreground mt-0.5">Add more AI and App usage to your current plan.</p>
           </div>
-          <Button size="sm" className="w-full gap-1.5" disabled={!selectedAiBoost}>
-            <Plus className="h-3.5 w-3.5" />
-            Add AI Capacity
-          </Button>
+          <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full flex items-center gap-1">
+            <Server className="h-2.5 w-2.5" />
+            App powered by Catalyst
+          </span>
         </div>
 
-        {/* App Usage Capacity */}
-        <div className="rounded-xl border border-border p-5 space-y-3">
-          <div className="flex items-center justify-between">
-            <h4 className="text-sm font-semibold text-foreground">Increase App Usage Capacity</h4>
-            <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full flex items-center gap-1">
-              <Server className="h-2.5 w-2.5" />
-              Powered by Catalyst
-            </span>
+        <div className="flex items-center gap-3">
+          <div className="relative flex-1" ref={dropdownRef}>
+            <button
+              onClick={() => setCapacityOpen(!capacityOpen)}
+              className="w-full flex items-center justify-between rounded-lg border border-border bg-background px-3 py-2.5 text-sm transition-colors hover:bg-muted/60"
+            >
+              <span className={selectedCapacity !== null ? "text-foreground" : "text-muted-foreground"}>
+                {selectedCapacity !== null ? capacityOptions[selectedCapacity].label : "Select capacity"}
+              </span>
+              <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${capacityOpen ? "rotate-180" : ""}`} />
+            </button>
+            {capacityOpen && (
+              <div className="absolute top-full left-0 right-0 mt-1 z-50 rounded-lg border border-border bg-popover shadow-md overflow-hidden">
+                {capacityOptions.map((opt, i) => (
+                  <button
+                    key={i}
+                    onClick={() => { setSelectedCapacity(i); setCapacityOpen(false); }}
+                    className={`w-full text-left px-3 py-2.5 text-sm transition-colors hover:bg-muted ${
+                      selectedCapacity === i ? "bg-muted text-foreground font-medium" : "text-muted-foreground"
+                    }`}
+                  >
+                    <span className="block">{opt.label}</span>
+                    <span className="text-[10px] opacity-70">${opt.ai} AI Usage + ${opt.app} App Usage</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-          <div className="flex gap-2">
-            {[5, 10, 25].map((amt) => (
-              <button
-                key={amt}
-                onClick={() => setSelectedAppBoost(selectedAppBoost === amt ? null : amt)}
-                className={`flex-1 rounded-lg border py-2 text-xs font-medium transition-colors ${
-                  selectedAppBoost === amt
-                    ? "border-primary bg-primary/5 text-primary"
-                    : "border-border text-muted-foreground hover:bg-muted/60"
-                }`}
-              >
-                +${amt}
-              </button>
-            ))}
-          </div>
-          <Button size="sm" className="w-full gap-1.5" disabled={!selectedAppBoost}>
+          <Button size="sm" className="gap-1.5 shrink-0" disabled={selectedCapacity === null}>
             <Plus className="h-3.5 w-3.5" />
-            Increase App Usage Capacity
+            Upgrade
           </Button>
         </div>
       </div>
