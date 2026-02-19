@@ -6,6 +6,8 @@ const plans = [
     tagline: "Get started and build your first AI apps",
     color: "hsl(142 50% 45%)",
     popular: false,
+    price: null,
+    breakdown: null,
     header: null,
     features: [
       "AI app generation",
@@ -24,6 +26,8 @@ const plans = [
     tagline: "Build and launch real apps",
     color: "hsl(45 90% 50%)",
     popular: true,
+    price: 15,
+    breakdown: "$10 AI + $5 App",
     header: "Everything in Free, plus:",
     features: [
       "Higher monthly AI usage",
@@ -42,6 +46,8 @@ const plans = [
     tagline: "Run production apps at scale",
     color: "hsl(210 80% 55%)",
     popular: false,
+    price: 30,
+    breakdown: "$25 AI + $5 App",
     header: "Everything in Builder, plus:",
     features: [
       "High monthly AI usage",
@@ -60,6 +66,8 @@ const plans = [
     tagline: "Advanced governance and scale",
     color: "hsl(270 60% 55%)",
     popular: false,
+    price: 100,
+    breakdown: "$75 AI + $25 App",
     header: "Everything in Pro, plus:",
     features: [
       "Unlimited apps",
@@ -110,6 +118,19 @@ const PricingCards = ({ currentPlan }: { currentPlan: string }) => {
                 <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
                   {plan.tagline}
                 </p>
+
+                {/* Price */}
+                <div className="mt-3">
+                  {plan.price != null ? (
+                    <>
+                      <span className="text-2xl font-bold text-foreground">${plan.price}</span>
+                      <span className="text-sm text-muted-foreground ml-1">/ mo</span>
+                      <p className="text-[10px] text-muted-foreground/70 mt-0.5">{plan.breakdown}</p>
+                    </>
+                  ) : (
+                    <span className="text-2xl font-bold text-foreground">$0</span>
+                  )}
+                </div>
               </div>
 
               {/* Current badge */}
