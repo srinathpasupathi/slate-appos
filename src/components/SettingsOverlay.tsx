@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
   X, Settings, Globe, BookOpen, Plug, GitBranch,
-  Users, CreditCard, ShieldCheck, ChevronRight, Code2,
+  Users, CreditCard, ShieldCheck, ChevronRight, Code2, Brain,
 } from "lucide-react";
 import GeneralSettings from "@/components/settings/GeneralSettings";
 import DomainsSettings from "@/components/settings/DomainsSettings";
@@ -12,6 +12,7 @@ import DeveloperSettings from "@/components/settings/DeveloperSettings";
 import TeamSettings from "@/components/settings/TeamSettings";
 import BillingSettings from "@/components/settings/BillingSettings";
 import PrivacySettings from "@/components/settings/PrivacySettings";
+import AIProvidersSettings from "@/components/settings/AIProvidersSettings";
 
 const projectMenuItems = [
   { id: "general", label: "General", icon: Settings },
@@ -25,6 +26,7 @@ const orgMenuItems = [
   { id: "team", label: "My Team", icon: Users },
   { id: "billing", label: "Plans & Billing", icon: CreditCard },
   { id: "privacy", label: "Privacy & Security", icon: ShieldCheck },
+  { id: "ai-providers", label: "AI Providers", icon: Brain },
 ];
 
 interface SettingsOverlayProps {
@@ -149,6 +151,8 @@ function renderContent(section: string) {
       return <BillingSettings />;
     case "privacy":
       return <PrivacySettings />;
+    case "ai-providers":
+      return <AIProvidersSettings />;
     default:
       return (
         <div className="rounded-xl border border-dashed border-border bg-muted/20 h-60 flex items-center justify-center">
@@ -171,6 +175,7 @@ function getDescription(section: string): string {
     team: "Invite and manage team members in your organization.",
     billing: "View and manage your subscription, plans, and payment methods.",
     privacy: "Configure security policies and privacy settings.",
+    "ai-providers": "Configure AI provider API keys and manage available models.",
   };
   return descriptions[section] || "";
 }
