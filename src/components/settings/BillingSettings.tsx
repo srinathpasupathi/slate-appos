@@ -4,13 +4,22 @@ import { useState, useRef, useEffect } from "react";
 
 const BillingSettings = () => {
   const currentPlan = "Pro Plan";
-  const aiUsed = 14.2;
-  const aiTotal = 20;
+
+  // AI free usage
+  const dailyFree = 1;
+  const monthlyFree = 5;
+  const freeUsedToday = 0.65; // of $1 daily
+  const freeUsedMonth = 3.20; // of $5 monthly total so far
+
+  // Paid AI usage (only kicks in after free is exhausted)
+  const paidAiUsed = 14.2;
+  const paidAiTotal = 20;
+
   const appUsed = 1.1;
   const appTotal = 5;
   const aiResetDate = "09 Mar";
   const appResetDate = "09 Mar";
-  const aiPercentage = (aiUsed / aiTotal) * 100;
+  const paidAiPercentage = (paidAiUsed / paidAiTotal) * 100;
   const appPercentage = (appUsed / appTotal) * 100;
 
   const plans = [
@@ -22,7 +31,7 @@ const BillingSettings = () => {
 
   const [aiDropdownOpen, setAiDropdownOpen] = useState(false);
   const [appDropdownOpen, setAppDropdownOpen] = useState(false);
-  const [selectedAiBoost, setSelectedAiBoost] = useState<number>(aiTotal);
+  const [selectedAiBoost, setSelectedAiBoost] = useState<number>(paidAiTotal);
   const [selectedAppBoost, setSelectedAppBoost] = useState<number>(appTotal);
   const aiRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<HTMLDivElement>(null);
@@ -64,24 +73,54 @@ const BillingSettings = () => {
       {/* Usage Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* AI Usage */}
-        <div className="rounded-xl border border-border p-5 space-y-3">
+        <div className="rounded-xl border border-border p-5 space-y-4">
           <div>
             <h4 className="text-sm font-semibold text-foreground">AI Usage</h4>
             <p className="text-xs text-muted-foreground mt-0.5">This billing cycle</p>
           </div>
-          <div className="flex items-end justify-between">
-            <div>
-              <span className="text-2xl font-bold text-foreground">${aiUsed.toFixed(2)}</span>
-              <span className="text-sm text-muted-foreground ml-1">/ ${aiTotal}</span>
+
+          {/* Free Usage Section */}
+          <div className="rounded-lg bg-muted/40 p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-foreground">Free Usage</span>
+              <span className="text-[10px] text-muted-foreground bg-background px-2 py-0.5 rounded-full">Applied first</span>
             </div>
-            <span className="text-xs font-medium text-muted-foreground">${(aiTotal - aiUsed).toFixed(2)} remaining</span>
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between text-[11px]">
+                <span className="text-muted-foreground">Daily free</span>
+                <span className="text-foreground font-medium">${freeUsedToday.toFixed(2)} / ${dailyFree} today</span>
+              </div>
+              <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                <div className="h-full rounded-full transition-all duration-500" style={{ width: `${(freeUsedToday / dailyFree) * 100}%`, backgroundColor: "hsl(142 50% 45%)" }} />
+              </div>
+              <div className="flex items-center justify-between text-[11px]">
+                <span className="text-muted-foreground">Monthly free</span>
+                <span className="text-foreground font-medium">${freeUsedMonth.toFixed(2)} / ${monthlyFree} this month</span>
+              </div>
+              <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                <div className="h-full rounded-full transition-all duration-500" style={{ width: `${(freeUsedMonth / monthlyFree) * 100}%`, backgroundColor: "hsl(142 50% 45%)" }} />
+              </div>
+            </div>
           </div>
-          <div className="h-2.5 bg-muted rounded-full overflow-hidden">
-            <div
-              className="h-full rounded-full transition-all duration-500"
-              style={{ width: `${aiPercentage}%`, backgroundColor: "hsl(210 80% 55%)" }}
-            />
+
+          {/* Paid Usage Section */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-foreground">Paid Usage</span>
+              <span className="text-[10px] text-muted-foreground">After free usage is exhausted</span>
+            </div>
+            <div className="flex items-end justify-between">
+              <div>
+                <span className="text-2xl font-bold text-foreground">${paidAiUsed.toFixed(2)}</span>
+                <span className="text-sm text-muted-foreground ml-1">/ ${paidAiTotal}</span>
+              </div>
+              <span className="text-xs font-medium text-muted-foreground">${(paidAiTotal - paidAiUsed).toFixed(2)} remaining</span>
+            </div>
+            <div className="h-2.5 bg-muted rounded-full overflow-hidden">
+              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${paidAiPercentage}%`, backgroundColor: "hsl(210 80% 55%)" }} />
+            </div>
           </div>
+
           <p className="text-[11px] text-muted-foreground">Used for app generation, edits, and AI actions.</p>
           <p className="text-[11px] text-muted-foreground/70">Resets on {aiResetDate}</p>
         </div>
@@ -164,7 +203,7 @@ const BillingSettings = () => {
               className="w-full flex items-center justify-between rounded-lg border border-border bg-background px-3 py-2.5 text-sm transition-colors hover:bg-muted/60"
             >
               <span className="text-foreground">
-                ${selectedAiBoost}{selectedAiBoost === aiTotal ? " (Current)" : ""}
+                ${selectedAiBoost}{selectedAiBoost === paidAiTotal ? " (Current)" : ""}
               </span>
               <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${aiDropdownOpen ? "rotate-180" : ""}`} />
             </button>
@@ -178,7 +217,7 @@ const BillingSettings = () => {
                       selectedAiBoost === amt ? "bg-muted text-foreground font-medium" : "text-muted-foreground"
                     }`}
                   >
-                    ${amt} AI Usage{amt === aiTotal ? " (Current)" : ""}
+                    ${amt} AI Usage{amt === paidAiTotal ? " (Current)" : ""}
                   </button>
                 ))}
               </div>
@@ -215,7 +254,7 @@ const BillingSettings = () => {
           </div>
         </div>
 
-        <Button size="sm" className="w-full gap-1.5" disabled={selectedAiBoost === aiTotal && selectedAppBoost === appTotal}>
+        <Button size="sm" className="w-full gap-1.5" disabled={selectedAiBoost === paidAiTotal && selectedAppBoost === appTotal}>
           <Plus className="h-3.5 w-3.5" />
           Upgrade
         </Button>
