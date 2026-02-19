@@ -1,4 +1,4 @@
-import { ExternalLink, Link2, GitBranch, MoreVertical, Pencil, RefreshCw, Settings2 } from "lucide-react";
+import { ExternalLink, Link2, GitBranch, MoreVertical, RefreshCw, Settings2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -94,10 +94,6 @@ const DeveloperSettings = () => {
                         </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-48">
-                        <DropdownMenuItem className="gap-2 cursor-pointer">
-                          <Pencil className="h-3.5 w-3.5" />
-                          Edit App Details
-                        </DropdownMenuItem>
                         <DropdownMenuItem className="gap-2 cursor-pointer">
                           <RefreshCw className="h-3.5 w-3.5" />
                           Change Deployment
