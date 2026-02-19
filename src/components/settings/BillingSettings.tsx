@@ -20,23 +20,20 @@ const BillingSettings = () => {
     { name: "Enterprise", ai: "Custom", app: "Custom" },
   ];
 
+  const [aiDropdownOpen, setAiDropdownOpen] = useState(false);
+  const [appDropdownOpen, setAppDropdownOpen] = useState(false);
   const [selectedAiBoost, setSelectedAiBoost] = useState<number | null>(null);
   const [selectedAppBoost, setSelectedAppBoost] = useState<number | null>(null);
-  const [capacityOpen, setCapacityOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const aiRef = useRef<HTMLDivElement>(null);
+  const appRef = useRef<HTMLDivElement>(null);
 
-  const capacityOptions = [
-    { ai: 10, app: 5, label: "+$10 AI / +$5 App" },
-    { ai: 25, app: 10, label: "+$25 AI / +$10 App" },
-    { ai: 50, app: 25, label: "+$50 AI / +$25 App" },
-  ];
-  const [selectedCapacity, setSelectedCapacity] = useState<number | null>(null);
+  const aiOptions = [10, 25, 50];
+  const appOptions = [5, 10, 25];
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setCapacityOpen(false);
-      }
+      if (aiRef.current && !aiRef.current.contains(e.target as Node)) setAiDropdownOpen(false);
+      if (appRef.current && !appRef.current.contains(e.target as Node)) setAppDropdownOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -158,39 +155,70 @@ const BillingSettings = () => {
           </span>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="relative flex-1" ref={dropdownRef}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {/* AI Usage dropdown */}
+          <div className="relative" ref={aiRef}>
+            <label className="text-xs text-muted-foreground mb-1 block">AI Usage</label>
             <button
-              onClick={() => setCapacityOpen(!capacityOpen)}
+              onClick={() => { setAiDropdownOpen(!aiDropdownOpen); setAppDropdownOpen(false); }}
               className="w-full flex items-center justify-between rounded-lg border border-border bg-background px-3 py-2.5 text-sm transition-colors hover:bg-muted/60"
             >
-              <span className={selectedCapacity !== null ? "text-foreground" : "text-muted-foreground"}>
-                {selectedCapacity !== null ? capacityOptions[selectedCapacity].label : "Select capacity"}
+              <span className={selectedAiBoost !== null ? "text-foreground" : "text-muted-foreground"}>
+                {selectedAiBoost !== null ? `+$${selectedAiBoost}` : "Select amount"}
               </span>
-              <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${capacityOpen ? "rotate-180" : ""}`} />
+              <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${aiDropdownOpen ? "rotate-180" : ""}`} />
             </button>
-            {capacityOpen && (
+            {aiDropdownOpen && (
               <div className="absolute top-full left-0 right-0 mt-1 z-50 rounded-lg border border-border bg-popover shadow-md overflow-hidden">
-                {capacityOptions.map((opt, i) => (
+                {aiOptions.map((amt) => (
                   <button
-                    key={i}
-                    onClick={() => { setSelectedCapacity(i); setCapacityOpen(false); }}
+                    key={amt}
+                    onClick={() => { setSelectedAiBoost(amt); setAiDropdownOpen(false); }}
                     className={`w-full text-left px-3 py-2.5 text-sm transition-colors hover:bg-muted ${
-                      selectedCapacity === i ? "bg-muted text-foreground font-medium" : "text-muted-foreground"
+                      selectedAiBoost === amt ? "bg-muted text-foreground font-medium" : "text-muted-foreground"
                     }`}
                   >
-                    <span className="block">{opt.label}</span>
-                    <span className="text-[10px] opacity-70">${opt.ai} AI Usage + ${opt.app} App Usage</span>
+                    +${amt} AI Usage
                   </button>
                 ))}
               </div>
             )}
           </div>
-          <Button size="sm" className="gap-1.5 shrink-0" disabled={selectedCapacity === null}>
-            <Plus className="h-3.5 w-3.5" />
-            Upgrade
-          </Button>
+
+          {/* App Usage dropdown */}
+          <div className="relative" ref={appRef}>
+            <label className="text-xs text-muted-foreground mb-1 block">App Usage</label>
+            <button
+              onClick={() => { setAppDropdownOpen(!appDropdownOpen); setAiDropdownOpen(false); }}
+              className="w-full flex items-center justify-between rounded-lg border border-border bg-background px-3 py-2.5 text-sm transition-colors hover:bg-muted/60"
+            >
+              <span className={selectedAppBoost !== null ? "text-foreground" : "text-muted-foreground"}>
+                {selectedAppBoost !== null ? `+$${selectedAppBoost}` : "Select amount"}
+              </span>
+              <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${appDropdownOpen ? "rotate-180" : ""}`} />
+            </button>
+            {appDropdownOpen && (
+              <div className="absolute top-full left-0 right-0 mt-1 z-50 rounded-lg border border-border bg-popover shadow-md overflow-hidden">
+                {appOptions.map((amt) => (
+                  <button
+                    key={amt}
+                    onClick={() => { setSelectedAppBoost(amt); setAppDropdownOpen(false); }}
+                    className={`w-full text-left px-3 py-2.5 text-sm transition-colors hover:bg-muted ${
+                      selectedAppBoost === amt ? "bg-muted text-foreground font-medium" : "text-muted-foreground"
+                    }`}
+                  >
+                    +${amt} App Usage
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
+
+        <Button size="sm" className="w-full gap-1.5" disabled={selectedAiBoost === null && selectedAppBoost === null}>
+          <Plus className="h-3.5 w-3.5" />
+          Upgrade
+        </Button>
       </div>
     </div>
   );
