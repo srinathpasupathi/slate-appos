@@ -7,7 +7,7 @@ import GeneralSettings from "@/components/settings/GeneralSettings";
 import DomainsSettings from "@/components/settings/DomainsSettings";
 import KnowledgeSettings from "@/components/settings/KnowledgeSettings";
 import ConnectorsSettings from "@/components/settings/ConnectorsSettings";
-import GitHubSettings from "@/components/settings/GitHubSettings";
+
 import DeveloperSettings from "@/components/settings/DeveloperSettings";
 import TeamSettings from "@/components/settings/TeamSettings";
 import BillingSettings from "@/components/settings/BillingSettings";
@@ -19,7 +19,6 @@ const projectMenuItems = [
   { id: "knowledge", label: "Knowledge", icon: BookOpen },
   { id: "connectors", label: "Connectors", icon: Plug },
   { id: "developer", label: "Developer Settings", icon: Code2 },
-  { id: "github", label: "GitHub", icon: GitBranch },
 ];
 
 const orgMenuItems = [
@@ -62,7 +61,7 @@ const SettingsOverlay = ({ open, onClose }: SettingsOverlayProps) => {
 
           <nav className="flex-1 px-3 pb-6 overflow-y-auto">
             <p className="px-3 mb-2 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-              Project Settings
+              App Settings
             </p>
             <div className="space-y-0.5 mb-6">
               {projectMenuItems.map((item) => (
@@ -149,8 +148,6 @@ function renderContent(section: string) {
       return <ConnectorsSettings />;
     case "developer":
       return <DeveloperSettings />;
-    case "github":
-      return <GitHubSettings />;
     case "team":
       return <TeamSettings />;
     case "billing":
@@ -175,7 +172,7 @@ function getDescription(section: string): string {
     knowledge: "Add custom knowledge and guidelines to improve your app.",
     connectors: "Connect external services and data sources.",
     developer: "Backend configuration, deployments, and Catalyst project details.",
-    github: "Link and manage GitHub repositories for version control.",
+    
     team: "Invite and manage team members in your organization.",
     billing: "View and manage your subscription, plans, and payment methods.",
     privacy: "Configure security policies and privacy settings.",
