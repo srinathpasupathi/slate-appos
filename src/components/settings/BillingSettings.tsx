@@ -61,21 +61,19 @@ const BillingSettings = () => {
             </div>
             <div>
               <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Current Plan</p>
-              <h4 className="text-xl font-semibold text-foreground mt-0.5">{currentPlan}</h4>
-              <p className="text-xs text-muted-foreground mt-1">Includes AI Usage and App Runtime.</p>
-              <div className="mt-3 flex items-baseline gap-3">
-                <span className="text-2xl font-bold text-foreground">${basePlan + (selectedAiBoost - paidAiTotal) + (selectedAppBoost - appTotal)}</span>
+              <div className="flex items-baseline gap-3 mt-0.5">
+                <h4 className="text-xl font-semibold text-foreground">{currentPlan}</h4>
+                <span className="text-muted-foreground">·</span>
+                <span className="text-xl font-bold text-foreground">${basePlan + (selectedAiBoost - paidAiTotal) + (selectedAppBoost - appTotal)}</span>
                 <span className="text-sm text-muted-foreground">/ mo</span>
               </div>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-[11px] text-muted-foreground">Base ${basePlan}</span>
+              <p className="text-xs text-muted-foreground mt-1">
+                Base ${basePlan}
                 {((selectedAiBoost - paidAiTotal) + (selectedAppBoost - appTotal)) > 0 && (
-                  <>
-                    <span className="text-[11px] text-muted-foreground">+</span>
-                    <span className="text-[11px] text-muted-foreground">Expanded ${(selectedAiBoost - paidAiTotal) + (selectedAppBoost - appTotal)}</span>
-                  </>
+                  <> + Expanded ${(selectedAiBoost - paidAiTotal) + (selectedAppBoost - appTotal)}</>
                 )}
-              </div>
+                {" · "}Includes AI Usage and App Runtime.
+              </p>
             </div>
           </div>
           <Button variant="outline" size="sm" className="gap-1.5">
