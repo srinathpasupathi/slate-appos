@@ -22,13 +22,13 @@ const BillingSettings = () => {
 
   const [aiDropdownOpen, setAiDropdownOpen] = useState(false);
   const [appDropdownOpen, setAppDropdownOpen] = useState(false);
-  const [selectedAiBoost, setSelectedAiBoost] = useState<number | null>(null);
-  const [selectedAppBoost, setSelectedAppBoost] = useState<number | null>(null);
+  const [selectedAiBoost, setSelectedAiBoost] = useState<number>(aiTotal);
+  const [selectedAppBoost, setSelectedAppBoost] = useState<number>(appTotal);
   const aiRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<HTMLDivElement>(null);
 
-  const aiOptions = [10, 25, 50];
-  const appOptions = [5, 10, 25];
+  const aiOptions = [20, 50, 100, 200];
+  const appOptions = [5, 15, 50, 100];
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -163,8 +163,8 @@ const BillingSettings = () => {
               onClick={() => { setAiDropdownOpen(!aiDropdownOpen); setAppDropdownOpen(false); }}
               className="w-full flex items-center justify-between rounded-lg border border-border bg-background px-3 py-2.5 text-sm transition-colors hover:bg-muted/60"
             >
-              <span className={selectedAiBoost !== null ? "text-foreground" : "text-muted-foreground"}>
-                {selectedAiBoost !== null ? `+$${selectedAiBoost}` : "Select amount"}
+              <span className="text-foreground">
+                ${selectedAiBoost}{selectedAiBoost === aiTotal ? " (Current)" : ""}
               </span>
               <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${aiDropdownOpen ? "rotate-180" : ""}`} />
             </button>
@@ -178,7 +178,7 @@ const BillingSettings = () => {
                       selectedAiBoost === amt ? "bg-muted text-foreground font-medium" : "text-muted-foreground"
                     }`}
                   >
-                    +${amt} AI Usage
+                    ${amt} AI Usage{amt === aiTotal ? " (Current)" : ""}
                   </button>
                 ))}
               </div>
@@ -192,8 +192,8 @@ const BillingSettings = () => {
               onClick={() => { setAppDropdownOpen(!appDropdownOpen); setAiDropdownOpen(false); }}
               className="w-full flex items-center justify-between rounded-lg border border-border bg-background px-3 py-2.5 text-sm transition-colors hover:bg-muted/60"
             >
-              <span className={selectedAppBoost !== null ? "text-foreground" : "text-muted-foreground"}>
-                {selectedAppBoost !== null ? `+$${selectedAppBoost}` : "Select amount"}
+              <span className="text-foreground">
+                ${selectedAppBoost}{selectedAppBoost === appTotal ? " (Current)" : ""}
               </span>
               <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${appDropdownOpen ? "rotate-180" : ""}`} />
             </button>
@@ -207,7 +207,7 @@ const BillingSettings = () => {
                       selectedAppBoost === amt ? "bg-muted text-foreground font-medium" : "text-muted-foreground"
                     }`}
                   >
-                    +${amt} App Usage
+                    ${amt} App Usage{amt === appTotal ? " (Current)" : ""}
                   </button>
                 ))}
               </div>
@@ -215,7 +215,7 @@ const BillingSettings = () => {
           </div>
         </div>
 
-        <Button size="sm" className="w-full gap-1.5" disabled={selectedAiBoost === null && selectedAppBoost === null}>
+        <Button size="sm" className="w-full gap-1.5" disabled={selectedAiBoost === aiTotal && selectedAppBoost === appTotal}>
           <Plus className="h-3.5 w-3.5" />
           Upgrade
         </Button>
