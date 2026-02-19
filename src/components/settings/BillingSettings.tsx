@@ -72,7 +72,7 @@ const BillingSettings = () => {
                 {((selectedAiBoost - paidAiTotal) + (selectedAppBoost - appTotal)) > 0 && (
                   <> + Expanded ${(selectedAiBoost - paidAiTotal) + (selectedAppBoost - appTotal)}</>
                 )}
-                {" · "}Includes AI Usage and App Runtime.
+                {" · "}Includes AI and App Usage.
               </p>
             </div>
           </div>
