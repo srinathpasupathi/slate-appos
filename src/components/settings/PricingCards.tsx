@@ -11,7 +11,7 @@ const plans = [
     header: null,
     features: [
       "AI app generation",
-      "Limited monthly AI usage",
+      "$5 monthly AI usage (up to $1/day)",
       "Up to 3 apps per org",
       "Default Slate hosting",
       "Basic knowledge base (small)",
