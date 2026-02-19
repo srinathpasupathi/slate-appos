@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect } from "react";
 
 const BillingSettings = () => {
-  const currentPlan = "Pro Plan";
+  const currentPlan = "Standard";
 
   // AI free usage
   const dailyFree = 1;
@@ -23,8 +23,8 @@ const BillingSettings = () => {
   const appPercentage = (appUsed / appTotal) * 100;
 
   const plans = [
-    { name: "Free Plan", ai: 5, app: 1 },
-    { name: "Pro Plan", ai: 20, app: 5 },
+    { name: "Free", ai: 5, app: 1 },
+    { name: "Standard", ai: 20, app: 5 },
     { name: "Professional", ai: 50, app: 15 },
     { name: "Enterprise", ai: "Custom", app: "Custom" },
   ];
