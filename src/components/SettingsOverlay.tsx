@@ -3,10 +3,15 @@ import {
   X, Settings, Globe, BookOpen, Plug, GitBranch,
   Users, CreditCard, ShieldCheck, ChevronRight,
 } from "lucide-react";
+import GeneralSettings from "@/components/settings/GeneralSettings";
+import DomainsSettings from "@/components/settings/DomainsSettings";
+import KnowledgeSettings from "@/components/settings/KnowledgeSettings";
+import ConnectorsSettings from "@/components/settings/ConnectorsSettings";
+import GitHubSettings from "@/components/settings/GitHubSettings";
 
 const projectMenuItems = [
   { id: "general", label: "General", icon: Settings },
-  { id: "domains", label: "Domains", icon: Globe },
+  { id: "domains", label: "Domains & Hosting", icon: Globe },
   { id: "knowledge", label: "Knowledge", icon: BookOpen },
   { id: "connectors", label: "Connectors", icon: Plug },
   { id: "github", label: "GitHub", icon: GitBranch },
@@ -30,13 +35,11 @@ const SettingsOverlay = ({ open, onClose }: SettingsOverlayProps) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in-0 duration-200"
         onClick={onClose}
       />
 
-      {/* Settings panel */}
       <div className="relative w-[calc(100%-64px)] h-[calc(100%-64px)] max-w-[1200px] max-h-[800px] bg-card border border-border rounded-2xl shadow-2xl flex overflow-hidden animate-in zoom-in-95 fade-in-0 duration-200">
         {/* Left sidebar */}
         <div className="w-[260px] border-r border-border bg-muted/30 flex flex-col">
@@ -51,7 +54,6 @@ const SettingsOverlay = ({ open, onClose }: SettingsOverlayProps) => {
           </div>
 
           <nav className="flex-1 px-3 pb-6 overflow-y-auto">
-            {/* Project Settings */}
             <p className="px-3 mb-2 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
               Project Settings
             </p>
@@ -75,7 +77,6 @@ const SettingsOverlay = ({ open, onClose }: SettingsOverlayProps) => {
               ))}
             </div>
 
-            {/* Org Settings */}
             <p className="px-3 mb-2 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
               Org Settings
             </p>
@@ -104,19 +105,24 @@ const SettingsOverlay = ({ open, onClose }: SettingsOverlayProps) => {
         {/* Right content */}
         <div className="flex-1 flex flex-col overflow-y-auto">
           <div className="px-8 py-6 border-b border-border">
-            <h3 className="text-xl font-semibold text-foreground capitalize">
-              {[...projectMenuItems, ...orgMenuItems].find((i) => i.id === activeSection)?.label}
-            </h3>
-            <p className="text-sm text-muted-foreground mt-1">
-              {getDescription(activeSection)}
-            </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-semibold text-foreground capitalize">
+                  {[...projectMenuItems, ...orgMenuItems].find((i) => i.id === activeSection)?.label}
+                </h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {getDescription(activeSection)}
+                </p>
+              </div>
+              {activeSection === "connectors" && (
+                <span className="text-xs text-muted-foreground font-medium bg-muted px-3 py-1.5 rounded-full">
+                  Powered by Zoho MCP
+                </span>
+              )}
+            </div>
           </div>
           <div className="flex-1 px-8 py-6">
-            <div className="rounded-xl border border-dashed border-border bg-muted/20 h-60 flex items-center justify-center">
-              <p className="text-sm text-muted-foreground">
-                {[...projectMenuItems, ...orgMenuItems].find((i) => i.id === activeSection)?.label} settings will appear here
-              </p>
-            </div>
+            {renderContent(activeSection)}
           </div>
         </div>
       </div>
@@ -124,11 +130,34 @@ const SettingsOverlay = ({ open, onClose }: SettingsOverlayProps) => {
   );
 };
 
+function renderContent(section: string) {
+  switch (section) {
+    case "general":
+      return <GeneralSettings />;
+    case "domains":
+      return <DomainsSettings />;
+    case "knowledge":
+      return <KnowledgeSettings />;
+    case "connectors":
+      return <ConnectorsSettings />;
+    case "github":
+      return <GitHubSettings />;
+    default:
+      return (
+        <div className="rounded-xl border border-dashed border-border bg-muted/20 h-60 flex items-center justify-center">
+          <p className="text-sm text-muted-foreground">
+            {section.charAt(0).toUpperCase() + section.slice(1)} settings coming soon
+          </p>
+        </div>
+      );
+  }
+}
+
 function getDescription(section: string): string {
   const descriptions: Record<string, string> = {
     general: "Manage your project's basic configuration and preferences.",
-    domains: "Configure custom domains for your deployed applications.",
-    knowledge: "Manage knowledge bases and context for AI-powered features.",
+    domains: "Configure custom domains and hosting for your application.",
+    knowledge: "Add custom knowledge and guidelines to improve your app.",
     connectors: "Connect external services and data sources.",
     github: "Link and manage GitHub repositories for version control.",
     team: "Invite and manage team members in your organization.",
