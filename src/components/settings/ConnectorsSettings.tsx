@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plug, Plus, X, ExternalLink, Server, Check } from "lucide-react";
+import { Plug, Plus, X, ExternalLink, Server, Check, Trash2 } from "lucide-react";
 
 const nativeConnectors = [
   { name: "Catalyst by Zoho", description: "Serverless platform for full-stack apps", connected: true, icon: "C" },
@@ -14,12 +14,45 @@ const zohoMcpServers = [
   { id: "analytics-mcp", name: "Zoho Analytics MCP", description: "Dashboards, reports, and data insights", url: "https://mcp.zoho.com/analytics" },
 ];
 
+interface ConnectedMcp {
+  id: string;
+  name: string;
+  url: string;
+  source: "zoho" | "custom";
+  auth: string;
+}
+
 const ConnectorsSettings = () => {
   const [mcpStep, setMcpStep] = useState<"chooser" | "zoho" | "custom" | null>(null);
   const [mcpName, setMcpName] = useState("");
   const [mcpUrl, setMcpUrl] = useState("");
   const [mcpAuth, setMcpAuth] = useState("oauth");
   const [selectedZohoMcp, setSelectedZohoMcp] = useState<string | null>(null);
+  const [connectedMcps, setConnectedMcps] = useState<ConnectedMcp[]>([]);
+
+  const handleAddZohoMcp = () => {
+    if (!selectedZohoMcp) return;
+    const server = zohoMcpServers.find((s) => s.id === selectedZohoMcp);
+    if (!server) return;
+    if (connectedMcps.some((m) => m.id === server.id)) return;
+    setConnectedMcps((prev) => [...prev, { id: server.id, name: server.name, url: server.url, source: "zoho", auth: "oauth" }]);
+    setSelectedZohoMcp(null);
+    setMcpStep(null);
+  };
+
+  const handleAddCustomMcp = () => {
+    if (!mcpName.trim() || !mcpUrl.trim()) return;
+    const id = `custom-${Date.now()}`;
+    setConnectedMcps((prev) => [...prev, { id, name: mcpName, url: mcpUrl, source: "custom", auth: mcpAuth }]);
+    setMcpName("");
+    setMcpUrl("");
+    setMcpAuth("oauth");
+    setMcpStep(null);
+  };
+
+  const handleRemoveMcp = (id: string) => {
+    setConnectedMcps((prev) => prev.filter((m) => m.id !== id));
+  };
 
   return (
     <div className="space-y-8">
@@ -64,12 +97,42 @@ const ConnectorsSettings = () => {
           </button>
         </div>
 
-        {/* Empty state */}
-        <div className="rounded-xl border border-dashed border-border bg-muted/20 p-8 flex flex-col items-center justify-center text-center">
-          <Server className="h-8 w-8 text-muted-foreground/50 mb-3" />
-          <p className="text-sm font-medium text-muted-foreground mb-1">No remote MCP servers connected</p>
-          <p className="text-xs text-muted-foreground">Add your own MCP server to extend Slate's capabilities.</p>
-        </div>
+        {connectedMcps.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-border bg-muted/20 p-8 flex flex-col items-center justify-center text-center">
+            <Server className="h-8 w-8 text-muted-foreground/50 mb-3" />
+            <p className="text-sm font-medium text-muted-foreground mb-1">No remote MCP servers connected</p>
+            <p className="text-xs text-muted-foreground">Add your own MCP server to extend Slate's capabilities.</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {connectedMcps.map((mcp) => (
+              <div key={mcp.id} className="rounded-xl border border-border bg-card p-4 flex items-center gap-3">
+                <div className={`h-10 w-10 rounded-lg flex items-center justify-center font-bold text-sm shrink-0 ${
+                  mcp.source === "zoho" ? "bg-primary/10 text-primary" : "bg-muted text-foreground"
+                }`}>
+                  {mcp.source === "zoho" ? "Z" : <Server className="h-5 w-5" />}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-foreground">{mcp.name}</p>
+                  <p className="text-xs text-muted-foreground font-mono truncate">{mcp.url}</p>
+                </div>
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-muted-foreground capitalize shrink-0">
+                  {mcp.auth}
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600 shrink-0">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  Connected
+                </span>
+                <button
+                  onClick={() => handleRemoveMcp(mcp.id)}
+                  className="h-8 w-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Add MCP Server Popup */}
@@ -121,31 +184,44 @@ const ConnectorsSettings = () => {
               <div className="space-y-4">
                 <p className="text-xs text-muted-foreground">Select an MCP server from your Zoho account to connect.</p>
                 <div className="space-y-2">
-                  {zohoMcpServers.map((server) => (
-                    <button
-                      key={server.id}
-                      onClick={() => setSelectedZohoMcp(server.id)}
-                      className={`w-full text-left rounded-xl px-4 py-3 border transition-colors ${
-                        selectedZohoMcp === server.id
-                          ? "border-primary bg-primary/5"
-                          : "border-border hover:bg-muted/50"
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className={`h-4 w-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                          selectedZohoMcp === server.id ? "border-primary" : "border-muted-foreground/40"
-                        }`}>
-                          {selectedZohoMcp === server.id && (
-                            <div className="h-2 w-2 rounded-full bg-primary" />
-                          )}
+                  {zohoMcpServers.map((server) => {
+                    const alreadyAdded = connectedMcps.some((m) => m.id === server.id);
+                    return (
+                      <button
+                        key={server.id}
+                        onClick={() => !alreadyAdded && setSelectedZohoMcp(server.id)}
+                        disabled={alreadyAdded}
+                        className={`w-full text-left rounded-xl px-4 py-3 border transition-colors ${
+                          alreadyAdded
+                            ? "border-border bg-muted/30 opacity-60 cursor-not-allowed"
+                            : selectedZohoMcp === server.id
+                            ? "border-primary bg-primary/5"
+                            : "border-border hover:bg-muted/50"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`h-4 w-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                            alreadyAdded ? "border-emerald-500" : selectedZohoMcp === server.id ? "border-primary" : "border-muted-foreground/40"
+                          }`}>
+                            {alreadyAdded ? (
+                              <Check className="h-2.5 w-2.5 text-emerald-500" />
+                            ) : selectedZohoMcp === server.id ? (
+                              <div className="h-2 w-2 rounded-full bg-primary" />
+                            ) : null}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <p className="text-sm font-semibold text-foreground">{server.name}</p>
+                              {alreadyAdded && (
+                                <span className="text-[10px] font-medium text-emerald-600">Added</span>
+                              )}
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-0.5">{server.description}</p>
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-foreground">{server.name}</p>
-                          <p className="text-xs text-muted-foreground mt-0.5">{server.description}</p>
-                        </div>
-                      </div>
-                    </button>
-                  ))}
+                      </button>
+                    );
+                  })}
                 </div>
 
                 <a
@@ -168,6 +244,7 @@ const ConnectorsSettings = () => {
                   </button>
                   <button
                     disabled={!selectedZohoMcp}
+                    onClick={handleAddZohoMcp}
                     className="h-10 px-5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Add server
@@ -251,7 +328,10 @@ const ConnectorsSettings = () => {
                 >
                   Back
                 </button>
-                <button className="h-10 px-5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors">
+                <button
+                  onClick={handleAddCustomMcp}
+                  className="h-10 px-5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
+                >
                   Add &amp; authorize
                 </button>
               </div>
