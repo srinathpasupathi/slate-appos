@@ -120,11 +120,6 @@ const SettingsOverlay = ({ open, onClose }: SettingsOverlayProps) => {
                   {getDescription(activeSection)}
                 </p>
               </div>
-              {activeSection === "connectors" && (
-                <span className="text-xs text-muted-foreground font-medium bg-muted px-3 py-1.5 rounded-full">
-                  Powered by Zoho MCP
-                </span>
-              )}
             </div>
           </div>
           <div className="flex-1 px-8 py-6">

@@ -3,6 +3,7 @@ import { Plug, Plus, X, ExternalLink, Server, Check, Trash2 } from "lucide-react
 
 const nativeConnectors = [
   { name: "Catalyst by Zoho", description: "Serverless platform for full-stack apps", connected: true, icon: "C" },
+  { name: "Zoho MCP", description: "Model Context Protocol server by Zoho", connected: true, icon: "Z" },
   { name: "Zoho CRM", description: "Customer relationship management", connected: false, icon: "Z" },
   { name: "Vertical Studio", description: "Low-code app development platform", connected: false, icon: "V" },
   { name: "Shopify", description: "E-commerce storefront integration", connected: false, icon: "S" },
