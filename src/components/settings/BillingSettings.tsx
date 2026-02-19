@@ -1,6 +1,7 @@
 import { Zap, ArrowUpRight, Plus, Server, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect } from "react";
+import PricingCards from "./PricingCards";
 
 const BillingSettings = () => {
   const currentPlan = "Standard";
@@ -156,30 +157,7 @@ const BillingSettings = () => {
       </div>
 
       {/* Available Plans */}
-      <div className="rounded-xl border border-dashed border-border bg-muted/20 p-5">
-        <p className="text-sm font-medium text-foreground mb-3">Available Plans</p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`rounded-lg border p-3 text-center text-sm transition-colors ${
-                plan.name === currentPlan
-                  ? "border-primary bg-primary/5 text-primary font-semibold"
-                  : "border-border text-muted-foreground"
-              }`}
-            >
-              <span className="block">{plan.name}</span>
-              {plan.name === currentPlan && (
-                <p className="text-[10px] mt-0.5 font-normal">Current</p>
-              )}
-              <div className="mt-2 space-y-0.5 text-[10px] opacity-80">
-                <p>${plan.ai} AI Usage / mo</p>
-                <p>${plan.app} App Usage / mo</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <PricingCards currentPlan={currentPlan} />
 
       {/* Expand Capacity */}
       <div className="rounded-xl border border-border p-5 space-y-4">
