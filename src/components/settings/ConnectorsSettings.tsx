@@ -9,7 +9,7 @@ const nativeConnectors = [
 ];
 
 const ConnectorsSettings = () => {
-  const [showMcpForm, setShowMcpForm] = useState(false);
+  const [mcpStep, setMcpStep] = useState<"chooser" | "custom" | null>(null);
   const [mcpName, setMcpName] = useState("");
   const [mcpUrl, setMcpUrl] = useState("");
   const [mcpAuth, setMcpAuth] = useState("oauth");
@@ -49,7 +49,7 @@ const ConnectorsSettings = () => {
         <div className="flex items-center justify-between mb-4">
           <h4 className="text-sm font-semibold text-foreground">Remote MCP Servers</h4>
           <button
-            onClick={() => setShowMcpForm(true)}
+            onClick={() => setMcpStep("chooser")}
             className="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors flex items-center gap-1.5"
           >
             <Plus className="h-3.5 w-3.5" />
@@ -66,19 +66,54 @@ const ConnectorsSettings = () => {
       </section>
 
       {/* Add MCP Server Popup */}
-      {showMcpForm && (
+      {mcpStep !== null && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowMcpForm(false)} />
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMcpStep(null)} />
           <div className="relative w-full max-w-md bg-card border border-border rounded-2xl shadow-2xl p-6 animate-in zoom-in-95 fade-in-0 duration-200">
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-base font-semibold text-foreground">Add MCP Server</h3>
+              <h3 className="text-base font-semibold text-foreground">
+                {mcpStep === "chooser" ? "Add MCP Server" : "Add Custom MCP Server"}
+              </h3>
               <button
-                onClick={() => setShowMcpForm(false)}
+                onClick={() => setMcpStep(null)}
                 className="h-8 w-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
+
+            {mcpStep === "chooser" ? (
+              <div className="space-y-3">
+                <a
+                  href="https://mcp.zoho.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full rounded-xl border border-border bg-card hover:bg-muted/50 p-4 flex items-center gap-4 transition-colors group block"
+                >
+                  <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-sm shrink-0">
+                    Z
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-foreground">Create via Zoho MCP</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Build and deploy an MCP server using Zoho's MCP platform.</p>
+                  </div>
+                  <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-foreground shrink-0 transition-colors" />
+                </a>
+
+                <button
+                  onClick={() => setMcpStep("custom")}
+                  className="w-full rounded-xl border border-border bg-card hover:bg-muted/50 p-4 flex items-center gap-4 transition-colors text-left"
+                >
+                  <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                    <Server className="h-5 w-5 text-foreground" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-foreground">Add Custom MCP Server</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Connect your own remote MCP server with a URL and credentials.</p>
+                  </div>
+                </button>
+              </div>
+            ) : (
 
             <div className="space-y-4">
               <div>
@@ -150,16 +185,17 @@ const ConnectorsSettings = () => {
 
               <div className="flex items-center justify-end gap-3 mt-2">
                 <button
-                  onClick={() => setShowMcpForm(false)}
+                  onClick={() => setMcpStep("chooser")}
                   className="h-10 px-5 rounded-lg border border-input text-sm font-medium text-foreground hover:bg-muted transition-colors"
                 >
-                  Cancel
+                  Back
                 </button>
                 <button className="h-10 px-5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors">
                   Add &amp; authorize
                 </button>
               </div>
             </div>
+            )}
           </div>
         </div>
       )}
