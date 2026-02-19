@@ -125,12 +125,12 @@ const BillingSettings = () => {
             <div className="flex items-end justify-between">
               <div>
                 <span className="text-2xl font-bold text-foreground">${paidAiUsed.toFixed(2)}</span>
-                <span className="text-sm text-muted-foreground ml-1">/ ${paidAiTotal}</span>
+                <span className="text-sm text-muted-foreground ml-1">/ ${selectedAiBoost}</span>
               </div>
-              <span className="text-xs font-medium text-muted-foreground">${(paidAiTotal - paidAiUsed).toFixed(2)} remaining</span>
+              <span className="text-xs font-medium text-muted-foreground">${(selectedAiBoost - paidAiUsed).toFixed(2)} remaining</span>
             </div>
             <div className="h-2.5 bg-muted rounded-full overflow-hidden">
-              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${paidAiPercentage}%`, backgroundColor: "hsl(210 80% 55%)" }} />
+              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${(paidAiUsed / selectedAiBoost) * 100}%`, backgroundColor: "hsl(210 80% 55%)" }} />
             </div>
           </div>
 
@@ -153,14 +153,14 @@ const BillingSettings = () => {
           <div className="flex items-end justify-between">
             <div>
               <span className="text-2xl font-bold text-foreground">${appUsed.toFixed(2)}</span>
-              <span className="text-sm text-muted-foreground ml-1">/ ${appTotal}</span>
+              <span className="text-sm text-muted-foreground ml-1">/ ${selectedAppBoost}</span>
             </div>
-            <span className="text-xs font-medium text-muted-foreground">${(appTotal - appUsed).toFixed(2)} remaining</span>
+            <span className="text-xs font-medium text-muted-foreground">${(selectedAppBoost - appUsed).toFixed(2)} remaining</span>
           </div>
           <div className="h-2.5 bg-muted rounded-full overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-500"
-              style={{ width: `${appPercentage}%`, backgroundColor: "hsl(172 50% 45%)" }}
+              style={{ width: `${(appUsed / selectedAppBoost) * 100}%`, backgroundColor: "hsl(172 50% 45%)" }}
             />
           </div>
           <p className="text-[11px] text-muted-foreground">Hosting, functions, storage, and app traffic.</p>
