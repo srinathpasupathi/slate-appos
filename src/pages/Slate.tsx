@@ -6,6 +6,7 @@ import {
 import zohoLogo from "@/assets/zoho-logo.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import SettingsOverlay from "@/components/SettingsOverlay";
 
 const recentProjects = [
   { name: "CRM Analytics Dashboard" },
@@ -161,6 +162,7 @@ const SlateDashboard = () => {
   const [prompt, setPrompt] = useState("");
   const [activeTab, setActiveTab] = useState("my");
   const [mode, setMode] = useState<"business" | "developer">("business");
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const navigate = useNavigate();
 
   const tabs = [
@@ -197,10 +199,6 @@ const SlateDashboard = () => {
           <SidebarLink icon={Users} label="Shared with me" />
         </nav>
 
-        {/* Profile popover at bottom */}
-        <div className="border-t border-border px-3 py-3">
-          <ProfilePopover />
-        </div>
       </aside>
 
       {/* Main content */}
@@ -238,7 +236,10 @@ const SlateDashboard = () => {
               <Bell className="h-4.5 w-4.5" />
             </button>
             {/* Settings */}
-            <button className="p-2 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
+            <button
+              onClick={() => setSettingsOpen(true)}
+              className="p-2 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+            >
               <Settings className="h-4.5 w-4.5" />
             </button>
             {/* Org popover */}
@@ -361,6 +362,9 @@ const SlateDashboard = () => {
         </div>
         )}
       </main>
+
+      {/* Settings overlay */}
+      <SettingsOverlay open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </div>
   );
 };
