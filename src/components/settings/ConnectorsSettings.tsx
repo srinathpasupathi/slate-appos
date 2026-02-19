@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Plug, Plus, X, ExternalLink, Server } from "lucide-react";
 
 const nativeConnectors = [
-  { name: "Zoho CRM", description: "Customer relationship management", connected: true, icon: "Z" },
+  { name: "Catalyst by Zoho", description: "Serverless platform for full-stack apps", connected: true, icon: "C" },
+  { name: "Zoho CRM", description: "Customer relationship management", connected: false, icon: "Z" },
   { name: "Vertical Studio", description: "Low-code app development platform", connected: false, icon: "V" },
-  { name: "Catalyst by Zoho", description: "Serverless platform for full-stack apps", connected: false, icon: "C" },
   { name: "Shopify", description: "E-commerce storefront integration", connected: false, icon: "S" },
 ];
 
