@@ -233,16 +233,16 @@ const SlateDashboard = () => {
               Developer
             </button>
             </div>
-            {/* Org popover */}
-            <ProfilePopover variant="topbar" />
-            {/* Settings */}
-            <button className="p-2 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
-              <Settings className="h-4.5 w-4.5" />
-            </button>
             {/* Notifications */}
             <button className="p-2 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
               <Bell className="h-4.5 w-4.5" />
             </button>
+            {/* Settings */}
+            <button className="p-2 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
+              <Settings className="h-4.5 w-4.5" />
+            </button>
+            {/* Org popover */}
+            <ProfilePopover variant="topbar" />
           </div>
         </div>
 
