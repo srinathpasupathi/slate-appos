@@ -74,7 +74,7 @@ const DeveloperSettings = () => {
                       <span className="font-mono text-xs text-foreground">franchise-sales.onslate.in</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">v2.4.1 — #a3f8c12</td>
+                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">initial - #4a835e1</td>
                   <td className="px-4 py-3">
                     <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-600">
                       Production
