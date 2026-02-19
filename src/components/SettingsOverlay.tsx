@@ -8,6 +8,9 @@ import DomainsSettings from "@/components/settings/DomainsSettings";
 import KnowledgeSettings from "@/components/settings/KnowledgeSettings";
 import ConnectorsSettings from "@/components/settings/ConnectorsSettings";
 import GitHubSettings from "@/components/settings/GitHubSettings";
+import TeamSettings from "@/components/settings/TeamSettings";
+import BillingSettings from "@/components/settings/BillingSettings";
+import PrivacySettings from "@/components/settings/PrivacySettings";
 
 const projectMenuItems = [
   { id: "general", label: "General", icon: Settings },
@@ -142,6 +145,12 @@ function renderContent(section: string) {
       return <ConnectorsSettings />;
     case "github":
       return <GitHubSettings />;
+    case "team":
+      return <TeamSettings />;
+    case "billing":
+      return <BillingSettings />;
+    case "privacy":
+      return <PrivacySettings />;
     default:
       return (
         <div className="rounded-xl border border-dashed border-border bg-muted/20 h-60 flex items-center justify-center">
