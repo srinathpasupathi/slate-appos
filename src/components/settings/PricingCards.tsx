@@ -27,7 +27,7 @@ const plans = [
     color: "hsl(45 90% 50%)",
     popular: true,
     price: 15,
-    breakdown: "$10 AI + $5 App",
+    breakdown: "$10 AI + $5 App Runtime",
     header: "Everything in Free, plus:",
     features: [
       "Higher monthly AI usage",
@@ -47,7 +47,7 @@ const plans = [
     color: "hsl(210 80% 55%)",
     popular: false,
     price: 30,
-    breakdown: "$25 AI + $5 App",
+    breakdown: "$25 AI + $5 App Runtime",
     header: "Everything in Builder, plus:",
     features: [
       "High monthly AI usage",
