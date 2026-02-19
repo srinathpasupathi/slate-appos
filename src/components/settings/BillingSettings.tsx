@@ -13,8 +13,8 @@ const BillingSettings = () => {
   const freeUsedMonth = 3.20; // of $5 monthly total so far
 
   // Paid AI usage (only kicks in after free is exhausted)
-  const paidAiUsed = 14.2;
-  const paidAiTotal = 20;
+  const paidAiUsed = 6.8;
+  const paidAiTotal = 10;
 
   const appUsed = 1.1;
   const appTotal = 5;
@@ -37,7 +37,7 @@ const BillingSettings = () => {
   const aiRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<HTMLDivElement>(null);
 
-  const aiOptions = [20, 50, 100, 200];
+  const aiOptions = [10, 25, 50, 100];
   const appOptions = [5, 15, 50, 100];
 
   useEffect(() => {
