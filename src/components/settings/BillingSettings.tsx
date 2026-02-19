@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import PricingCards from "./PricingCards";
 
 const BillingSettings = () => {
-  const currentPlan = "Standard";
+  const currentPlan = "Builder";
 
   // AI free usage
   const dailyFree = 1;
