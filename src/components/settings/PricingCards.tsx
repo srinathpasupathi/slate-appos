@@ -61,22 +61,6 @@ const plans = [
       "Priority support",
     ],
   },
-  {
-    name: "Enterprise",
-    tagline: "Advanced governance and scale",
-    color: "hsl(270 60% 55%)",
-    popular: false,
-    price: 100,
-    breakdown: "$75 AI + $25 App",
-    header: "Everything in Pro, plus:",
-    features: [
-      "Unlimited apps",
-      "Unlimited knowledge base",
-      "Custom AI usage limits",
-      "Custom runtime capacity",
-      "Dedicated support",
-    ],
-  },
 ];
 
 const PricingCards = ({ currentPlan }: { currentPlan: string }) => {
