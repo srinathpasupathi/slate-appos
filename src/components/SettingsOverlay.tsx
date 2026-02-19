@@ -44,16 +44,18 @@ const SettingsOverlay = ({ open, onClose }: SettingsOverlayProps) => {
       />
 
       <div className="relative w-[calc(100%-64px)] h-[calc(100%-64px)] max-w-[1200px] max-h-[800px] bg-card border border-border rounded-2xl shadow-2xl flex overflow-hidden animate-in zoom-in-95 fade-in-0 duration-200">
+        {/* Close button - top right */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10 h-8 w-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+        >
+          <X className="h-4 w-4" />
+        </button>
+
         {/* Left sidebar */}
         <div className="w-[260px] border-r border-border bg-muted/30 flex flex-col">
-          <div className="flex items-center justify-between px-6 py-5">
+          <div className="px-6 py-5">
             <h2 className="text-lg font-semibold text-foreground">Settings</h2>
-            <button
-              onClick={onClose}
-              className="h-8 w-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            >
-              <X className="h-4 w-4" />
-            </button>
           </div>
 
           <nav className="flex-1 px-3 pb-6 overflow-y-auto">
