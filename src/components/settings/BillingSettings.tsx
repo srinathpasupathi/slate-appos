@@ -5,6 +5,7 @@ import PricingCards from "./PricingCards";
 
 const BillingSettings = () => {
   const currentPlan = "Builder";
+  const basePlan = 15; // Builder base price
 
   // AI free usage
   const dailyFree = 1;
@@ -61,7 +62,20 @@ const BillingSettings = () => {
             <div>
               <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Current Plan</p>
               <h4 className="text-xl font-semibold text-foreground mt-0.5">{currentPlan}</h4>
-              <p className="text-xs text-muted-foreground mt-1">Includes AI Usage and App Usage.</p>
+              <p className="text-xs text-muted-foreground mt-1">Includes AI Usage and App Runtime.</p>
+              <div className="mt-3 flex items-baseline gap-3">
+                <span className="text-2xl font-bold text-foreground">${basePlan + (selectedAiBoost - paidAiTotal) + (selectedAppBoost - appTotal)}</span>
+                <span className="text-sm text-muted-foreground">/ mo</span>
+              </div>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-[11px] text-muted-foreground">Base ${basePlan}</span>
+                {((selectedAiBoost - paidAiTotal) + (selectedAppBoost - appTotal)) > 0 && (
+                  <>
+                    <span className="text-[11px] text-muted-foreground">+</span>
+                    <span className="text-[11px] text-muted-foreground">Expanded ${(selectedAiBoost - paidAiTotal) + (selectedAppBoost - appTotal)}</span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
           <Button variant="outline" size="sm" className="gap-1.5">
