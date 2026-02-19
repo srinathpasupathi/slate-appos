@@ -1,4 +1,4 @@
-import { Server, ExternalLink, Link2 } from "lucide-react";
+import { Server, ExternalLink, Link2, GitBranch, Plus } from "lucide-react";
 
 const DeveloperSettings = () => {
   return (
@@ -7,7 +7,7 @@ const DeveloperSettings = () => {
       <section>
         <h4 className="text-sm font-semibold text-foreground mb-4">Connected Backend</h4>
         <div className="rounded-xl border border-border bg-card p-5">
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-sm shrink-0">
               C
             </div>
@@ -103,6 +103,36 @@ const DeveloperSettings = () => {
               </tr>
             </tbody>
           </table>
+        </div>
+      </section>
+
+      {/* GitHub Integration */}
+      <section>
+        <h4 className="text-sm font-semibold text-foreground mb-4">GitHub Integration</h4>
+        <div className="rounded-xl border border-border bg-card p-5">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center shrink-0">
+              <GitBranch className="h-5 w-5 text-foreground" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-foreground">Connect your GitHub account</p>
+              <p className="text-xs text-muted-foreground">
+                Link a repository for version control, automatic syncing, and collaborative development.
+              </p>
+            </div>
+            <button className="h-9 px-4 rounded-lg bg-foreground text-background text-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-2 shrink-0">
+              <GitBranch className="h-4 w-4" />
+              Connect
+            </button>
+          </div>
+
+          {/* Connected Accounts */}
+          <div className="border-t border-border pt-4">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Connected Accounts</p>
+            <div className="rounded-lg border border-dashed border-border bg-muted/20 p-4 flex items-center justify-center">
+              <p className="text-xs text-muted-foreground">No GitHub accounts connected yet.</p>
+            </div>
+          </div>
         </div>
       </section>
     </div>
