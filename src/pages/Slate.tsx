@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, Briefcase, GitBranch, ChevronUp, ChevronDown, Copy, Rocket,
+  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, Briefcase, GitBranch, ChevronUp, ChevronDown, Copy, Rocket, Bell,
 } from "lucide-react";
 import zohoLogo from "@/assets/zoho-logo.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -206,8 +206,10 @@ const SlateDashboard = () => {
       {/* Main content */}
       <main className="flex-1 flex flex-col overflow-y-auto">
         {/* Top bar with mode toggle */}
-        <div className="flex items-center justify-end px-6 py-3">
-          <div className="flex items-center gap-1 bg-muted rounded-full p-1">
+        <div className="flex items-center justify-between px-6 py-3">
+          <div />
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1 bg-muted rounded-full p-1">
             <button
               onClick={() => setMode("business")}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
@@ -229,6 +231,17 @@ const SlateDashboard = () => {
             >
               <Code2 className="h-3.5 w-3.5" />
               Developer
+            </button>
+            </div>
+            {/* Org popover */}
+            <ProfilePopover variant="topbar" />
+            {/* Settings */}
+            <button className="p-2 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
+              <Settings className="h-4.5 w-4.5" />
+            </button>
+            {/* Notifications */}
+            <button className="p-2 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
+              <Bell className="h-4.5 w-4.5" />
             </button>
           </div>
         </div>
@@ -352,17 +365,25 @@ const SlateDashboard = () => {
   );
 };
 
-const ProfilePopover = () => (
+const ProfilePopover = ({ variant = "sidebar" }: { variant?: "sidebar" | "topbar" }) => (
   <Popover>
     <PopoverTrigger asChild>
-      <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors">
-        <Avatar className="h-8 w-8">
-          <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">S</AvatarFallback>
-        </Avatar>
-        <span className="text-sm font-medium text-foreground truncate">Srinath</span>
-      </button>
+      {variant === "sidebar" ? (
+        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-colors">
+          <Avatar className="h-8 w-8">
+            <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">S</AvatarFallback>
+          </Avatar>
+          <span className="text-sm font-medium text-foreground truncate">Srinath</span>
+        </button>
+      ) : (
+        <button className="p-1 rounded-full hover:bg-muted transition-colors">
+          <Avatar className="h-7 w-7">
+            <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">S</AvatarFallback>
+          </Avatar>
+        </button>
+      )}
     </PopoverTrigger>
-    <PopoverContent side="top" align="start" className="w-72 p-0">
+    <PopoverContent side={variant === "sidebar" ? "top" : "bottom"} align={variant === "sidebar" ? "start" : "end"} className="w-72 p-0">
       {/* Workspace info */}
       <div className="p-4 border-b border-border">
         <div className="flex items-center gap-3 mb-3">
@@ -375,9 +396,6 @@ const ProfilePopover = () => (
           </div>
         </div>
         <div className="flex gap-2">
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-muted text-xs font-medium text-foreground hover:bg-muted/80 transition-colors">
-            <Settings className="h-3.5 w-3.5" /> Settings
-          </button>
           <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-muted text-xs font-medium text-foreground hover:bg-muted/80 transition-colors">
             <UserPlus className="h-3.5 w-3.5" /> Invite members
           </button>
