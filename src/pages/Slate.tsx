@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, Briefcase, GitBranch, ChevronUp, ChevronDown, Copy, Rocket, Bell,
+  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, GitBranch, ChevronUp, ChevronDown, Copy, Rocket, Bell,
 } from "lucide-react";
 import zohoLogo from "@/assets/zoho-logo.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -161,7 +161,7 @@ const DevAppCard = ({ app, defaultOpen = false }: { app: DevApp; defaultOpen?: b
 const SlateDashboard = () => {
   const [prompt, setPrompt] = useState("");
   const [activeTab, setActiveTab] = useState("my");
-  const [mode, setMode] = useState<"business" | "developer">("business");
+  
   const [settingsOpen, setSettingsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -207,30 +207,6 @@ const SlateDashboard = () => {
         <div className="flex items-center justify-between px-6 py-3">
           <div />
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1 bg-muted rounded-full p-1">
-            <button
-              onClick={() => setMode("business")}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
-                mode === "business"
-                  ? "bg-card text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <Briefcase className="h-3.5 w-3.5" />
-              Business
-            </button>
-            <button
-              onClick={() => setMode("developer")}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
-                mode === "developer"
-                  ? "bg-card text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <Code2 className="h-3.5 w-3.5" />
-              Developer
-            </button>
-            </div>
             {/* Notifications */}
             <button className="p-2 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
               <Bell className="h-4.5 w-4.5" />
@@ -247,8 +223,8 @@ const SlateDashboard = () => {
           </div>
         </div>
 
-        {mode === "business" ? (
-        <>
+        
+        
         {/* Hero gradient area - fills available space */}
         <div className="relative flex-1 flex flex-col min-h-[60vh]">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/8 to-primary/5 pointer-events-none" />
@@ -333,34 +309,7 @@ const SlateDashboard = () => {
             ))}
           </div>
         </div>
-        </>
-        ) : (
-        /* Developer Mode */
-        <div className="flex-1 flex flex-col px-6 lg:px-16 py-6 overflow-y-auto">
-          {/* Top bar */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search app"
-                className="h-9 w-60 rounded-lg border border-input bg-card pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-              />
-            </div>
-            <button className="h-9 px-5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors flex items-center gap-2">
-              <Rocket className="h-4 w-4" />
-              Deploy App
-            </button>
-          </div>
-
-          {/* App list */}
-          <div className="space-y-4">
-            {devApps.map((app, i) => (
-              <DevAppCard key={app.name} app={app} defaultOpen={i === 0} />
-            ))}
-          </div>
-        </div>
-        )}
+        
       </main>
 
       {/* Settings overlay */}
