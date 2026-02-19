@@ -104,31 +104,61 @@ const ConnectorsSettings = () => {
               </div>
 
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">Authentication</label>
-                <div className="flex flex-wrap gap-2">
+                <label className="text-sm font-medium text-foreground mb-3 block">Authentication</label>
+                <div className="space-y-1">
                   {[
-                    { id: "oauth", label: "OAuth" },
-                    { id: "bearer", label: "Bearer Token / API Key" },
-                    { id: "none", label: "No Authentication" },
+                    { id: "oauth", label: "OAuth (default)", description: "Authorize in the next step." },
+                    { id: "bearer", label: "Bearer token or API key", description: "Use a bearer token or API key if the MCP server doesn't support OAuth." },
+                    { id: "none", label: "No authentication", description: "Connect without credentials if the server doesn't require authentication." },
                   ].map((opt) => (
                     <button
                       key={opt.id}
                       onClick={() => setMcpAuth(opt.id)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                      className={`w-full text-left rounded-xl px-4 py-3 border transition-colors ${
                         mcpAuth === opt.id
-                          ? "bg-primary text-primary-foreground border-primary"
-                          : "bg-muted text-muted-foreground border-border hover:text-foreground"
+                          ? "border-primary bg-primary/5"
+                          : "border-transparent hover:bg-muted/50"
                       }`}
                     >
-                      {opt.label}
+                      <div className="flex items-start gap-3">
+                        <div className={`mt-0.5 h-4 w-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          mcpAuth === opt.id ? "border-primary" : "border-muted-foreground/40"
+                        }`}>
+                          {mcpAuth === opt.id && (
+                            <div className="h-2 w-2 rounded-full bg-primary" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">{opt.label}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{opt.description}</p>
+                        </div>
+                      </div>
                     </button>
                   ))}
                 </div>
+
+                {mcpAuth === "bearer" && (
+                  <div className="mt-3 pl-7">
+                    <input
+                      type="password"
+                      placeholder="Enter API key or bearer token"
+                      className="w-full h-10 rounded-lg border border-input bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+                )}
               </div>
 
-              <button className="w-full h-10 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors mt-2">
-                Add &amp; Authorize
-              </button>
+              <div className="flex items-center justify-end gap-3 mt-2">
+                <button
+                  onClick={() => setShowMcpForm(false)}
+                  className="h-10 px-5 rounded-lg border border-input text-sm font-medium text-foreground hover:bg-muted transition-colors"
+                >
+                  Cancel
+                </button>
+                <button className="h-10 px-5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors">
+                  Add &amp; authorize
+                </button>
+              </div>
             </div>
           </div>
         </div>
