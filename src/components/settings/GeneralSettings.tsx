@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { Globe, Trash2, User, Clock, Link2, Zap } from "lucide-react";
 
-const categories = ["Template", "Internal Tools", "Website", "B2B App", "Prototype"];
-
 const GeneralSettings = () => {
-  const [category, setCategory] = useState("Internal Tools");
   const [visibility, setVisibility] = useState<"published" | "not_published">("published");
 
   return (
@@ -35,26 +32,6 @@ const GeneralSettings = () => {
       <section>
         <h4 className="text-sm font-semibold text-foreground mb-4">Configuration</h4>
         <div className="space-y-5">
-          {/* App Category */}
-          <div className="rounded-xl border border-border bg-card p-5">
-            <label className="text-sm font-medium text-foreground mb-3 block">App Category</label>
-            <div className="flex flex-wrap gap-2">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-                    category === cat
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-muted text-muted-foreground border-border hover:text-foreground hover:border-foreground/20"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* App Visibility */}
           <div className="rounded-xl border border-border bg-card p-5">
             <label className="text-sm font-medium text-foreground mb-3 block">App Visibility</label>
