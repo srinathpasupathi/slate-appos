@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Send, Paperclip, Code, Eye, FolderTree, Terminal, Share2, Github, Upload, Link2, Globe, UserPlus, ChevronRight, Pencil, Plus, ExternalLink } from "lucide-react";
+import { ArrowLeft, Send, Paperclip, Code, Eye, FolderTree, Terminal, Share2, Github, Upload, Link2, Globe, UserPlus, ChevronRight, Pencil, Plus, ExternalLink, ChevronDown, Home, CreditCard, Settings, Sun, Moon, HelpCircle, Zap, Server } from "lucide-react";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import slateLogo from "@/assets/slate-logo.svg";
 import GenerationProgress from "@/components/slate/GenerationProgress";
 import StreamingCode from "@/components/slate/StreamingCode";
@@ -37,8 +38,11 @@ const SlateWorkspace = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationDone, setGenerationDone] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const appName = "Franchise Sales App";
 
   const handleGenerationComplete = useCallback(() => {
     setIsGenerating(false);
@@ -144,22 +148,94 @@ const SlateWorkspace = () => {
         <ResizablePanel defaultSize={35} minSize={25} maxSize={55}>
           <div className="flex flex-col h-full border-r border-border">
             {/* Header */}
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card shrink-0">
-              <button
-                onClick={() => navigate("/slate")}
-                className="h-8 w-8 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </button>
-              <div className="flex items-center gap-3">
-                <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
-                <span className="text-base font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Slate</span>
-              </div>
-              <div className="ml-auto flex items-center gap-1">
-                <span className="text-[10px] font-semibold bg-primary/15 text-primary px-2 py-0.5 rounded-full">
-                  Slate
-                </span>
-              </div>
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-card shrink-0">
+              <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center gap-1.5 text-base font-bold text-foreground hover:text-foreground/80 transition-colors" style={{ fontFamily: "'Lato', sans-serif" }}>
+                    {appName}
+                    <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-[280px] p-0 bg-card border-border">
+                  {/* Go back to Home */}
+                  <button
+                    onClick={() => navigate("/slate")}
+                    className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors"
+                  >
+                    <Home className="h-4 w-4 text-muted-foreground" />
+                    Go back to Home
+                  </button>
+
+                  <DropdownMenuSeparator className="bg-border" />
+
+                  {/* Billing Plan */}
+                  <div className="px-4 py-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Current Plan</span>
+                      <span className="text-xs font-semibold bg-primary/15 text-primary px-2 py-0.5 rounded-full">Builder – $15/mo</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground flex items-center gap-1 mt-1">
+                      <Zap className="h-3 w-3 text-amber-500" />
+                      Using free daily usage
+                    </p>
+                  </div>
+
+                  <DropdownMenuSeparator className="bg-border" />
+
+                  {/* AI Usage */}
+                  <div className="px-4 py-3 space-y-3">
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-xs font-medium text-foreground">AI Usage</span>
+                        <span className="text-[11px] text-muted-foreground">$0.42 / $1.00 daily</span>
+                      </div>
+                      <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+                        <div className="h-full rounded-full bg-primary transition-all" style={{ width: "42%" }} />
+                      </div>
+                    </div>
+
+                    {/* App Usage */}
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-xs font-medium text-foreground">App Usage</span>
+                        <span className="text-[11px] text-muted-foreground">$1.20 / $5.00 monthly</span>
+                      </div>
+                      <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+                        <div className="h-full rounded-full bg-teal-500 transition-all" style={{ width: "24%" }} />
+                      </div>
+                    </div>
+                  </div>
+
+                  <DropdownMenuSeparator className="bg-border" />
+
+                  {/* Settings, Appearance, Help */}
+                  <div className="py-1">
+                    <button className="flex items-center gap-3 w-full px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors">
+                      <Settings className="h-4 w-4 text-muted-foreground" />
+                      Settings
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsDarkMode(!isDarkMode);
+                        document.documentElement.classList.toggle("dark");
+                      }}
+                      className="flex items-center justify-between w-full px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors"
+                    >
+                      <span className="flex items-center gap-3">
+                        {isDarkMode ? <Moon className="h-4 w-4 text-muted-foreground" /> : <Sun className="h-4 w-4 text-muted-foreground" />}
+                        Appearance
+                      </span>
+                      <span className="text-[11px] text-muted-foreground">{isDarkMode ? "Dark" : "Light"}</span>
+                    </button>
+                    <button className="flex items-center gap-3 w-full px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors">
+                      <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                      Help
+                    </button>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
 
             {/* Messages */}
