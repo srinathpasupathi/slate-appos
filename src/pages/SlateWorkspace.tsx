@@ -10,6 +10,7 @@ import GenerationProgress from "@/components/slate/GenerationProgress";
 import StreamingCode from "@/components/slate/StreamingCode";
 import PreviewLoading from "@/components/slate/PreviewLoading";
 import GeneratedPreview from "@/components/slate/GeneratedPreview";
+import SettingsOverlay from "@/components/SettingsOverlay";
 
 interface Message {
   id: string;
@@ -39,6 +40,7 @@ const SlateWorkspace = () => {
   const [generationDone, setGenerationDone] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -209,8 +211,8 @@ const SlateWorkspace = () => {
 
                     {/* Usage indicator */}
                     <div className="flex items-center gap-1.5 pt-1">
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      <span className="text-[11px] text-muted-foreground">Currently using free daily usage</span>
+                      <span className="h-1.5 w-1.5 rounded-full bg-destructive animate-pulse" />
+                      <span className="text-[11px] text-destructive">Currently using free daily usage</span>
                     </div>
                   </div>
 
@@ -218,7 +220,10 @@ const SlateWorkspace = () => {
 
                   {/* Settings, Appearance, Help */}
                   <div className="py-1">
-                    <button className="flex items-center gap-3 w-full px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors">
+                    <button
+                      onClick={() => setSettingsOpen(true)}
+                      className="flex items-center gap-3 w-full px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors"
+                    >
                       <Settings className="h-4 w-4 text-muted-foreground" />
                       Settings
                     </button>
@@ -436,6 +441,7 @@ const SlateWorkspace = () => {
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
+      <SettingsOverlay open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </div>
   );
 };
