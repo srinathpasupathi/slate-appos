@@ -494,7 +494,16 @@ const SharePanel = () => {
   const [inviteRole, setInviteRole] = useState("Editor");
   const [showRoleDropdown, setShowRoleDropdown] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
-  const roles = ["Viewer", "Editor", "Admin"];
+  const [invitedPeople, setInvitedPeople] = useState<{ email: string; role: string }[]>([]);
+  const roles = ["App Owner", "Editor", "Viewer"];
+
+  const handleInvite = () => {
+    if (inviteEmail.trim()) {
+      setInvitedPeople((prev) => [...prev, { email: inviteEmail.trim(), role: inviteRole }]);
+      setInviteEmail("");
+      setInviteRole("Editor");
+    }
+  };
 
   return (
     <div className="py-4">
@@ -534,7 +543,10 @@ const SharePanel = () => {
                   </div>
                 )}
               </div>
-              <button className="h-7 px-3 rounded-md bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors">
+              <button
+                onClick={handleInvite}
+                className="h-7 px-3 rounded-md bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors"
+              >
                 Invite
               </button>
             </div>
@@ -550,6 +562,20 @@ const SharePanel = () => {
           </div>
           <span className="text-xs text-muted-foreground">Owner</span>
         </div>
+        {invitedPeople.map((person, idx) => (
+          <div key={idx} className="flex items-center justify-between py-2 px-1">
+            <div className="flex items-center gap-3">
+              <span className="h-8 w-8 rounded-full bg-muted text-[11px] font-bold text-muted-foreground flex items-center justify-center uppercase">
+                {person.email.charAt(0)}
+              </span>
+              <div className="flex flex-col">
+                <span className="text-sm text-foreground">{person.email}</span>
+                <span className="text-xs text-muted-foreground">Invited</span>
+              </div>
+            </div>
+            <span className="text-xs text-muted-foreground">{person.role}</span>
+          </div>
+        ))}
       </div>
       <div className="px-4 pt-2 space-y-2">
         <div className="border-t border-border pt-2">
