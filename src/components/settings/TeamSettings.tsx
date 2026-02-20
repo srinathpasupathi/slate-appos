@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MoreHorizontal, Plus, X, ChevronDown, ChevronRight } from "lucide-react";
+import { MoreHorizontal, Plus, X, ChevronDown, ChevronRight, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,7 +13,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 
 const orgRoles = ["Admin", "Member"] as const;
@@ -184,8 +184,15 @@ const TeamSettings = () => {
               <TableHead className="text-xs">Role</TableHead>
               <TableHead className="text-xs">App Access</TableHead>
               <TableHead className="text-xs">Joined</TableHead>
-              <TableHead className="text-xs text-right">Total Usage</TableHead>
-              <TableHead className="text-xs text-right">AI Usage Limit</TableHead>
+              <TableHead className="text-xs text-right">Total AI Usage</TableHead>
+              <TableHead className="text-xs text-right">
+                <span className="inline-flex items-center gap-1">
+                  AI Usage Limit
+                  <span title="Per month" className="inline-flex">
+                    <Info className="h-3 w-3 text-muted-foreground" />
+                  </span>
+                </span>
+              </TableHead>
               <TableHead className="text-xs w-10" />
             </TableRow>
           </TableHeader>
@@ -228,7 +235,7 @@ const TeamSettings = () => {
                       )}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">{member.joined}</TableCell>
-                    <TableCell className="text-sm text-right font-medium text-foreground">{member.usage}</TableCell>
+                    <TableCell className="text-sm text-right font-medium text-foreground">${member.usage}</TableCell>
                     <TableCell className="text-sm text-right font-medium text-foreground">${member.creditLimit}</TableCell>
                     <TableCell>
                       <DropdownMenu>
@@ -382,9 +389,10 @@ const TeamSettings = () => {
         <DialogContent className="sm:max-w-[360px]">
           <DialogHeader>
             <DialogTitle>Update AI Usage Limit</DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground">This limit applies per month only.</DialogDescription>
           </DialogHeader>
           <div className="space-y-1.5 py-2">
-            <label className="text-sm font-medium text-foreground">AI Usage Limit ($)</label>
+            <label className="text-sm font-medium text-foreground">Monthly AI Usage Limit ($)</label>
             <Input type="number" value={editCreditValue} onChange={(e) => setEditCreditValue(e.target.value)} />
           </div>
           <DialogFooter>
