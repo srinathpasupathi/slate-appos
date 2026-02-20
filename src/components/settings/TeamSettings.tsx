@@ -58,8 +58,9 @@ const TeamSettings = () => {
   const [inviteAppAccess, setInviteAppAccess] = useState<AppAccess[]>([]);
   const [editCreditId, setEditCreditId] = useState<string | null>(null);
   const [editCreditValue, setEditCreditValue] = useState("");
-  const [editRoleId, setEditRoleId] = useState<string | null>(null);
-  const [editRoleValue, setEditRoleValue] = useState("");
+  const [editMemberId, setEditMemberId] = useState<string | null>(null);
+  const [editMemberRole, setEditMemberRole] = useState("");
+  const [editMemberAppAccess, setEditMemberAppAccess] = useState<AppAccess[]>([]);
   const [expandedMember, setExpandedMember] = useState<string | null>(null);
 
   const isPerAppRole = (role: string) => role === "Member";
@@ -119,9 +120,46 @@ const TeamSettings = () => {
     setEditCreditId(null);
   };
 
+  const handleOpenEdit = (member: Member) => {
+    setEditMemberId(member.id);
+    setEditMemberRole(member.role);
+    setEditMemberAppAccess([...member.appAccess]);
+  };
+
+  const handleAddAppToEdit = () => {
+    const usedIds = editMemberAppAccess.map((a) => a.appId);
+    const next = availableApps.find((a) => !usedIds.includes(a.id));
+    if (next) {
+      setEditMemberAppAccess((prev) => [...prev, { appId: next.id, appName: next.name, role: "Editor" }]);
+    }
+  };
+
+  const handleRemoveAppFromEdit = (appId: string) => {
+    setEditMemberAppAccess((prev) => prev.filter((a) => a.appId !== appId));
+  };
+
+  const handleUpdateEditAppRole = (appId: string, role: string) => {
+    setEditMemberAppAccess((prev) => prev.map((a) => a.appId === appId ? { ...a, role } : a));
+  };
+
+  const handleUpdateEditApp = (oldAppId: string, newAppId: string) => {
+    const app = availableApps.find((a) => a.id === newAppId);
+    if (!app) return;
+    setEditMemberAppAccess((prev) => prev.map((a) => a.appId === oldAppId ? { ...a, appId: newAppId, appName: app.name } : a));
+  };
+
+  const handleSaveEdit = () => {
+    if (!editMemberId) return;
+    setMembers((prev) => prev.map((m) =>
+      m.id === editMemberId
+        ? { ...m, role: editMemberRole, appAccess: isPerAppRole(editMemberRole) ? editMemberAppAccess : [] }
+        : m
+    ));
+    setEditMemberId(null);
+  };
+
   const handleSaveRole = (id: string, role: string) => {
     setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, role, appAccess: isAllAccessRole(role) ? [] : m.appAccess } : m)));
-    setEditRoleId(null);
   };
 
   return (
@@ -203,8 +241,8 @@ const TeamSettings = () => {
                           <DropdownMenuItem onClick={() => { setEditCreditId(member.id); setEditCreditValue(String(member.creditLimit)); }}>
                             Update Credit Limit
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => { setEditRoleId(member.id); setEditRoleValue(member.role); }}>
-                            Change Role
+                          <DropdownMenuItem onClick={() => handleOpenEdit(member)}>
+                            Edit
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={() => handleRemove(member.id)}>
@@ -356,28 +394,95 @@ const TeamSettings = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Role Dialog */}
-      <Dialog open={!!editRoleId} onOpenChange={() => setEditRoleId(null)}>
-        <DialogContent className="sm:max-w-[360px]">
+      {/* Edit Member Dialog */}
+      <Dialog open={!!editMemberId} onOpenChange={() => setEditMemberId(null)}>
+        <DialogContent className="sm:max-w-[480px]">
           <DialogHeader>
-            <DialogTitle>Change Role</DialogTitle>
+            <DialogTitle>Edit Member</DialogTitle>
           </DialogHeader>
-          <div className="space-y-1.5 py-2">
-            <label className="text-sm font-medium text-foreground">Role</label>
-            <Select value={editRoleValue} onValueChange={setEditRoleValue}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {orgRoles.map((r) => (
-                  <SelectItem key={r} value={r}>{r}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="space-y-4 py-2">
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium text-foreground">Role</label>
+              <Select value={editMemberRole} onValueChange={(val) => { setEditMemberRole(val); if (isAllAccessRole(val)) setEditMemberAppAccess([]); }}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {orgRoles.map((r) => (
+                    <SelectItem key={r} value={r}>{r}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {isAllAccessRole(editMemberRole) && (
+                <p className="text-xs text-muted-foreground mt-1">Admins have access to all apps by default.</p>
+              )}
+            </div>
+
+            {isPerAppRole(editMemberRole) && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-medium text-foreground">App Access</label>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={handleAddAppToEdit}
+                    disabled={editMemberAppAccess.length >= availableApps.length}
+                    className="gap-1 h-7 text-xs"
+                  >
+                    <Plus className="h-3 w-3" /> Add App
+                  </Button>
+                </div>
+
+                {editMemberAppAccess.length === 0 && (
+                  <p className="text-xs text-muted-foreground py-2">No apps added yet. Click "Add App" to assign per-app access.</p>
+                )}
+
+                {editMemberAppAccess.map((access) => {
+                  const usedIds = editMemberAppAccess.filter((a) => a.appId !== access.appId).map((a) => a.appId);
+                  return (
+                    <div key={access.appId} className="flex items-center gap-2 p-2 rounded-lg border border-border bg-muted/30">
+                      <div className="flex-1">
+                        <Select value={access.appId} onValueChange={(val) => handleUpdateEditApp(access.appId, val)}>
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {availableApps
+                              .filter((a) => !usedIds.includes(a.id))
+                              .map((a) => (
+                                <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="w-32">
+                        <Select value={access.role} onValueChange={(val) => handleUpdateEditAppRole(access.appId, val)}>
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {appRoles.map((r) => (
+                              <SelectItem key={r} value={r}>{r}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <button
+                        onClick={() => handleRemoveAppFromEdit(access.appId)}
+                        className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditRoleId(null)}>Cancel</Button>
-            <Button onClick={() => editRoleId && handleSaveRole(editRoleId, editRoleValue)}>Save</Button>
+            <Button variant="outline" onClick={() => setEditMemberId(null)}>Cancel</Button>
+            <Button onClick={handleSaveEdit}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
