@@ -44,6 +44,7 @@ const SlateWorkspace = () => {
   const [settingsInitialTab, setSettingsInitialTab] = useState<string | undefined>(undefined);
   const [publishOpen, setPublishOpen] = useState(false);
   const [githubPopoverOpen, setGithubPopoverOpen] = useState(false);
+  const [appMenuOpen, setAppMenuOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -156,7 +157,7 @@ const SlateWorkspace = () => {
             <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-card shrink-0">
               <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
 
-              <DropdownMenu>
+              <DropdownMenu open={appMenuOpen} onOpenChange={setAppMenuOpen}>
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-1.5 text-base font-bold text-foreground hover:text-foreground/80 transition-colors" style={{ fontFamily: "'Lato', sans-serif" }}>
                     {appName}
@@ -224,7 +225,7 @@ const SlateWorkspace = () => {
                   {/* Settings, Appearance, Help */}
                   <div className="py-1">
                     <button
-                      onClick={() => setSettingsOpen(true)}
+                      onClick={() => { setAppMenuOpen(false); setSettingsOpen(true); }}
                       className="flex items-center gap-3 w-full px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors"
                     >
                       <Settings className="h-4 w-4 text-muted-foreground" />
