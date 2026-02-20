@@ -64,13 +64,13 @@ const DomainsSettings = () => {
           </button>
 
           {/* Purchase domain */}
-          <button className="rounded-xl border border-border bg-card p-5 text-left hover:border-primary/30 hover:shadow-sm transition-all group">
+          <a href="https://zoho.com/domains" target="_blank" rel="noreferrer" className="rounded-xl border border-border bg-card p-5 text-left hover:border-primary/30 hover:shadow-sm transition-all group block">
             <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
               <ShoppingCart className="h-5 w-5 text-primary" />
             </div>
             <p className="text-sm font-semibold text-foreground mb-1">Purchase New Domain</p>
-            <p className="text-xs text-muted-foreground">Search and register a new domain directly from Slate.</p>
-          </button>
+            <p className="text-xs text-muted-foreground">Search and register a new domain directly from Zoho Domains.</p>
+          </a>
         </div>
       </section>
 
