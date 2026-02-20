@@ -489,42 +489,78 @@ const CodeLine = ({ num, text }: { num: number; text: string }) => (
 );
 
 /* ---------- Share Panel ---------- */
-const SharePanel = () => (
-  <div className="py-4">
-    <h3 className="text-base font-semibold text-foreground px-4 mb-3">Share app</h3>
-    <div className="px-4 mb-4">
-      <div className="h-9 rounded-md border border-input bg-background px-3 flex items-center">
-        <span className="text-sm text-muted-foreground">Add people</span>
+const SharePanel = () => {
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState("Editor");
+  const [showRoleDropdown, setShowRoleDropdown] = useState(false);
+  const [isInputFocused, setIsInputFocused] = useState(false);
+  const roles = ["Viewer", "Editor", "Admin"];
+
+  return (
+    <div className="py-4">
+      <h3 className="text-base font-semibold text-foreground px-4 mb-3">Share app</h3>
+      <div className="px-4 mb-4">
+        <div className="rounded-lg border border-input bg-background overflow-hidden">
+          <input
+            type="email"
+            value={inviteEmail}
+            onChange={(e) => setInviteEmail(e.target.value)}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setTimeout(() => setIsInputFocused(false), 150)}
+            placeholder="Add people"
+            className="w-full h-9 px-3 text-sm text-foreground bg-transparent placeholder:text-muted-foreground focus:outline-none"
+          />
+          {inviteEmail.trim() && (
+            <div className="flex items-center justify-end gap-2 px-3 pb-2">
+              <div className="relative">
+                <button
+                  onClick={() => setShowRoleDropdown(!showRoleDropdown)}
+                  className="h-7 px-2.5 rounded-md border border-border text-xs font-medium text-foreground hover:bg-muted flex items-center gap-1 transition-colors"
+                >
+                  {inviteRole}
+                  <ChevronDown className="h-3 w-3 text-muted-foreground" />
+                </button>
+                {showRoleDropdown && (
+                  <div className="absolute right-0 top-8 z-50 w-28 rounded-md border border-border bg-card shadow-lg py-1">
+                    {roles.map((role) => (
+                      <button
+                        key={role}
+                        onClick={() => { setInviteRole(role); setShowRoleDropdown(false); }}
+                        className={`w-full text-left px-3 py-1.5 text-xs hover:bg-muted transition-colors ${role === inviteRole ? "text-primary font-medium" : "text-foreground"}`}
+                      >
+                        {role}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <button className="h-7 px-3 rounded-md bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors">
+                Invite
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-    <div className="px-4 mb-2">
-      <p className="text-sm font-semibold text-foreground mb-3">App access</p>
-      <button className="flex items-center justify-between w-full py-2 text-sm text-foreground hover:bg-muted/50 rounded-md px-1 transition-colors">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
-            <Globe className="h-4 w-4 text-muted-foreground" />
+      <div className="px-4 mb-2">
+        <p className="text-sm font-semibold text-foreground mb-3">Who has access</p>
+        <div className="flex items-center justify-between py-2 px-1">
+          <div className="flex items-center gap-3">
+            <span className="h-8 w-8 rounded-full bg-primary text-[11px] font-bold text-primary-foreground flex items-center justify-center">S</span>
+            <span className="text-sm text-foreground">user@company.com (you)</span>
           </div>
-          <span>People you invited</span>
+          <span className="text-xs text-muted-foreground">Owner</span>
         </div>
-        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-      </button>
-      <div className="flex items-center justify-between py-2 px-1">
-        <div className="flex items-center gap-3">
-          <span className="h-8 w-8 rounded-full bg-primary text-[11px] font-bold text-primary-foreground flex items-center justify-center">S</span>
-          <span className="text-sm text-foreground">user@company.com (you)</span>
+      </div>
+      <div className="px-4 pt-2 space-y-2">
+        <div className="border-t border-border pt-2">
+          <button className="w-full h-9 rounded-md border border-border text-sm font-medium text-foreground hover:bg-muted/50 flex items-center justify-center gap-2 transition-colors">
+            <Upload className="h-3.5 w-3.5" /> Publish app
+          </button>
         </div>
-        <span className="text-xs text-muted-foreground">Owner</span>
       </div>
     </div>
-    <div className="px-4 pt-2 space-y-2">
-      <div className="border-t border-border pt-2">
-        <button className="w-full h-9 rounded-md border border-border text-sm font-medium text-foreground hover:bg-muted/50 flex items-center justify-center gap-2 transition-colors">
-          <Upload className="h-3.5 w-3.5" /> Publish app
-        </button>
-      </div>
-    </div>
-  </div>
-);
+  );
+};
 
 /* ---------- Publish Button ---------- */
 const PublishButton = () => {
