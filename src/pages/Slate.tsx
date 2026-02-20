@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, GitBranch, ChevronUp, ChevronDown, Copy, Rocket, Bell, AppWindow, Layers, X, Database, Paperclip, Plug, Server, FileText, Trash2,
 } from "lucide-react";
-import zohoLogo from "@/assets/zoho-logo.svg";
+import slateLogo from "@/assets/slate-logo.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import SettingsOverlay from "@/components/SettingsOverlay";
@@ -251,7 +251,7 @@ const SlateDashboard = () => {
       <aside className="hidden lg:flex flex-col w-[240px] border-r border-border bg-card flex-shrink-0">
         {/* Logo */}
         <div className="flex items-center px-4 py-4">
-          <img src={zohoLogo} alt="Zoho" className="h-6 w-auto" />
+          <img src={slateLogo} alt="Slate" className="h-7 w-auto" />
         </div>
 
         {/* Nav links */}
