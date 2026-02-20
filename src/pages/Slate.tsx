@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, GitBranch, ChevronUp, ChevronDown, Copy, Rocket, Bell, AppWindow, Layers, X, Database,
+  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, GitBranch, ChevronUp, ChevronDown, Copy, Rocket, Bell, AppWindow, Layers, X, Database, Paperclip, Plug, Server, FileText, Trash2,
 } from "lucide-react";
 import zohoLogo from "@/assets/zoho-logo.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -197,9 +197,39 @@ const SlateDashboard = () => {
   const [prompt, setPrompt] = useState("");
   const [activeTab, setActiveTab] = useState("my");
   const [activeIntent, setActiveIntent] = useState<string | null>(null);
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const [plusMenuOpen, setPlusMenuOpen] = useState(false);
   
   const [settingsOpen, setSettingsOpen] = useState(false);
   const navigate = useNavigate();
+
+  const connectedConnectors = [
+    { name: "Catalyst by Zoho", icon: "⚡" },
+    { name: "Zoho CRM", icon: "📊" },
+  ];
+
+  const connectedMcpServers = [
+    { name: "Zoho MCP Server", url: "https://mcp.zoho.com" },
+    { name: "Custom Analytics MCP", url: "https://analytics.example.com/mcp" },
+  ];
+
+  const handleFileUpload = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.multiple = true;
+    input.onchange = (e) => {
+      const files = (e.target as HTMLInputElement).files;
+      if (files) {
+        setAttachedFiles(prev => [...prev, ...Array.from(files)]);
+      }
+    };
+    input.click();
+    setPlusMenuOpen(false);
+  };
+
+  const removeFile = (index: number) => {
+    setAttachedFiles(prev => prev.filter((_, i) => i !== index));
+  };
 
   const tabs = [
     { id: "my", label: "My apps" },
@@ -302,10 +332,72 @@ const SlateDashboard = () => {
                   rows={4}
                   className="w-full resize-none rounded-t-xl bg-transparent px-5 pt-4 pb-2 text-sm md:text-base text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
                 />
+
+                {/* Attached files */}
+                {attachedFiles.length > 0 && (
+                  <div className="flex flex-wrap gap-2 px-4 pb-2">
+                    {attachedFiles.map((file, i) => (
+                      <div key={i} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-muted border border-border text-xs text-foreground">
+                        <FileText className="h-3 w-3 text-muted-foreground" />
+                        <span className="max-w-[120px] truncate">{file.name}</span>
+                        <button onClick={() => removeFile(i)} className="text-muted-foreground hover:text-foreground transition-colors">
+                          <X className="h-3 w-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <div className="flex items-center justify-between px-4 pb-3">
-                  <button className="h-7 w-7 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
-                    <Plus className="h-4 w-4" />
-                  </button>
+                  <Popover open={plusMenuOpen} onOpenChange={setPlusMenuOpen}>
+                    <PopoverTrigger asChild>
+                      <button className="h-7 w-7 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+                        <Plus className="h-4 w-4" />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent align="start" side="top" className="w-64 p-1.5">
+                      <button
+                        onClick={handleFileUpload}
+                        className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-muted transition-colors"
+                      >
+                        <Paperclip className="h-4 w-4 text-muted-foreground" />
+                        <div className="text-left">
+                          <p className="font-medium">Attach Files</p>
+                          <p className="text-xs text-muted-foreground">Upload files to include</p>
+                        </div>
+                      </button>
+                      <div className="h-px bg-border my-1" />
+                      <div className="px-3 py-2">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Plug className="h-3.5 w-3.5 text-muted-foreground" />
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Connectors</p>
+                        </div>
+                        {connectedConnectors.map((c) => (
+                          <div key={c.name} className="flex items-center gap-2.5 px-2 py-1.5 rounded-md hover:bg-muted transition-colors cursor-pointer">
+                            <span className="text-sm">{c.icon}</span>
+                            <span className="text-sm text-foreground">{c.name}</span>
+                            <Check className="h-3 w-3 text-primary ml-auto" />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="h-px bg-border my-1" />
+                      <div className="px-3 py-2">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Server className="h-3.5 w-3.5 text-muted-foreground" />
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">MCP Servers</p>
+                        </div>
+                        {connectedMcpServers.map((s) => (
+                          <div key={s.name} className="flex items-center gap-2.5 px-2 py-1.5 rounded-md hover:bg-muted transition-colors cursor-pointer">
+                            <div className="h-5 w-5 rounded bg-primary/10 flex items-center justify-center">
+                              <Server className="h-3 w-3 text-primary" />
+                            </div>
+                            <span className="text-sm text-foreground truncate flex-1">{s.name}</span>
+                            <Check className="h-3 w-3 text-primary shrink-0" />
+                          </div>
+                        ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                   <div className="flex items-center gap-2">
                     <button className="text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded transition-colors">Plan</button>
                     <button
