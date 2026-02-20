@@ -176,35 +176,41 @@ const SlateWorkspace = () => {
                       <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Current Plan</span>
                       <span className="text-xs font-semibold bg-primary/15 text-primary px-2 py-0.5 rounded-full">Builder – $15/mo</span>
                     </div>
-                    <p className="text-[11px] text-muted-foreground flex items-center gap-1 mt-1">
-                      <Zap className="h-3 w-3 text-amber-500" />
-                      Using free daily usage
-                    </p>
                   </div>
 
                   <DropdownMenuSeparator className="bg-border" />
 
-                  {/* AI Usage */}
+                  {/* AI Usage - monthly with free daily tier */}
                   <div className="px-4 py-3 space-y-3">
                     <div>
-                      <div className="flex items-center justify-between mb-1.5">
+                      <div className="flex items-center justify-between mb-1">
                         <span className="text-xs font-medium text-foreground">AI Usage</span>
-                        <span className="text-[11px] text-muted-foreground">$0.42 / $1.00 daily</span>
+                        <span className="text-[11px] text-muted-foreground">$3.20 / $10.00 monthly</span>
                       </div>
                       <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-                        <div className="h-full rounded-full bg-primary transition-all" style={{ width: "42%" }} />
+                        <div className="h-full rounded-full bg-primary transition-all" style={{ width: "32%" }} />
                       </div>
+                      <p className="text-[10px] text-muted-foreground mt-1.5 flex items-center gap-1">
+                        <Zap className="h-3 w-3 text-amber-500" />
+                        Free tier: $0.65 / $1.00 used today · $3.80 / $5.00 this month
+                      </p>
                     </div>
 
                     {/* App Usage */}
                     <div>
-                      <div className="flex items-center justify-between mb-1.5">
+                      <div className="flex items-center justify-between mb-1">
                         <span className="text-xs font-medium text-foreground">App Usage</span>
                         <span className="text-[11px] text-muted-foreground">$1.20 / $5.00 monthly</span>
                       </div>
                       <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
                         <div className="h-full rounded-full bg-teal-500 transition-all" style={{ width: "24%" }} />
                       </div>
+                    </div>
+
+                    {/* Usage indicator */}
+                    <div className="flex items-center gap-1.5 pt-1">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-[11px] text-muted-foreground">Currently using free daily usage</span>
                     </div>
                   </div>
 
