@@ -265,7 +265,7 @@ const SlateDashboard = () => {
           <div className="pt-4 pb-1">
             <p className="px-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Apps</p>
           </div>
-          <SidebarLink icon={Clock} label="Recent" />
+          <SidebarLink icon={Clock} label="Recently created" />
           <div className="pl-8 space-y-0.5">
             {recentProjects.map((p) => (
               <a key={p.name} href="#" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
