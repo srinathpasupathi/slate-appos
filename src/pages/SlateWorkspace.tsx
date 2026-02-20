@@ -491,14 +491,14 @@ const CodeLine = ({ num, text }: { num: number; text: string }) => (
 /* ---------- Share Panel ---------- */
 const SharePanel = () => (
   <div className="py-4">
-    <h3 className="text-base font-semibold text-foreground px-4 mb-3">Share project</h3>
+    <h3 className="text-base font-semibold text-foreground px-4 mb-3">Share app</h3>
     <div className="px-4 mb-4">
       <div className="h-9 rounded-md border border-input bg-background px-3 flex items-center">
         <span className="text-sm text-muted-foreground">Add people</span>
       </div>
     </div>
     <div className="px-4 mb-2">
-      <p className="text-sm font-semibold text-foreground mb-3">Project access</p>
+      <p className="text-sm font-semibold text-foreground mb-3">App access</p>
       <button className="flex items-center justify-between w-full py-2 text-sm text-foreground hover:bg-muted/50 rounded-md px-1 transition-colors">
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
@@ -519,7 +519,7 @@ const SharePanel = () => (
     <div className="px-4 pt-2 space-y-2">
       <div className="border-t border-border pt-2">
         <button className="w-full h-9 rounded-md border border-border text-sm font-medium text-foreground hover:bg-muted/50 flex items-center justify-center gap-2 transition-colors">
-          <Upload className="h-3.5 w-3.5" /> Publish project
+          <Upload className="h-3.5 w-3.5" /> Publish app
         </button>
       </div>
     </div>
