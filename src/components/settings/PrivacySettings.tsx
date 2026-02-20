@@ -9,7 +9,7 @@ import {
 const PrivacySettings = () => {
   const [defaultAccess, setDefaultAccess] = useState("org");
   const [mcpAccess, setMcpAccess] = useState(true);
-  const [publicPreview, setPublicPreview] = useState(false);
+  
   const [defaultCreditLimit, setDefaultCreditLimit] = useState("100");
 
   return (
@@ -45,19 +45,6 @@ const PrivacySettings = () => {
             </p>
           </div>
           <Switch checked={mcpAccess} onCheckedChange={setMcpAccess} />
-        </div>
-      </div>
-
-      {/* Public Preview Links */}
-      <div className="rounded-xl border border-border p-5">
-        <div className="flex items-start justify-between">
-          <div className="flex-1 mr-6">
-            <h4 className="text-sm font-semibold text-foreground">Allow Public Preview Links</h4>
-            <p className="text-xs text-muted-foreground mt-1">
-              When enabled, users can create temporary public preview links to their apps. When disabled, preview link creation is blocked.
-            </p>
-          </div>
-          <Switch checked={publicPreview} onCheckedChange={setPublicPreview} />
         </div>
       </div>
 
