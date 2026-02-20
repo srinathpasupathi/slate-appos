@@ -282,7 +282,7 @@ const SlateDashboard = () => {
             </h1>
 
             {/* Prompt box */}
-            <div className="max-w-2xl w-full mx-auto">
+            <div className="max-w-3xl w-full mx-auto">
               {/* Intent pill */}
               {activeIntent && (
                 <div className="mb-2 flex items-center">
@@ -299,7 +299,7 @@ const SlateDashboard = () => {
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   placeholder="Ask Slate to create an app about.."
-                  rows={2}
+                  rows={4}
                   className="w-full resize-none rounded-t-xl bg-transparent px-5 pt-4 pb-2 text-sm md:text-base text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
                 />
                 <div className="flex items-center justify-between px-4 pb-3">
@@ -348,7 +348,7 @@ const SlateDashboard = () => {
                           <Icon className="h-4 w-4" />
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-foreground">{starter.title}</p>
+                          <p className="text-sm font-semibold text-foreground whitespace-nowrap">{starter.title}</p>
                           <p className="text-xs text-muted-foreground">{starter.description}</p>
                         </div>
                       </button>
