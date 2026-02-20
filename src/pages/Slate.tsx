@@ -233,6 +233,7 @@ const SlateDashboard = () => {
 
   const tabs = [
     { id: "my", label: "My apps" },
+    { id: "all", label: "All apps" },
     { id: "templates", label: "Templates" },
   ];
 
@@ -272,8 +273,7 @@ const SlateDashboard = () => {
               </a>
             ))}
           </div>
-  <SidebarLink icon={Grid3X3} label="All apps" />
-          <SidebarLink icon={Users} label="Shared with me" />
+  <SidebarLink icon={Grid3X3} label="All apps" onClick={() => setActiveTab("all")} />
         </nav>
 
       </aside>
@@ -475,23 +475,44 @@ const SlateDashboard = () => {
           </div>
 
           {/* Project cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {projectCards.map((card) => (
-              <div
-                key={card.title}
-                onClick={() => navigate(`/slate/workspace?prompt=${encodeURIComponent(card.title)}`)}
-                className="group rounded-xl border border-border bg-card overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-              >
-                <div className={`h-40 bg-gradient-to-br ${card.color} flex items-center justify-center`}>
-                  <div className="w-3/4 h-24 rounded-lg bg-background/60 border border-border/50 shadow-sm" />
+          {(activeTab === "my" || activeTab === "all") && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {(activeTab === "all" ? [...projectCards, ...devApps.map(app => ({ title: app.name, description: `${app.stack} · ${app.source}`, color: "from-primary/15 to-accent/15" }))] : projectCards).map((card) => (
+                <div
+                  key={card.title}
+                  onClick={() => navigate(`/slate/workspace?prompt=${encodeURIComponent(card.title)}`)}
+                  className="group rounded-xl border border-border bg-card overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+                >
+                  <div className={`h-40 bg-gradient-to-br ${card.color} flex items-center justify-center`}>
+                    <div className="w-3/4 h-24 rounded-lg bg-background/60 border border-border/50 shadow-sm" />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-sm font-semibold text-foreground mb-1 font-sans">{card.title}</h3>
+                    <p className="text-xs text-muted-foreground">{card.description}</p>
+                  </div>
                 </div>
-                <div className="p-4">
-                  <h3 className="text-sm font-semibold text-foreground mb-1 font-sans">{card.title}</h3>
-                  <p className="text-xs text-muted-foreground">{card.description}</p>
+              ))}
+            </div>
+          )}
+          {activeTab === "templates" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {projectCards.map((card) => (
+                <div
+                  key={card.title}
+                  onClick={() => navigate(`/slate/workspace?prompt=${encodeURIComponent(card.title)}`)}
+                  className="group rounded-xl border border-border bg-card overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+                >
+                  <div className={`h-40 bg-gradient-to-br ${card.color} flex items-center justify-center`}>
+                    <div className="w-3/4 h-24 rounded-lg bg-background/60 border border-border/50 shadow-sm" />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-sm font-semibold text-foreground mb-1 font-sans">{card.title}</h3>
+                    <p className="text-xs text-muted-foreground">{card.description}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
         
       </main>
@@ -579,9 +600,10 @@ const ProfilePopover = ({ variant = "sidebar" }: { variant?: "sidebar" | "topbar
   </Popover>
 );
 
-const SidebarLink = ({ icon: Icon, label, active }: { icon: any; label: string; active?: boolean }) => (
+const SidebarLink = ({ icon: Icon, label, active, onClick }: { icon: any; label: string; active?: boolean; onClick?: () => void }) => (
   <a
     href="#"
+    onClick={(e) => { if (onClick) { e.preventDefault(); onClick(); } }}
     className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${
       active
         ? "bg-muted text-foreground font-medium"
