@@ -418,7 +418,7 @@ const SlateDashboard = () => {
               {/* Quick Starter Cards */}
               <div className="mt-8">
                 <p className="text-sm font-semibold text-foreground mb-4 text-center">
-                  What do you want to build, Srinath?
+                  Get started with a template
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                   {quickStarters.map((starter) => {
