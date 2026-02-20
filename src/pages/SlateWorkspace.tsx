@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Send, Paperclip, Code, Eye, FolderTree, Terminal, Share2, Github, Upload, Link2, Globe, UserPlus, ChevronRight, Pencil, Plus, ExternalLink, ChevronDown, Home, CreditCard, Settings, Sun, Moon, HelpCircle, Zap, Server } from "lucide-react";
+import { ArrowLeft, Send, Paperclip, Code, Eye, FolderTree, Terminal, Share2, Github, Upload, Link2, Globe, UserPlus, ChevronRight, Pencil, Plus, ExternalLink, ChevronDown, Home, CreditCard, Settings, Sun, Moon, HelpCircle, Zap, Server, Lock, Search, AlertCircle, ChevronLeft } from "lucide-react";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -553,15 +553,28 @@ const PublishButton = () => {
   const [open, setOpen] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [view, setView] = useState<"main" | "editSettings" | "websiteInfo">("main");
+  const [appTitle, setAppTitle] = useState("Slate app");
+  const [appDescription, setAppDescription] = useState("");
 
   const handlePublish = () => {
     setIsPublished(true);
+  };
+
+  const handleUnpublish = () => {
+    setIsPublished(false);
+    setView("main");
   };
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText("franchise-app.onslate.com");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleOpenChange = (val: boolean) => {
+    setOpen(val);
+    if (!val) setView("main");
   };
 
   return (
@@ -572,9 +585,172 @@ const PublishButton = () => {
       >
         Publish
       </button>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent className="sm:max-w-[420px] bg-card border-border rounded-2xl p-0 overflow-hidden">
-          {isPublished ? (
+          {/* Website Info View */}
+          {view === "websiteInfo" ? (
+            <div className="p-6 space-y-5">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="text-lg font-semibold text-foreground">Website info</h3>
+                  <button className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 font-normal">
+                    <HelpCircle className="h-3.5 w-3.5" />
+                    Docs
+                  </button>
+                </div>
+                <p className="text-sm text-muted-foreground">Help people discover your app</p>
+              </div>
+
+              {/* Icon & title */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-semibold text-foreground">Icon & title</span>
+                  <span className="text-xs text-muted-foreground">{appTitle.length}/60</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-xl border border-border bg-muted/30 flex items-center justify-center shrink-0 cursor-pointer hover:bg-muted transition-colors">
+                    <img src="/favicon.ico" alt="icon" className="h-6 w-6" />
+                  </div>
+                  <input
+                    type="text"
+                    value={appTitle}
+                    onChange={(e) => setAppTitle(e.target.value.slice(0, 60))}
+                    className="flex-1 h-10 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    placeholder="Slate app"
+                  />
+                </div>
+              </div>
+
+              {/* Description */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-semibold text-foreground">Description</span>
+                  <span className="text-xs text-muted-foreground">{appDescription.length}/160</span>
+                </div>
+                <textarea
+                  value={appDescription}
+                  onChange={(e) => setAppDescription(e.target.value.slice(0, 160))}
+                  placeholder="Slate Generated Project"
+                  rows={3}
+                  className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground resize-y focus:outline-none focus:ring-2 focus:ring-ring"
+                />
+              </div>
+
+              {/* Social image */}
+              <div>
+                <span className="text-sm font-semibold text-foreground block mb-2">Social image</span>
+                <div className="rounded-lg border border-border bg-muted/30 px-4 py-3 flex items-center justify-between">
+                  <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    <Upload className="h-4 w-4" />
+                    Upload
+                  </button>
+                  <button className="text-sm text-muted-foreground hover:text-foreground border border-border rounded-md px-3 py-1 transition-colors">
+                    Generate
+                  </button>
+                </div>
+              </div>
+
+              {/* Preview */}
+              <div>
+                <span className="text-sm font-semibold text-foreground block mb-2">Preview</span>
+                <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <img src="/favicon.ico" alt="icon" className="h-4 w-4" />
+                    <span className="text-sm font-medium text-primary">{appTitle || "Slate App"}</span>
+                  </div>
+                  <p className="text-xs text-primary/70">franchise-app.onslate.com</p>
+                  <p className="text-xs text-muted-foreground">{appDescription || "Slate Generated Project"}</p>
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-1">
+                <button
+                  onClick={() => setView("editSettings")}
+                  className="h-10 px-8 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          ) : view === "editSettings" ? (
+            /* Edit Settings View */
+            <div className="p-6 space-y-4">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="text-lg font-semibold text-foreground">Edit settings</h3>
+                  <button className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 font-normal">
+                    <HelpCircle className="h-3.5 w-3.5" />
+                    Docs
+                  </button>
+                </div>
+                <p className="text-sm text-muted-foreground">Update your publish settings</p>
+              </div>
+
+              {/* URL card */}
+              <button className="w-full rounded-xl border border-border p-4 flex items-center gap-4 hover:bg-muted/30 transition-colors text-left">
+                <div className="h-10 w-10 rounded-xl bg-emerald-500/15 flex items-center justify-center shrink-0">
+                  <Link2 className="h-5 w-5 text-emerald-500" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-semibold text-foreground">URL</span>
+                    <svg className="h-4 w-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                  </div>
+                  <span className="text-xs text-muted-foreground">franchise-app.onslate.com</span>
+                </div>
+                <Pencil className="h-4 w-4 text-muted-foreground shrink-0" />
+              </button>
+
+              {/* Website access card */}
+              <button className="w-full rounded-xl border border-border p-4 flex items-center gap-4 hover:bg-muted/30 transition-colors text-left">
+                <div className="h-10 w-10 rounded-xl bg-emerald-500/15 flex items-center justify-center shrink-0">
+                  <Lock className="h-5 w-5 text-emerald-500" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-semibold text-foreground">Website access</span>
+                    <svg className="h-4 w-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                  </div>
+                  <span className="text-xs text-muted-foreground">Workspace members only</span>
+                </div>
+                <Pencil className="h-4 w-4 text-muted-foreground shrink-0" />
+              </button>
+
+              {/* Website info card */}
+              <button
+                onClick={() => setView("websiteInfo")}
+                className="w-full rounded-xl border border-border p-4 flex items-center gap-4 hover:bg-muted/30 transition-colors text-left"
+              >
+                <div className="h-10 w-10 rounded-xl bg-amber-500/15 flex items-center justify-center shrink-0">
+                  <Search className="h-5 w-5 text-amber-500" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-semibold text-foreground">Website info</span>
+                    <AlertCircle className="h-4 w-4 text-amber-500" />
+                  </div>
+                  <span className="text-xs text-muted-foreground">Missing info</span>
+                </div>
+                <Pencil className="h-4 w-4 text-muted-foreground shrink-0" />
+              </button>
+
+              <div className="flex items-center justify-between pt-2">
+                <button
+                  onClick={() => setView("main")}
+                  className="flex items-center gap-1.5 text-sm font-medium text-foreground hover:text-foreground/80 transition-colors"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Back
+                </button>
+                <button
+                  onClick={() => { setView("main"); }}
+                  className="h-10 px-6 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
+                >
+                  Save changes
+                </button>
+              </div>
+            </div>
+          ) : isPublished ? (
             /* Post-publish view */
             <div className="p-6 space-y-4">
               <div className="flex items-center justify-between">
@@ -609,8 +785,17 @@ const PublishButton = () => {
               </div>
 
               <div className="flex gap-3">
-                <button className="flex-1 h-10 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted/50 transition-colors">
+                <button
+                  onClick={() => setView("editSettings")}
+                  className="flex-1 h-10 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted/50 transition-colors"
+                >
                   Edit settings
+                </button>
+                <button
+                  onClick={handleUnpublish}
+                  className="flex-1 h-10 rounded-lg border border-destructive/50 text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors"
+                >
+                  Unpublish
                 </button>
               </div>
 
