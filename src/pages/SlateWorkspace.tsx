@@ -510,38 +510,16 @@ const SharePanel = () => (
       </button>
       <div className="flex items-center justify-between py-2 px-1">
         <div className="flex items-center gap-3">
-          <span className="h-8 w-8 rounded-full bg-destructive/80 text-[11px] font-bold text-white flex items-center justify-center">M</span>
-          <span className="text-sm text-foreground">My Workspace</span>
-        </div>
-        <span className="text-xs text-muted-foreground">Can edit ∨</span>
-      </div>
-      <div className="flex items-center justify-between py-2 px-1">
-        <div className="flex items-center gap-3">
           <span className="h-8 w-8 rounded-full bg-primary text-[11px] font-bold text-primary-foreground flex items-center justify-center">S</span>
           <span className="text-sm text-foreground">user@company.com (you)</span>
         </div>
         <span className="text-xs text-muted-foreground">Owner</span>
       </div>
-      <div className="flex items-center justify-between py-2 px-1">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-full border border-dashed border-muted-foreground flex items-center justify-center">
-            <UserPlus className="h-3.5 w-3.5 text-muted-foreground" />
-          </div>
-          <span className="text-sm text-muted-foreground">Invite link</span>
-        </div>
-        <span className="text-xs text-muted-foreground">Disabled ∨</span>
-      </div>
     </div>
     <div className="px-4 pt-2 space-y-2">
-      <button className="w-full h-9 rounded-md bg-muted text-sm font-medium text-foreground hover:bg-muted/80 transition-colors">
-        Create invite link
-      </button>
-      <div className="border-t border-border pt-2 space-y-2">
+      <div className="border-t border-border pt-2">
         <button className="w-full h-9 rounded-md border border-border text-sm font-medium text-foreground hover:bg-muted/50 flex items-center justify-center gap-2 transition-colors">
           <Upload className="h-3.5 w-3.5" /> Publish project
-        </button>
-        <button className="w-full h-9 rounded-md border border-border text-sm font-medium text-foreground hover:bg-muted/50 flex items-center justify-center gap-2 transition-colors">
-          <ExternalLink className="h-3.5 w-3.5" /> Share preview
         </button>
       </div>
     </div>
