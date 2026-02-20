@@ -5,6 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -73,6 +80,9 @@ const AIProvidersSettings = () => {
   const [dialogProvider, setDialogProvider] = useState<ProviderId | null>(null);
   const [keyInput, setKeyInput] = useState("");
   const [detailProvider, setDetailProvider] = useState<ProviderId | null>(null);
+
+  const [defaultProvider, setDefaultProvider] = useState<ProviderId | "">("");
+  const [defaultModel, setDefaultModel] = useState<string>("");
 
   const handleCardClick = (id: ProviderId) => {
     if (keys[id]) {
@@ -167,9 +177,69 @@ const AIProvidersSettings = () => {
     );
   }
 
+  // Get configured providers and their enabled models for defaults
+  const configuredProviders = providers.filter((p) => !!keys[p.id]);
+  const availableModels = defaultProvider
+    ? providers
+        .find((p) => p.id === defaultProvider)
+        ?.models.filter((m) => enabledModels[m.id]) || []
+    : [];
+
   // Cards grid view
   return (
     <>
+      {/* Default Provider & Model */}
+      <div className="rounded-xl border border-border p-5 space-y-4 mb-6">
+        <div>
+          <h4 className="text-sm font-semibold text-foreground">Default Provider & Model</h4>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Choose the default AI provider and model used across your app.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground">Default Provider</label>
+            <Select
+              value={defaultProvider}
+              onValueChange={(val) => {
+                setDefaultProvider(val as ProviderId);
+                setDefaultModel("");
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={configuredProviders.length ? "Select provider" : "No providers configured"} />
+              </SelectTrigger>
+              <SelectContent>
+                {configuredProviders.map((p) => (
+                  <SelectItem key={p.id} value={p.id}>
+                    {p.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground">Default Model</label>
+            <Select
+              value={defaultModel}
+              onValueChange={setDefaultModel}
+              disabled={!defaultProvider}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={defaultProvider ? "Select model" : "Choose a provider first"} />
+              </SelectTrigger>
+              <SelectContent>
+                {availableModels.map((m) => (
+                  <SelectItem key={m.id} value={m.id}>
+                    {m.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {providers.map((provider) => {
           const configured = !!keys[provider.id];
