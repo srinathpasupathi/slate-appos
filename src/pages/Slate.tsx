@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, GitBranch, ChevronUp, ChevronDown, Copy, Rocket, Bell,
+  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, GitBranch, ChevronUp, ChevronDown, Copy, Rocket, Bell, AppWindow, Layers, X, Database,
 } from "lucide-react";
 import zohoLogo from "@/assets/zoho-logo.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -158,9 +158,45 @@ const DevAppCard = ({ app, defaultOpen = false }: { app: DevApp; defaultOpen?: b
   );
 };
 
+const quickStarters = [
+  {
+    id: "website",
+    title: "Website",
+    description: "Marketing or content site",
+    icon: Globe,
+    prompt: "Build a modern responsive website for [your business or product].\nIt should include sections like hero, features, pricing, and contact.\nUse a clean and modern visual style.",
+    pill: "Website",
+  },
+  {
+    id: "frontend",
+    title: "Frontend App",
+    description: "Interactive product UI",
+    icon: AppWindow,
+    prompt: "Create an interactive frontend app for [your use case or product idea].\nInclude the main screens needed and design it with a modern, intuitive UI.",
+    pill: "Frontend App",
+  },
+  {
+    id: "crm-customisation",
+    title: "CRM Customisation",
+    description: "Extend your Zoho CRM",
+    icon: Database,
+    prompt: "Customize Zoho CRM to support [your business workflow].\nUpdate the relevant modules and add any required fields or automations.",
+    pill: "CRM Customization",
+  },
+  {
+    id: "crm-fullstack",
+    title: "CRM Backend + Frontend",
+    description: "Full-stack CRM experience",
+    icon: Layers,
+    prompt: "Build a full-stack CRM solution for [your business use case].\nSet up the required backend capabilities and create a clean frontend interface for users.",
+    pill: "Custom Frontend + CRM Backend",
+  },
+];
+
 const SlateDashboard = () => {
   const [prompt, setPrompt] = useState("");
   const [activeTab, setActiveTab] = useState("my");
+  const [activeIntent, setActiveIntent] = useState<string | null>(null);
   
   const [settingsOpen, setSettingsOpen] = useState(false);
   const navigate = useNavigate();
@@ -169,6 +205,15 @@ const SlateDashboard = () => {
     { id: "my", label: "My apps" },
     { id: "templates", label: "Templates" },
   ];
+
+  const handleStarterClick = (starter: typeof quickStarters[number]) => {
+    setPrompt(starter.prompt);
+    setActiveIntent(starter.id);
+  };
+
+  const clearIntent = () => {
+    setActiveIntent(null);
+  };
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
@@ -238,6 +283,17 @@ const SlateDashboard = () => {
 
             {/* Prompt box */}
             <div className="max-w-2xl w-full mx-auto">
+              {/* Intent pill */}
+              {activeIntent && (
+                <div className="mb-2 flex items-center">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                    Building: {quickStarters.find(s => s.id === activeIntent)?.pill}
+                    <button onClick={clearIntent} className="ml-0.5 hover:bg-primary/20 rounded-full p-0.5 transition-colors">
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                </div>
+              )}
               <div className="rounded-xl border border-input bg-card shadow-lg focus-within:ring-2 focus-within:ring-ring focus-within:border-transparent transition-all">
                 <textarea
                   value={prompt}
@@ -264,6 +320,40 @@ const SlateDashboard = () => {
                       <ArrowRight className="h-4 w-4" />
                     </button>
                   </div>
+                </div>
+              </div>
+
+              {/* Quick Starter Cards */}
+              <div className="mt-8">
+                <p className="text-sm font-semibold text-foreground mb-4 text-center">
+                  What do you want to build, Srinath?
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {quickStarters.map((starter) => {
+                    const Icon = starter.icon;
+                    const isActive = activeIntent === starter.id;
+                    return (
+                      <button
+                        key={starter.id}
+                        onClick={() => handleStarterClick(starter)}
+                        className={`group flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-all hover:shadow-md hover:-translate-y-0.5 ${
+                          isActive
+                            ? "border-primary/40 bg-primary/5 shadow-sm"
+                            : "border-border bg-card hover:border-foreground/20"
+                        }`}
+                      >
+                        <div className={`h-8 w-8 rounded-lg flex items-center justify-center transition-colors ${
+                          isActive ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
+                        }`}>
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">{starter.title}</p>
+                          <p className="text-xs text-muted-foreground">{starter.description}</p>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
