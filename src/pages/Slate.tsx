@@ -271,13 +271,13 @@ const SlateDashboard = () => {
         
         
         {/* Hero gradient area - fills available space */}
-        <div className="relative flex-1 flex flex-col min-h-[65vh]">
+        <div className="relative flex-1 flex flex-col min-h-[75vh]">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/8 to-primary/5 pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
 
-          <div className="relative flex-1 flex flex-col items-center justify-center px-6 lg:px-16">
+          <div className="relative flex-1 flex flex-col items-center justify-center px-6 lg:px-16 py-12">
             {/* Heading */}
-            <h1 className="text-center text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-8 mt-16">
+            <h1 className="text-center text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-8">
               Let's start building, Srinath
             </h1>
 
