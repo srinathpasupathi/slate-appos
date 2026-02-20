@@ -4,7 +4,7 @@ import { ArrowLeft, Send, Paperclip, Code, Eye, FolderTree, Terminal, Share2, Gi
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import zohoLogo from "@/assets/zoho-logo.svg";
+import slateLogo from "@/assets/slate-logo.svg";
 import GenerationProgress from "@/components/slate/GenerationProgress";
 import StreamingCode from "@/components/slate/StreamingCode";
 import PreviewLoading from "@/components/slate/PreviewLoading";
@@ -151,7 +151,7 @@ const SlateWorkspace = () => {
               >
                 <ArrowLeft className="h-4 w-4" />
               </button>
-              <img src={zohoLogo} alt="Zoho" className="h-5 w-auto" />
+              <img src={slateLogo} alt="Slate" className="h-6 w-auto" />
               <div className="ml-auto flex items-center gap-1">
                 <span className="text-[10px] font-semibold bg-primary/15 text-primary px-2 py-0.5 rounded-full">
                   Slate
