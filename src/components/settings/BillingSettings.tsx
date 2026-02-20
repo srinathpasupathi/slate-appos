@@ -72,7 +72,7 @@ const BillingSettings = () => {
                 {((selectedAiBoost - paidAiTotal) + (selectedAppBoost - appTotal)) > 0 && (
                   <> + Expanded ${(selectedAiBoost - paidAiTotal) + (selectedAppBoost - appTotal)}</>
                 )}
-                {" · "}Includes AI and App Usage.
+                {" · "}Includes AI Credits and Cloud Usage Credits.
               </p>
             </div>
           </div>
@@ -88,7 +88,7 @@ const BillingSettings = () => {
         {/* AI Usage */}
         <div className="rounded-xl border border-border p-5 space-y-4">
           <div>
-            <h4 className="text-sm font-semibold text-foreground">AI Usage</h4>
+            <h4 className="text-sm font-semibold text-foreground">AI Credits</h4>
             <p className="text-xs text-muted-foreground mt-0.5">This billing cycle</p>
           </div>
 
@@ -142,7 +142,7 @@ const BillingSettings = () => {
         <div className="rounded-xl border border-border p-5 space-y-3">
           <div className="flex items-start justify-between">
             <div>
-              <h4 className="text-sm font-semibold text-foreground">App Usage</h4>
+              <h4 className="text-sm font-semibold text-foreground">Cloud Usage Credits</h4>
               <p className="text-xs text-muted-foreground mt-0.5">This billing cycle</p>
             </div>
             <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full flex items-center gap-1">
@@ -176,7 +176,7 @@ const BillingSettings = () => {
         <div className="flex items-center justify-between">
           <div>
             <h4 className="text-sm font-semibold text-foreground">Expand Capacity</h4>
-            <p className="text-xs text-muted-foreground mt-0.5">Add more AI and App usage to your current plan.</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Add more AI Credits and Cloud Usage Credits to your current plan.</p>
           </div>
           <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full flex items-center gap-1">
             <Server className="h-2.5 w-2.5" />
@@ -187,7 +187,7 @@ const BillingSettings = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {/* AI Usage dropdown */}
           <div className="relative" ref={aiRef}>
-            <label className="text-xs text-muted-foreground mb-1 block">AI Usage</label>
+            <label className="text-xs text-muted-foreground mb-1 block">AI Credits</label>
             <button
               onClick={() => { setAiDropdownOpen(!aiDropdownOpen); setAppDropdownOpen(false); }}
               className="w-full flex items-center justify-between rounded-lg border border-border bg-background px-3 py-2.5 text-sm transition-colors hover:bg-muted/60"
@@ -207,7 +207,7 @@ const BillingSettings = () => {
                       selectedAiBoost === amt ? "bg-muted text-foreground font-medium" : "text-muted-foreground"
                     }`}
                   >
-                    ${amt} AI Usage{amt === paidAiTotal ? " (Current)" : ""}
+                    ${amt} AI Credits{amt === paidAiTotal ? " (Current)" : ""}
                   </button>
                 ))}
               </div>
@@ -216,7 +216,7 @@ const BillingSettings = () => {
 
           {/* App Usage dropdown */}
           <div className="relative" ref={appRef}>
-            <label className="text-xs text-muted-foreground mb-1 block">App Usage</label>
+            <label className="text-xs text-muted-foreground mb-1 block">Cloud Usage Credits</label>
             <button
               onClick={() => { setAppDropdownOpen(!appDropdownOpen); setAiDropdownOpen(false); }}
               className="w-full flex items-center justify-between rounded-lg border border-border bg-background px-3 py-2.5 text-sm transition-colors hover:bg-muted/60"
@@ -236,7 +236,7 @@ const BillingSettings = () => {
                       selectedAppBoost === amt ? "bg-muted text-foreground font-medium" : "text-muted-foreground"
                     }`}
                   >
-                    ${amt} App Usage{amt === appTotal ? " (Current)" : ""}
+                    ${amt} Cloud Usage Credits{amt === appTotal ? " (Current)" : ""}
                   </button>
                 ))}
               </div>
