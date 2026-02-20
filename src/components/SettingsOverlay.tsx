@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   X, Settings, Globe, BookOpen, Plug, GitBranch,
   Users, CreditCard, ShieldCheck, ChevronRight, Code2, Brain,
@@ -32,10 +32,15 @@ const orgMenuItems = [
 interface SettingsOverlayProps {
   open: boolean;
   onClose: () => void;
+  initialTab?: string;
 }
 
-const SettingsOverlay = ({ open, onClose }: SettingsOverlayProps) => {
-  const [activeSection, setActiveSection] = useState("general");
+const SettingsOverlay = ({ open, onClose, initialTab }: SettingsOverlayProps) => {
+  const [activeSection, setActiveSection] = useState(initialTab || "general");
+
+  useEffect(() => {
+    if (initialTab) setActiveSection(initialTab);
+  }, [initialTab]);
 
   if (!open) return null;
 
