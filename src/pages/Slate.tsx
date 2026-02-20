@@ -251,7 +251,7 @@ const SlateDashboard = () => {
       <aside className="hidden lg:flex flex-col w-[240px] border-r border-border bg-card flex-shrink-0">
         {/* Logo */}
         <div className="flex items-center gap-3 px-4 py-4">
-          <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
+          <img src={slateLogo} alt="Slate" className="h-5 w-auto ml-2" />
           <span className="text-lg font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Slate</span>
         </div>
 
