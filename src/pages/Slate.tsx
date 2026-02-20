@@ -361,7 +361,7 @@ const SlateDashboard = () => {
         </div>
 
         {/* Tabs + Projects */}
-        <div className="px-6 lg:px-16 pt-14 pb-10">
+        <div className="px-6 lg:px-16 pt-8 pb-10">
           <div className="flex items-center mb-6">
             <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
               {tabs.map((tab) => (
