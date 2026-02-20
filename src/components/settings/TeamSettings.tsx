@@ -185,7 +185,7 @@ const TeamSettings = () => {
               <TableHead className="text-xs">App Access</TableHead>
               <TableHead className="text-xs">Joined</TableHead>
               <TableHead className="text-xs text-right">Total Usage</TableHead>
-              <TableHead className="text-xs text-right">Credit Limit</TableHead>
+              <TableHead className="text-xs text-right">AI Usage Limit</TableHead>
               <TableHead className="text-xs w-10" />
             </TableRow>
           </TableHeader>
@@ -229,7 +229,7 @@ const TeamSettings = () => {
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">{member.joined}</TableCell>
                     <TableCell className="text-sm text-right font-medium text-foreground">{member.usage}</TableCell>
-                    <TableCell className="text-sm text-right font-medium text-foreground">{member.creditLimit}</TableCell>
+                    <TableCell className="text-sm text-right font-medium text-foreground">${member.creditLimit}</TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -239,7 +239,7 @@ const TeamSettings = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48">
                           <DropdownMenuItem onClick={() => { setEditCreditId(member.id); setEditCreditValue(String(member.creditLimit)); }}>
-                            Update Credit Limit
+                             Update AI Usage Limit
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleOpenEdit(member)}>
                             Edit
@@ -381,10 +381,10 @@ const TeamSettings = () => {
       <Dialog open={!!editCreditId} onOpenChange={() => setEditCreditId(null)}>
         <DialogContent className="sm:max-w-[360px]">
           <DialogHeader>
-            <DialogTitle>Update Credit Limit</DialogTitle>
+            <DialogTitle>Update AI Usage Limit</DialogTitle>
           </DialogHeader>
           <div className="space-y-1.5 py-2">
-            <label className="text-sm font-medium text-foreground">Credit Limit</label>
+            <label className="text-sm font-medium text-foreground">AI Usage Limit ($)</label>
             <Input type="number" value={editCreditValue} onChange={(e) => setEditCreditValue(e.target.value)} />
           </div>
           <DialogFooter>
