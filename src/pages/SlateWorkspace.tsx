@@ -553,9 +553,14 @@ const PublishButton = () => {
   const [open, setOpen] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [view, setView] = useState<"main" | "editSettings" | "websiteInfo">("main");
+  const [view, setView] = useState<"main" | "editSettings" | "websiteInfo" | "websiteAccess" | "editUrl">("main");
   const [appTitle, setAppTitle] = useState("Slate app");
   const [appDescription, setAppDescription] = useState("");
+  const [accessMode, setAccessMode] = useState<"org" | "public">("org");
+  const [urlSlug, setUrlSlug] = useState("franchise-app");
+  const [editingSlug, setEditingSlug] = useState("franchise-app");
+
+  const fullUrl = `${urlSlug}.onslate.com`;
 
   const handlePublish = () => {
     setIsPublished(true);
@@ -567,7 +572,7 @@ const PublishButton = () => {
   };
 
   const handleCopyUrl = () => {
-    navigator.clipboard.writeText("franchise-app.onslate.com");
+    navigator.clipboard.writeText(fullUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -587,8 +592,126 @@ const PublishButton = () => {
       </button>
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent className="sm:max-w-[420px] bg-card border-border rounded-2xl p-0 overflow-hidden">
-          {/* Website Info View */}
-          {view === "websiteInfo" ? (
+
+          {/* ---- Edit URL View ---- */}
+          {view === "editUrl" ? (
+            <div className="p-6 space-y-5">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="text-lg font-semibold text-foreground">Edit URL</h3>
+                  <button className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 font-normal">
+                    <HelpCircle className="h-3.5 w-3.5" />
+                    Docs
+                  </button>
+                </div>
+                <p className="text-sm text-muted-foreground">Customize your app's web address</p>
+              </div>
+
+              <div>
+                <span className="text-sm font-semibold text-foreground block mb-2">Subdomain</span>
+                <div className="flex items-center gap-0">
+                  <input
+                    type="text"
+                    value={editingSlug}
+                    onChange={(e) => setEditingSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))}
+                    className="flex-1 h-10 rounded-l-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    placeholder="my-app"
+                  />
+                  <span className="h-10 px-3 rounded-r-lg border border-l-0 border-border bg-muted flex items-center text-sm text-muted-foreground">.onslate.com</span>
+                </div>
+              </div>
+
+              <div>
+                <span className="text-sm text-muted-foreground block mb-1">Preview</span>
+                <div className="rounded-lg border border-border bg-muted/20 px-4 py-3">
+                  <span className="text-sm font-medium text-foreground">{editingSlug || "my-app"}.onslate.com</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-2">
+                <button
+                  onClick={() => { setEditingSlug(urlSlug); setView("editSettings"); }}
+                  className="flex items-center gap-1.5 text-sm font-medium text-foreground hover:text-foreground/80 transition-colors"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Back
+                </button>
+                <button
+                  onClick={() => { setUrlSlug(editingSlug); setView("editSettings"); }}
+                  className="h-10 px-6 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+
+          ) : view === "websiteAccess" ? (
+            /* ---- Website Access View ---- */
+            <div className="p-6 space-y-5">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="text-lg font-semibold text-foreground">Website access</h3>
+                  <button className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 font-normal">
+                    <HelpCircle className="h-3.5 w-3.5" />
+                    Docs
+                  </button>
+                </div>
+                <p className="text-sm text-muted-foreground">Control who can view your published app</p>
+              </div>
+
+              <div className="space-y-3">
+                <button
+                  onClick={() => setAccessMode("org")}
+                  className={`w-full rounded-xl border p-4 flex items-center gap-4 text-left transition-colors ${accessMode === "org" ? "border-primary bg-primary/5" : "border-border hover:bg-muted/30"}`}
+                >
+                  <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${accessMode === "org" ? "bg-primary/15" : "bg-muted"}`}>
+                    <Lock className={`h-5 w-5 ${accessMode === "org" ? "text-primary" : "text-muted-foreground"}`} />
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-sm font-semibold text-foreground block">Org members only</span>
+                    <span className="text-xs text-muted-foreground">Only members of your organization can access</span>
+                  </div>
+                  {accessMode === "org" && (
+                    <svg className="h-5 w-5 text-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => setAccessMode("public")}
+                  className={`w-full rounded-xl border p-4 flex items-center gap-4 text-left transition-colors ${accessMode === "public" ? "border-primary bg-primary/5" : "border-border hover:bg-muted/30"}`}
+                >
+                  <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${accessMode === "public" ? "bg-primary/15" : "bg-muted"}`}>
+                    <Globe className={`h-5 w-5 ${accessMode === "public" ? "text-primary" : "text-muted-foreground"}`} />
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-sm font-semibold text-foreground block">Public access</span>
+                    <span className="text-xs text-muted-foreground">Anyone with the link can access your app</span>
+                  </div>
+                  {accessMode === "public" && (
+                    <svg className="h-5 w-5 text-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                  )}
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between pt-2">
+                <button
+                  onClick={() => setView("editSettings")}
+                  className="flex items-center gap-1.5 text-sm font-medium text-foreground hover:text-foreground/80 transition-colors"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Back
+                </button>
+                <button
+                  onClick={() => setView("editSettings")}
+                  className="h-10 px-6 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+
+          ) : view === "websiteInfo" ? (
+            /* ---- Website Info View ---- */
             <div className="p-6 space-y-5">
               <div>
                 <div className="flex items-center justify-between mb-1">
@@ -609,7 +732,7 @@ const PublishButton = () => {
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="h-12 w-12 rounded-xl border border-border bg-muted/30 flex items-center justify-center shrink-0 cursor-pointer hover:bg-muted transition-colors">
-                    <img src="/favicon.ico" alt="icon" className="h-6 w-6" />
+                    <img src={slateLogo} alt="Slate" className="h-6 w-6" />
                   </div>
                   <input
                     type="text"
@@ -655,10 +778,10 @@ const PublishButton = () => {
                 <span className="text-sm font-semibold text-foreground block mb-2">Preview</span>
                 <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-1">
                   <div className="flex items-center gap-2">
-                    <img src="/favicon.ico" alt="icon" className="h-4 w-4" />
+                    <img src={slateLogo} alt="Slate" className="h-4 w-4" />
                     <span className="text-sm font-medium text-primary">{appTitle || "Slate App"}</span>
                   </div>
-                  <p className="text-xs text-primary/70">franchise-app.onslate.com</p>
+                  <p className="text-xs text-primary/70">{fullUrl}</p>
                   <p className="text-xs text-muted-foreground">{appDescription || "Slate Generated Project"}</p>
                 </div>
               </div>
@@ -672,8 +795,9 @@ const PublishButton = () => {
                 </button>
               </div>
             </div>
+
           ) : view === "editSettings" ? (
-            /* Edit Settings View */
+            /* ---- Edit Settings View ---- */
             <div className="p-6 space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-1">
@@ -687,7 +811,10 @@ const PublishButton = () => {
               </div>
 
               {/* URL card */}
-              <button className="w-full rounded-xl border border-border p-4 flex items-center gap-4 hover:bg-muted/30 transition-colors text-left">
+              <button
+                onClick={() => { setEditingSlug(urlSlug); setView("editUrl"); }}
+                className="w-full rounded-xl border border-border p-4 flex items-center gap-4 hover:bg-muted/30 transition-colors text-left"
+              >
                 <div className="h-10 w-10 rounded-xl bg-emerald-500/15 flex items-center justify-center shrink-0">
                   <Link2 className="h-5 w-5 text-emerald-500" />
                 </div>
@@ -696,13 +823,16 @@ const PublishButton = () => {
                     <span className="text-sm font-semibold text-foreground">URL</span>
                     <svg className="h-4 w-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
                   </div>
-                  <span className="text-xs text-muted-foreground">franchise-app.onslate.com</span>
+                  <span className="text-xs text-muted-foreground">{fullUrl}</span>
                 </div>
                 <Pencil className="h-4 w-4 text-muted-foreground shrink-0" />
               </button>
 
               {/* Website access card */}
-              <button className="w-full rounded-xl border border-border p-4 flex items-center gap-4 hover:bg-muted/30 transition-colors text-left">
+              <button
+                onClick={() => setView("websiteAccess")}
+                className="w-full rounded-xl border border-border p-4 flex items-center gap-4 hover:bg-muted/30 transition-colors text-left"
+              >
                 <div className="h-10 w-10 rounded-xl bg-emerald-500/15 flex items-center justify-center shrink-0">
                   <Lock className="h-5 w-5 text-emerald-500" />
                 </div>
@@ -711,7 +841,7 @@ const PublishButton = () => {
                     <span className="text-sm font-semibold text-foreground">Website access</span>
                     <svg className="h-4 w-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
                   </div>
-                  <span className="text-xs text-muted-foreground">Workspace members only</span>
+                  <span className="text-xs text-muted-foreground">{accessMode === "org" ? "Org members only" : "Public access"}</span>
                 </div>
                 <Pencil className="h-4 w-4 text-muted-foreground shrink-0" />
               </button>
@@ -750,13 +880,14 @@ const PublishButton = () => {
                 </button>
               </div>
             </div>
+
           ) : isPublished ? (
-            /* Post-publish view */
+            /* ---- Post-publish view ---- */
             <div className="p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                  <span className="text-base font-semibold text-foreground">Published to workspace</span>
+                  <span className="text-base font-semibold text-foreground">Published to org</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                   <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9m-9 9a9 9 0 0 1 9-9" /></svg>
@@ -773,7 +904,7 @@ const PublishButton = () => {
                   </button>
                 </div>
                 <div className="rounded-xl border border-border bg-muted/30 px-4 py-3 flex items-center justify-between">
-                  <span className="text-sm font-medium text-foreground">franchise-app.onslate.com</span>
+                  <span className="text-sm font-medium text-foreground">{fullUrl}</span>
                   <button onClick={handleCopyUrl} className="h-7 w-7 rounded-md hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
                     {copied ? (
                       <svg className="h-4 w-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
@@ -806,8 +937,9 @@ const PublishButton = () => {
                 Update
               </button>
             </div>
+
           ) : (
-            /* Pre-publish view */
+            /* ---- Pre-publish view ---- */
             <>
               <div className="p-6 pb-0">
                 <DialogHeader>
@@ -828,7 +960,7 @@ const PublishButton = () => {
                   <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center shrink-0">
                     <Link2 className="h-4 w-4 text-foreground" />
                   </div>
-                  <span className="text-sm font-medium text-foreground flex-1 truncate">franchise-app.onslate.com</span>
+                  <span className="text-sm font-medium text-foreground flex-1 truncate">{fullUrl}</span>
                   <button className="h-7 w-7 rounded-md hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
                     <Pencil className="h-3.5 w-3.5" />
                   </button>
