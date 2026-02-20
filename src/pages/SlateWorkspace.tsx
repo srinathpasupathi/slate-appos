@@ -551,6 +551,19 @@ const SharePanel = () => (
 /* ---------- Publish Button ---------- */
 const PublishButton = () => {
   const [open, setOpen] = useState(false);
+  const [isPublished, setIsPublished] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handlePublish = () => {
+    setIsPublished(true);
+  };
+
+  const handleCopyUrl = () => {
+    navigator.clipboard.writeText("franchise-app.onslate.com");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <>
       <button
@@ -561,45 +574,97 @@ const PublishButton = () => {
       </button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-[420px] bg-card border-border rounded-2xl p-0 overflow-hidden">
-          <div className="p-6 pb-0">
-            <DialogHeader>
-              <DialogTitle className="flex items-center justify-between text-lg">
-                <span>Website address</span>
-                <button className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 font-normal">
-                  <Globe className="h-3.5 w-3.5" />
-                  Docs
+          {isPublished ? (
+            /* Post-publish view */
+            <div className="p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                  <span className="text-base font-semibold text-foreground">Published to workspace</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9m-9 9a9 9 0 0 1 9-9" /></svg>
+                  4 Visitors
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-muted-foreground">Live URL</span>
+                  <button className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors">
+                    <Link2 className="h-3.5 w-3.5" />
+                    Add custom domain
+                  </button>
+                </div>
+                <div className="rounded-xl border border-border bg-muted/30 px-4 py-3 flex items-center justify-between">
+                  <span className="text-sm font-medium text-foreground">franchise-app.onslate.com</span>
+                  <button onClick={handleCopyUrl} className="h-7 w-7 rounded-md hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+                    {copied ? (
+                      <svg className="h-4 w-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
+                    ) : (
+                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button className="flex-1 h-10 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted/50 transition-colors">
+                  Edit settings
                 </button>
-              </DialogTitle>
-              <DialogDescription className="text-muted-foreground">
-                Choose your app's URL or use the generated one
-              </DialogDescription>
-            </DialogHeader>
-          </div>
-          <div className="p-6 pt-4 space-y-3">
-            <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-3.5 flex items-center gap-3 transition-colors">
-              <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center shrink-0">
-                <Link2 className="h-4 w-4 text-foreground" />
               </div>
-              <span className="text-sm font-medium text-foreground flex-1 truncate">franchise-app.onslate.com</span>
-              <button className="h-7 w-7 rounded-md hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
-                <Pencil className="h-3.5 w-3.5" />
-              </button>
-            </div>
-            <button className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors w-full py-2 px-1 rounded-lg hover:bg-muted/50">
-              <div className="h-9 w-9 rounded-full border-2 border-dashed border-muted-foreground/40 flex items-center justify-center">
-                <Plus className="h-4 w-4" />
-              </div>
-              Add custom domain
-            </button>
-            <div className="flex justify-end pt-2">
+
               <button
                 onClick={() => setOpen(false)}
-                className="h-10 px-8 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors shadow-sm shadow-primary/25"
+                className="w-full h-11 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors shadow-sm shadow-primary/25"
               >
-                Continue
+                Update
               </button>
             </div>
-          </div>
+          ) : (
+            /* Pre-publish view */
+            <>
+              <div className="p-6 pb-0">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center justify-between text-lg">
+                    <span>Website address</span>
+                    <button className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 font-normal">
+                      <Globe className="h-3.5 w-3.5" />
+                      Docs
+                    </button>
+                  </DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
+                    Choose your app's URL or use the generated one
+                  </DialogDescription>
+                </DialogHeader>
+              </div>
+              <div className="p-6 pt-4 space-y-3">
+                <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-3.5 flex items-center gap-3 transition-colors">
+                  <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center shrink-0">
+                    <Link2 className="h-4 w-4 text-foreground" />
+                  </div>
+                  <span className="text-sm font-medium text-foreground flex-1 truncate">franchise-app.onslate.com</span>
+                  <button className="h-7 w-7 rounded-md hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+                    <Pencil className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+                <button className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors w-full py-2 px-1 rounded-lg hover:bg-muted/50">
+                  <div className="h-9 w-9 rounded-full border-2 border-dashed border-muted-foreground/40 flex items-center justify-center">
+                    <Plus className="h-4 w-4" />
+                  </div>
+                  Add custom domain
+                </button>
+                <div className="flex justify-end pt-2">
+                  <button
+                    onClick={handlePublish}
+                    className="h-10 px-8 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors shadow-sm shadow-primary/25"
+                  >
+                    Continue
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </>
