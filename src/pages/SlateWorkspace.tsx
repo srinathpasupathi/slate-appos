@@ -151,7 +151,8 @@ const SlateWorkspace = () => {
               >
                 <ArrowLeft className="h-4 w-4" />
               </button>
-              <img src={slateLogo} alt="Slate" className="h-6 w-auto" />
+              <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
+              <span className="text-base font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Slate</span>
               <div className="ml-auto flex items-center gap-1">
                 <span className="text-[10px] font-semibold bg-primary/15 text-primary px-2 py-0.5 rounded-full">
                   Slate
