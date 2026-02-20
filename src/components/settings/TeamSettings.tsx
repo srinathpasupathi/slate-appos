@@ -44,10 +44,10 @@ interface Member {
 }
 
 const initialMembers: Member[] = [
-  { id: "1", name: "Aravind Kumar", email: "aravind@slate.in", role: "Super Admin", joined: "12 Jan 2025", usage: "842", creditLimit: 200, appAccess: [] },
-  { id: "2", name: "Priya Sharma", email: "priya@slate.in", role: "Admin", joined: "18 Feb 2025", usage: "431", creditLimit: 150, appAccess: [] },
-  { id: "3", name: "Rahul Menon", email: "rahul@slate.in", role: "Editor", joined: "05 Mar 2025", usage: "217", creditLimit: 100, appAccess: [{ appId: "app1", appName: "Franchise Sales App", role: "Editor" }, { appId: "app3", appName: "Inventory Tracker", role: "Viewer" }] },
-  { id: "4", name: "Deepa Nair", email: "deepa@slate.in", role: "Viewer", joined: "22 Mar 2025", usage: "54", creditLimit: 50, appAccess: [{ appId: "app2", appName: "HR Management App", role: "Viewer" }] },
+  { id: "1", name: "Aravind Siva", email: "aravind.siva@zohocorp.com", role: "Super Admin", joined: "12 Jan 2025", usage: "842", creditLimit: 200, appAccess: [] },
+  { id: "2", name: "Erai Anbu", email: "erai.anbu@zohocorp.com", role: "Admin", joined: "18 Feb 2025", usage: "431", creditLimit: 150, appAccess: [] },
+  { id: "3", name: "Viswanath M", email: "viswanath.m@zohocorp.com", role: "Editor", joined: "05 Mar 2025", usage: "217", creditLimit: 100, appAccess: [{ appId: "app1", appName: "Franchise Sales App", role: "Editor" }, { appId: "app3", appName: "Inventory Tracker", role: "Viewer" }] },
+  { id: "4", name: "Thangaram S", email: "thangaram.s@zohocorp.com", role: "Viewer", joined: "22 Mar 2025", usage: "54", creditLimit: 50, appAccess: [{ appId: "app2", appName: "HR Management App", role: "Viewer" }] },
 ];
 
 const TeamSettings = () => {
