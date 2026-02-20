@@ -271,7 +271,7 @@ const SlateDashboard = () => {
         
         
         {/* Hero gradient area - fills available space */}
-        <div className="relative flex-1 flex flex-col min-h-[60vh]">
+        <div className="relative flex-1 flex flex-col min-h-[65vh]">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/8 to-primary/5 pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
 
@@ -282,7 +282,7 @@ const SlateDashboard = () => {
             </h1>
 
             {/* Prompt box */}
-            <div className="max-w-3xl w-full mx-auto">
+            <div className="max-w-4xl w-full mx-auto">
               {/* Intent pill */}
               {activeIntent && (
                 <div className="mb-2 flex items-center">
@@ -361,7 +361,7 @@ const SlateDashboard = () => {
         </div>
 
         {/* Tabs + Projects */}
-        <div className="px-6 lg:px-16 py-8">
+        <div className="px-6 lg:px-16 pt-14 pb-10">
           <div className="flex items-center mb-6">
             <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
               {tabs.map((tab) => (
