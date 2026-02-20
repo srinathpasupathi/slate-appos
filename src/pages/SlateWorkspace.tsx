@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Send, Paperclip, Code, Eye, FolderTree, Terminal, Share2, Github, Upload, Link2, Globe, UserPlus, ChevronRight, Pencil, Plus, ExternalLink, ChevronDown, Home, CreditCard, Settings, Sun, Moon, HelpCircle, Zap, Server, Lock, Search, AlertCircle, ChevronLeft } from "lucide-react";
+import { ArrowLeft, Send, Paperclip, Code, Eye, FolderTree, Terminal, Share2, Github, Upload, Link2, Globe, UserPlus, ChevronRight, Pencil, Plus, ExternalLink, ChevronDown, Home, CreditCard, Settings, Sun, Moon, HelpCircle, Zap, Server, Lock, Search, AlertCircle, ChevronLeft, Copy, Check } from "lucide-react";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -521,6 +521,8 @@ const SharePanel = ({ onPublishClick }: { onPublishClick?: () => void }) => {
   const [showRoleDropdown, setShowRoleDropdown] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [invitedPeople, setInvitedPeople] = useState<{ email: string; role: string }[]>([]);
+  const [previewLink, setPreviewLink] = useState<string | null>(null);
+  const [previewCopied, setPreviewCopied] = useState(false);
   const roles = ["App Owner", "Editor", "Viewer"];
 
   const handleInvite = () => {
@@ -604,13 +606,47 @@ const SharePanel = ({ onPublishClick }: { onPublishClick?: () => void }) => {
         ))}
       </div>
       <div className="px-4 pt-2 space-y-2">
-        <div className="border-t border-border pt-2">
+        <div className="border-t border-border pt-3">
           <button
             onClick={onPublishClick}
             className="w-full h-9 rounded-md border border-border text-sm font-medium text-foreground hover:bg-muted/50 flex items-center justify-center gap-2 transition-colors"
           >
             <Upload className="h-3.5 w-3.5" /> Publish app
           </button>
+        </div>
+        <div className="border-t border-border pt-3 mt-3">
+          <p className="text-sm font-semibold text-foreground mb-1">Share Preview</p>
+          <p className="text-xs text-muted-foreground mb-3">Generate a temporary preview link valid for 7 days.</p>
+          {!previewLink ? (
+            <button
+              onClick={() => {
+                const id = Math.random().toString(36).substring(2, 10);
+                setPreviewLink(`https://preview.onslate.in/${id}`);
+              }}
+              className="w-full h-9 rounded-md border border-border text-sm font-medium text-foreground hover:bg-muted/50 flex items-center justify-center gap-2 transition-colors"
+            >
+              <Link2 className="h-3.5 w-3.5" /> Generate Preview Link
+            </button>
+          ) : (
+            <div className="flex items-center gap-2">
+              <div className="flex-1 h-9 px-3 rounded-md border border-border bg-muted/30 flex items-center overflow-hidden">
+                <span className="text-xs text-foreground truncate">{previewLink}</span>
+              </div>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(previewLink);
+                  setPreviewCopied(true);
+                  setTimeout(() => setPreviewCopied(false), 2000);
+                }}
+                className="h-9 w-9 shrink-0 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              >
+                {previewCopied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+              </button>
+            </div>
+          )}
+          {previewLink && (
+            <p className="text-[10px] text-muted-foreground mt-1.5">Expires in 7 days</p>
+          )}
         </div>
       </div>
     </div>
