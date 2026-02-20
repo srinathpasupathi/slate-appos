@@ -759,19 +759,7 @@ const PublishButton = () => {
                 />
               </div>
 
-              {/* Social image */}
-              <div>
-                <span className="text-sm font-semibold text-foreground block mb-2">Social image</span>
-                <div className="rounded-lg border border-border bg-muted/30 px-4 py-3 flex items-center justify-between">
-                  <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    <Upload className="h-4 w-4" />
-                    Upload
-                  </button>
-                  <button className="text-sm text-muted-foreground hover:text-foreground border border-border rounded-md px-3 py-1 transition-colors">
-                    Generate
-                  </button>
-                </div>
-              </div>
+
 
               {/* Preview */}
               <div>
