@@ -1,6 +1,6 @@
-import { Zap, ArrowUpRight, Plus, Server, ChevronDown } from "lucide-react";
+import { Zap, ArrowUpRight, Plus, Server, Sparkles, Cloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import PricingCards from "./PricingCards";
 
 const BillingSettings = () => {
@@ -31,24 +31,21 @@ const BillingSettings = () => {
     { name: "Enterprise", ai: "Custom", app: "Custom" },
   ];
 
-  const [aiDropdownOpen, setAiDropdownOpen] = useState(false);
-  const [appDropdownOpen, setAppDropdownOpen] = useState(false);
-  const [selectedAiBoost, setSelectedAiBoost] = useState<number>(paidAiTotal);
-  const [selectedAppBoost, setSelectedAppBoost] = useState<number>(appTotal);
-  const aiRef = useRef<HTMLDivElement>(null);
-  const appRef = useRef<HTMLDivElement>(null);
+  const aiAddOnOptions = [
+    { amount: 5, label: "$5" },
+    { amount: 10, label: "$10" },
+    { amount: 25, label: "$25" },
+    { amount: 50, label: "$50" },
+  ];
+  const cloudAddOnOptions = [
+    { amount: 5, label: "$5" },
+    { amount: 10, label: "$10" },
+    { amount: 25, label: "$25" },
+    { amount: 50, label: "$50" },
+  ];
 
-  const aiOptions = [10, 25, 50, 100];
-  const appOptions = [5, 15, 50, 100];
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (aiRef.current && !aiRef.current.contains(e.target as Node)) setAiDropdownOpen(false);
-      if (appRef.current && !appRef.current.contains(e.target as Node)) setAppDropdownOpen(false);
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
+  const [selectedAiAddOn, setSelectedAiAddOn] = useState<number | null>(null);
+  const [selectedCloudAddOn, setSelectedCloudAddOn] = useState<number | null>(null);
 
   return (
     <div className="space-y-6">
@@ -64,15 +61,11 @@ const BillingSettings = () => {
               <div className="flex items-baseline gap-3 mt-0.5">
                 <h4 className="text-xl font-semibold text-foreground">{currentPlan}</h4>
                 <span className="text-muted-foreground">·</span>
-                <span className="text-xl font-bold text-foreground">${basePlan + (selectedAiBoost - paidAiTotal) + (selectedAppBoost - appTotal)}</span>
+                <span className="text-xl font-bold text-foreground">${basePlan}</span>
                 <span className="text-sm text-muted-foreground">/ mo</span>
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                Base ${basePlan}
-                {((selectedAiBoost - paidAiTotal) + (selectedAppBoost - appTotal)) > 0 && (
-                  <> + Expanded ${(selectedAiBoost - paidAiTotal) + (selectedAppBoost - appTotal)}</>
-                )}
-                {" · "}Includes AI Credits and Cloud Usage Credits.
+                Includes AI Credits and Cloud Usage Credits.
               </p>
             </div>
           </div>
@@ -125,12 +118,12 @@ const BillingSettings = () => {
             <div className="flex items-end justify-between">
               <div>
                 <span className="text-2xl font-bold text-foreground">${paidAiUsed.toFixed(2)}</span>
-                <span className="text-sm text-muted-foreground ml-1">/ ${selectedAiBoost}</span>
+                <span className="text-sm text-muted-foreground ml-1">/ ${paidAiTotal}</span>
               </div>
-              <span className="text-xs font-medium text-muted-foreground">${(selectedAiBoost - paidAiUsed).toFixed(2)} remaining</span>
+              <span className="text-xs font-medium text-muted-foreground">${(paidAiTotal - paidAiUsed).toFixed(2)} remaining</span>
             </div>
             <div className="h-2.5 bg-muted rounded-full overflow-hidden">
-              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${(paidAiUsed / selectedAiBoost) * 100}%`, backgroundColor: "hsl(210 80% 55%)" }} />
+              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${(paidAiUsed / paidAiTotal) * 100}%`, backgroundColor: "hsl(210 80% 55%)" }} />
             </div>
           </div>
 
@@ -153,14 +146,14 @@ const BillingSettings = () => {
           <div className="flex items-end justify-between">
             <div>
               <span className="text-2xl font-bold text-foreground">${appUsed.toFixed(2)}</span>
-              <span className="text-sm text-muted-foreground ml-1">/ ${selectedAppBoost}</span>
+              <span className="text-sm text-muted-foreground ml-1">/ ${appTotal}</span>
             </div>
-            <span className="text-xs font-medium text-muted-foreground">${(selectedAppBoost - appUsed).toFixed(2)} remaining</span>
+            <span className="text-xs font-medium text-muted-foreground">${(appTotal - appUsed).toFixed(2)} remaining</span>
           </div>
           <div className="h-2.5 bg-muted rounded-full overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-500"
-              style={{ width: `${(appUsed / selectedAppBoost) * 100}%`, backgroundColor: "hsl(172 50% 45%)" }}
+              style={{ width: `${(appUsed / appTotal) * 100}%`, backgroundColor: "hsl(172 50% 45%)" }}
             />
           </div>
           <p className="text-[11px] text-muted-foreground">Hosting, functions, storage, and app traffic.</p>
@@ -171,82 +164,90 @@ const BillingSettings = () => {
       {/* Available Plans */}
       <PricingCards currentPlan={currentPlan} />
 
-      {/* Expand Capacity */}
-      <div className="rounded-xl border border-border p-5 space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h4 className="text-sm font-semibold text-foreground">Expand Capacity</h4>
-            <p className="text-xs text-muted-foreground mt-0.5">Add more AI Credits and Cloud Usage Credits to your current plan.</p>
-          </div>
-          <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full flex items-center gap-1">
-            <Server className="h-2.5 w-2.5" />
-            App powered by Catalyst
-          </span>
+      {/* Add-on Credits */}
+      <div className="rounded-xl border border-border p-5 space-y-5">
+        <div>
+          <h4 className="text-sm font-semibold text-foreground">Purchase Add-on Credits</h4>
+          <p className="text-xs text-muted-foreground mt-0.5">Need more credits? Purchase add-ons anytime — applied instantly to your account.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {/* AI Usage dropdown */}
-          <div className="relative" ref={aiRef}>
-            <label className="text-xs text-muted-foreground mb-1 block">AI Credits</label>
-            <button
-              onClick={() => { setAiDropdownOpen(!aiDropdownOpen); setAppDropdownOpen(false); }}
-              className="w-full flex items-center justify-between rounded-lg border border-border bg-background px-3 py-2.5 text-sm transition-colors hover:bg-muted/60"
-            >
-              <span className="text-foreground">
-                ${selectedAiBoost}{selectedAiBoost === paidAiTotal ? " (Current)" : ""}
-              </span>
-              <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${aiDropdownOpen ? "rotate-180" : ""}`} />
-            </button>
-            {aiDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 mt-1 z-50 rounded-lg border border-border bg-popover shadow-md overflow-hidden">
-                {aiOptions.map((amt) => (
-                  <button
-                    key={amt}
-                    onClick={() => { setSelectedAiBoost(amt); setAiDropdownOpen(false); }}
-                    className={`w-full text-left px-3 py-2.5 text-sm transition-colors hover:bg-muted ${
-                      selectedAiBoost === amt ? "bg-muted text-foreground font-medium" : "text-muted-foreground"
-                    }`}
-                  >
-                    ${amt} AI Credits{amt === paidAiTotal ? " (Current)" : ""}
-                  </button>
-                ))}
-              </div>
-            )}
+        {/* AI Credits Add-on */}
+        <div className="space-y-2.5">
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-primary" />
+            <span className="text-xs font-semibold text-foreground">AI Credits</span>
           </div>
-
-          {/* App Usage dropdown */}
-          <div className="relative" ref={appRef}>
-            <label className="text-xs text-muted-foreground mb-1 block">Cloud Usage Credits</label>
-            <button
-              onClick={() => { setAppDropdownOpen(!appDropdownOpen); setAiDropdownOpen(false); }}
-              className="w-full flex items-center justify-between rounded-lg border border-border bg-background px-3 py-2.5 text-sm transition-colors hover:bg-muted/60"
-            >
-              <span className="text-foreground">
-                ${selectedAppBoost}{selectedAppBoost === appTotal ? " (Current)" : ""}
-              </span>
-              <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${appDropdownOpen ? "rotate-180" : ""}`} />
-            </button>
-            {appDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 mt-1 z-50 rounded-lg border border-border bg-popover shadow-md overflow-hidden">
-                {appOptions.map((amt) => (
-                  <button
-                    key={amt}
-                    onClick={() => { setSelectedAppBoost(amt); setAppDropdownOpen(false); }}
-                    className={`w-full text-left px-3 py-2.5 text-sm transition-colors hover:bg-muted ${
-                      selectedAppBoost === amt ? "bg-muted text-foreground font-medium" : "text-muted-foreground"
-                    }`}
-                  >
-                    ${amt} Cloud Usage Credits{amt === appTotal ? " (Current)" : ""}
-                  </button>
-                ))}
-              </div>
-            )}
+          <div className="flex flex-wrap gap-2">
+            {aiAddOnOptions.map((opt) => (
+              <button
+                key={opt.amount}
+                onClick={() => setSelectedAiAddOn(selectedAiAddOn === opt.amount ? null : opt.amount)}
+                className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${
+                  selectedAiAddOn === opt.amount
+                    ? "border-primary bg-primary/10 text-primary ring-1 ring-primary/30"
+                    : "border-border bg-background text-foreground hover:bg-muted/60"
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
           </div>
         </div>
 
-        <Button size="sm" className="w-full gap-1.5" disabled={selectedAiBoost === paidAiTotal && selectedAppBoost === appTotal}>
+        {/* Cloud Usage Credits Add-on */}
+        <div className="space-y-2.5">
+          <div className="flex items-center gap-2">
+            <Cloud className="h-4 w-4" style={{ color: "hsl(172 50% 45%)" }} />
+            <span className="text-xs font-semibold text-foreground">Cloud Usage Credits</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {cloudAddOnOptions.map((opt) => (
+              <button
+                key={opt.amount}
+                onClick={() => setSelectedCloudAddOn(selectedCloudAddOn === opt.amount ? null : opt.amount)}
+                className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${
+                  selectedCloudAddOn === opt.amount
+                    ? "border-primary bg-primary/10 text-primary ring-1 ring-primary/30"
+                    : "border-border bg-background text-foreground hover:bg-muted/60"
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Summary & Purchase */}
+        {(selectedAiAddOn || selectedCloudAddOn) && (
+          <div className="rounded-lg bg-muted/40 p-3 space-y-1.5">
+            <p className="text-xs font-medium text-foreground">Order Summary</p>
+            {selectedAiAddOn && (
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">AI Credits add-on</span>
+                <span className="text-foreground font-medium">${selectedAiAddOn}</span>
+              </div>
+            )}
+            {selectedCloudAddOn && (
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">Cloud Usage Credits add-on</span>
+                <span className="text-foreground font-medium">${selectedCloudAddOn}</span>
+              </div>
+            )}
+            <div className="h-px bg-border my-1" />
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-foreground font-semibold">Total</span>
+              <span className="text-foreground font-bold">${(selectedAiAddOn || 0) + (selectedCloudAddOn || 0)}</span>
+            </div>
+          </div>
+        )}
+
+        <Button
+          size="sm"
+          className="w-full gap-1.5"
+          disabled={!selectedAiAddOn && !selectedCloudAddOn}
+        >
           <Plus className="h-3.5 w-3.5" />
-          Upgrade
+          Purchase Add-on{(selectedAiAddOn && selectedCloudAddOn) ? "s" : ""}
         </Button>
       </div>
     </div>
