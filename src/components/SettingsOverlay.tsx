@@ -26,7 +26,7 @@ const orgMenuItems = [
   { id: "team", label: "My Team", icon: Users },
   { id: "billing", label: "Plans & Billing", icon: CreditCard },
   { id: "privacy", label: "Privacy & Security", icon: ShieldCheck },
-  { id: "ai-providers", label: "AI Providers", icon: Brain },
+  { id: "ai-providers", label: "AI Providers (BYOK)", icon: Brain },
 ];
 
 interface SettingsOverlayProps {
