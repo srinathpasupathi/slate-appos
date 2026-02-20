@@ -16,7 +16,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 
-const orgRoles = ["Super Admin", "Admin", "App Owner", "Editor", "Viewer"] as const;
+const orgRoles = ["Admin", "Member"] as const;
 const appRoles = ["App Owner", "Editor", "Viewer"] as const;
 
 const availableApps = [
@@ -44,17 +44,17 @@ interface Member {
 }
 
 const initialMembers: Member[] = [
-  { id: "1", name: "Aravind Siva", email: "aravind.siva@zohocorp.com", role: "Super Admin", joined: "12 Jan 2025", usage: "842", creditLimit: 200, appAccess: [] },
+  { id: "1", name: "Aravind Siva", email: "aravind.siva@zohocorp.com", role: "Admin", joined: "12 Jan 2025", usage: "842", creditLimit: 200, appAccess: [] },
   { id: "2", name: "Erai Anbu", email: "erai.anbu@zohocorp.com", role: "Admin", joined: "18 Feb 2025", usage: "431", creditLimit: 150, appAccess: [] },
-  { id: "3", name: "Viswanath M", email: "viswanath.m@zohocorp.com", role: "Editor", joined: "05 Mar 2025", usage: "217", creditLimit: 100, appAccess: [{ appId: "app1", appName: "Franchise Sales App", role: "Editor" }, { appId: "app3", appName: "Inventory Tracker", role: "Viewer" }] },
-  { id: "4", name: "Thangaram S", email: "thangaram.s@zohocorp.com", role: "Viewer", joined: "22 Mar 2025", usage: "54", creditLimit: 50, appAccess: [{ appId: "app2", appName: "HR Management App", role: "Viewer" }] },
+  { id: "3", name: "Viswanath M", email: "viswanath.m@zohocorp.com", role: "Member", joined: "05 Mar 2025", usage: "217", creditLimit: 100, appAccess: [{ appId: "app1", appName: "Franchise Sales App", role: "Editor" }, { appId: "app3", appName: "Inventory Tracker", role: "Viewer" }] },
+  { id: "4", name: "Thangaram S", email: "thangaram.s@zohocorp.com", role: "Member", joined: "22 Mar 2025", usage: "54", creditLimit: 50, appAccess: [{ appId: "app2", appName: "HR Management App", role: "Viewer" }] },
 ];
 
 const TeamSettings = () => {
   const [members, setMembers] = useState<Member[]>(initialMembers);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteRole, setInviteRole] = useState<string>("Editor");
+  const [inviteRole, setInviteRole] = useState<string>("Member");
   const [inviteAppAccess, setInviteAppAccess] = useState<AppAccess[]>([]);
   const [editCreditId, setEditCreditId] = useState<string | null>(null);
   const [editCreditValue, setEditCreditValue] = useState("");
@@ -62,8 +62,8 @@ const TeamSettings = () => {
   const [editRoleValue, setEditRoleValue] = useState("");
   const [expandedMember, setExpandedMember] = useState<string | null>(null);
 
-  const isPerAppRole = (role: string) => ["App Owner", "Editor", "Viewer"].includes(role);
-  const isAllAccessRole = (role: string) => ["Super Admin", "Admin"].includes(role);
+  const isPerAppRole = (role: string) => role === "Member";
+  const isAllAccessRole = (role: string) => role === "Admin";
 
   const handleAddAppToInvite = () => {
     const usedIds = inviteAppAccess.map((a) => a.appId);
