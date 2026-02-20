@@ -41,7 +41,9 @@ const SlateWorkspace = () => {
   const [generationProgress, setGenerationProgress] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsInitialTab, setSettingsInitialTab] = useState<string | undefined>(undefined);
   const [publishOpen, setPublishOpen] = useState(false);
+  const [githubPopoverOpen, setGithubPopoverOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -365,11 +367,34 @@ const SlateWorkspace = () => {
                 </Popover>
 
                 {/* GitHub */}
-                <button className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-foreground hover:bg-muted/80 transition-colors">
-                  <Github className="h-4 w-4" />
-                </button>
-
-                {/* Publish */}
+                <Popover open={githubPopoverOpen} onOpenChange={setGithubPopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <button className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-foreground hover:bg-muted/80 transition-colors">
+                      <Github className="h-4 w-4" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent align="end" className="w-[320px] bg-card border-border p-0 rounded-xl">
+                    <div className="p-5">
+                      <h3 className="text-base font-semibold text-foreground mb-1">GitHub</h3>
+                      <p className="text-sm text-muted-foreground">Sync your app 2-way with GitHub to collaborate at source.</p>
+                    </div>
+                    <div className="border-t border-border px-5 py-3 flex items-center justify-between">
+                      <button className="h-7 w-7 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                        <HelpCircle className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          setGithubPopoverOpen(false);
+                          setSettingsInitialTab("developer");
+                          setSettingsOpen(true);
+                        }}
+                        className="h-9 px-4 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted/50 flex items-center gap-2 transition-colors"
+                      >
+                        <Github className="h-4 w-4" /> Connect GitHub
+                      </button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
                 <PublishButton externalOpen={publishOpen} onExternalOpenChange={setPublishOpen} />
               </div>
             </div>
@@ -442,7 +467,7 @@ const SlateWorkspace = () => {
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
-      <SettingsOverlay open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <SettingsOverlay open={settingsOpen} onClose={() => { setSettingsOpen(false); setSettingsInitialTab(undefined); }} initialTab={settingsInitialTab} />
     </div>
   );
 };
