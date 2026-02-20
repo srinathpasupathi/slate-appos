@@ -41,6 +41,7 @@ const SlateWorkspace = () => {
   const [generationProgress, setGenerationProgress] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [publishOpen, setPublishOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -359,7 +360,7 @@ const SlateWorkspace = () => {
                     </button>
                   </PopoverTrigger>
                   <PopoverContent align="end" className="w-[380px] bg-card border-border p-0">
-                    <SharePanel />
+                    <SharePanel onPublishClick={() => setPublishOpen(true)} />
                   </PopoverContent>
                 </Popover>
 
@@ -369,7 +370,7 @@ const SlateWorkspace = () => {
                 </button>
 
                 {/* Publish */}
-                <PublishButton />
+                <PublishButton externalOpen={publishOpen} onExternalOpenChange={setPublishOpen} />
               </div>
             </div>
 
@@ -489,7 +490,7 @@ const CodeLine = ({ num, text }: { num: number; text: string }) => (
 );
 
 /* ---------- Share Panel ---------- */
-const SharePanel = () => {
+const SharePanel = ({ onPublishClick }: { onPublishClick?: () => void }) => {
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState("Editor");
   const [showRoleDropdown, setShowRoleDropdown] = useState(false);
@@ -579,7 +580,10 @@ const SharePanel = () => {
       </div>
       <div className="px-4 pt-2 space-y-2">
         <div className="border-t border-border pt-2">
-          <button className="w-full h-9 rounded-md border border-border text-sm font-medium text-foreground hover:bg-muted/50 flex items-center justify-center gap-2 transition-colors">
+          <button
+            onClick={onPublishClick}
+            className="w-full h-9 rounded-md border border-border text-sm font-medium text-foreground hover:bg-muted/50 flex items-center justify-center gap-2 transition-colors"
+          >
             <Upload className="h-3.5 w-3.5" /> Publish app
           </button>
         </div>
@@ -589,8 +593,10 @@ const SharePanel = () => {
 };
 
 /* ---------- Publish Button ---------- */
-const PublishButton = () => {
-  const [open, setOpen] = useState(false);
+const PublishButton = ({ externalOpen, onExternalOpenChange }: { externalOpen?: boolean; onExternalOpenChange?: (v: boolean) => void }) => {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = externalOpen !== undefined ? externalOpen : internalOpen;
+  const setOpen = (v: boolean) => { setInternalOpen(v); onExternalOpenChange?.(v); };
   const [isPublished, setIsPublished] = useState(false);
   const [copied, setCopied] = useState(false);
   const [view, setView] = useState<"main" | "editSettings" | "websiteInfo" | "websiteAccess" | "editUrl">("main");
