@@ -243,6 +243,7 @@ const SlateDashboard = () => {
 
   const clearIntent = () => {
     setActiveIntent(null);
+    setPrompt("");
   };
 
   return (
