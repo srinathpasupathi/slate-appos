@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MoreHorizontal, Plus, X } from "lucide-react";
+import { MoreHorizontal, Plus, X, ChevronDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,24 +16,76 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 
-const roles = ["Super Admin", "Admin", "App Owner", "Editor", "Viewer"] as const;
+const orgRoles = ["Super Admin", "Admin", "App Owner", "Editor", "Viewer"] as const;
+const appRoles = ["App Owner", "Editor", "Viewer"] as const;
 
-const initialMembers = [
-  { id: "1", name: "Aravind Kumar", email: "aravind@slate.in", role: "Super Admin", joined: "12 Jan 2025", usage: "842", creditLimit: 200 },
-  { id: "2", name: "Priya Sharma", email: "priya@slate.in", role: "Admin", joined: "18 Feb 2025", usage: "431", creditLimit: 150 },
-  { id: "3", name: "Rahul Menon", email: "rahul@slate.in", role: "Editor", joined: "05 Mar 2025", usage: "217", creditLimit: 100 },
-  { id: "4", name: "Deepa Nair", email: "deepa@slate.in", role: "Viewer", joined: "22 Mar 2025", usage: "54", creditLimit: 50 },
+const availableApps = [
+  { id: "app1", name: "Franchise Sales App" },
+  { id: "app2", name: "HR Management App" },
+  { id: "app3", name: "Inventory Tracker" },
+  { id: "app4", name: "Customer Portal" },
+];
+
+interface AppAccess {
+  appId: string;
+  appName: string;
+  role: string;
+}
+
+interface Member {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  joined: string;
+  usage: string;
+  creditLimit: number;
+  appAccess: AppAccess[];
+}
+
+const initialMembers: Member[] = [
+  { id: "1", name: "Aravind Kumar", email: "aravind@slate.in", role: "Super Admin", joined: "12 Jan 2025", usage: "842", creditLimit: 200, appAccess: [] },
+  { id: "2", name: "Priya Sharma", email: "priya@slate.in", role: "Admin", joined: "18 Feb 2025", usage: "431", creditLimit: 150, appAccess: [] },
+  { id: "3", name: "Rahul Menon", email: "rahul@slate.in", role: "Editor", joined: "05 Mar 2025", usage: "217", creditLimit: 100, appAccess: [{ appId: "app1", appName: "Franchise Sales App", role: "Editor" }, { appId: "app3", appName: "Inventory Tracker", role: "Viewer" }] },
+  { id: "4", name: "Deepa Nair", email: "deepa@slate.in", role: "Viewer", joined: "22 Mar 2025", usage: "54", creditLimit: 50, appAccess: [{ appId: "app2", appName: "HR Management App", role: "Viewer" }] },
 ];
 
 const TeamSettings = () => {
-  const [members, setMembers] = useState(initialMembers);
+  const [members, setMembers] = useState<Member[]>(initialMembers);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<string>("Editor");
+  const [inviteAppAccess, setInviteAppAccess] = useState<AppAccess[]>([]);
   const [editCreditId, setEditCreditId] = useState<string | null>(null);
   const [editCreditValue, setEditCreditValue] = useState("");
   const [editRoleId, setEditRoleId] = useState<string | null>(null);
   const [editRoleValue, setEditRoleValue] = useState("");
+  const [expandedMember, setExpandedMember] = useState<string | null>(null);
+
+  const isPerAppRole = (role: string) => ["App Owner", "Editor", "Viewer"].includes(role);
+  const isAllAccessRole = (role: string) => ["Super Admin", "Admin"].includes(role);
+
+  const handleAddAppToInvite = () => {
+    const usedIds = inviteAppAccess.map((a) => a.appId);
+    const next = availableApps.find((a) => !usedIds.includes(a.id));
+    if (next) {
+      setInviteAppAccess((prev) => [...prev, { appId: next.id, appName: next.name, role: inviteRole }]);
+    }
+  };
+
+  const handleRemoveAppFromInvite = (appId: string) => {
+    setInviteAppAccess((prev) => prev.filter((a) => a.appId !== appId));
+  };
+
+  const handleUpdateInviteAppRole = (appId: string, role: string) => {
+    setInviteAppAccess((prev) => prev.map((a) => a.appId === appId ? { ...a, role } : a));
+  };
+
+  const handleUpdateInviteApp = (oldAppId: string, newAppId: string) => {
+    const app = availableApps.find((a) => a.id === newAppId);
+    if (!app) return;
+    setInviteAppAccess((prev) => prev.map((a) => a.appId === oldAppId ? { ...a, appId: newAppId, appName: app.name } : a));
+  };
 
   const handleInvite = () => {
     if (!inviteEmail) return;
@@ -47,10 +99,12 @@ const TeamSettings = () => {
         joined: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
         usage: "0",
         creditLimit: 100,
+        appAccess: isPerAppRole(inviteRole) ? inviteAppAccess : [],
       },
     ]);
     setInviteEmail("");
     setInviteRole("Editor");
+    setInviteAppAccess([]);
     setInviteOpen(false);
   };
 
@@ -66,7 +120,7 @@ const TeamSettings = () => {
   };
 
   const handleSaveRole = (id: string, role: string) => {
-    setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, role } : m)));
+    setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, role, appAccess: isAllAccessRole(role) ? [] : m.appAccess } : m)));
     setEditRoleId(null);
   };
 
@@ -87,8 +141,10 @@ const TeamSettings = () => {
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/40">
+              <TableHead className="text-xs w-6" />
               <TableHead className="text-xs">Name</TableHead>
               <TableHead className="text-xs">Role</TableHead>
+              <TableHead className="text-xs">App Access</TableHead>
               <TableHead className="text-xs">Joined</TableHead>
               <TableHead className="text-xs text-right">Total Usage</TableHead>
               <TableHead className="text-xs text-right">Credit Limit</TableHead>
@@ -96,65 +152,93 @@ const TeamSettings = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {members.map((member) => (
-              <TableRow key={member.id}>
-                <TableCell>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{member.name}</p>
-                    <p className="text-xs text-muted-foreground">{member.email}</p>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span className="text-xs font-medium bg-muted px-2.5 py-1 rounded-full text-foreground">
-                    {member.role}
-                  </span>
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground">{member.joined}</TableCell>
-                <TableCell className="text-sm text-right font-medium text-foreground">{member.usage}</TableCell>
-                <TableCell className="text-sm text-right font-medium text-foreground">{member.creditLimit}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button className="h-8 w-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setEditCreditId(member.id);
-                          setEditCreditValue(String(member.creditLimit));
-                        }}
-                      >
-                        Update Credit Limit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setEditRoleId(member.id);
-                          setEditRoleValue(member.role);
-                        }}
-                      >
-                        Change Role
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        className="text-destructive focus:text-destructive"
-                        onClick={() => handleRemove(member.id)}
-                      >
-                        Remove Member
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
+            {members.map((member) => {
+              const hasAppAccess = isPerAppRole(member.role) && member.appAccess.length > 0;
+              const isExpanded = expandedMember === member.id;
+
+              return (
+                <>
+                  <TableRow key={member.id} className="group">
+                    <TableCell className="px-2">
+                      {hasAppAccess ? (
+                        <button
+                          onClick={() => setExpandedMember(isExpanded ? null : member.id)}
+                          className="h-6 w-6 rounded flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                        >
+                          {isExpanded ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+                        </button>
+                      ) : null}
+                    </TableCell>
+                    <TableCell>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{member.name}</p>
+                        <p className="text-xs text-muted-foreground">{member.email}</p>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-xs font-medium bg-muted px-2.5 py-1 rounded-full text-foreground">
+                        {member.role}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      {isAllAccessRole(member.role) ? (
+                        <span className="text-xs text-muted-foreground italic">All apps</span>
+                      ) : member.appAccess.length > 0 ? (
+                        <span className="text-xs text-muted-foreground">{member.appAccess.length} app{member.appAccess.length > 1 ? "s" : ""}</span>
+                      ) : (
+                        <span className="text-xs text-muted-foreground italic">No apps assigned</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">{member.joined}</TableCell>
+                    <TableCell className="text-sm text-right font-medium text-foreground">{member.usage}</TableCell>
+                    <TableCell className="text-sm text-right font-medium text-foreground">{member.creditLimit}</TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="h-8 w-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48">
+                          <DropdownMenuItem onClick={() => { setEditCreditId(member.id); setEditCreditValue(String(member.creditLimit)); }}>
+                            Update Credit Limit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => { setEditRoleId(member.id); setEditRoleValue(member.role); }}>
+                            Change Role
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={() => handleRemove(member.id)}>
+                            Remove Member
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                  {hasAppAccess && isExpanded && (
+                    <TableRow key={`${member.id}-apps`} className="bg-muted/20">
+                      <TableCell colSpan={8} className="px-8 py-3">
+                        <div className="space-y-2">
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">App-level Access</p>
+                          {member.appAccess.map((access) => (
+                            <div key={access.appId} className="flex items-center justify-between py-1.5 px-3 rounded-lg bg-background border border-border">
+                              <span className="text-sm text-foreground font-medium">{access.appName}</span>
+                              <span className="text-xs font-medium bg-muted px-2.5 py-1 rounded-full text-foreground">{access.role}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </>
+              );
+            })}
           </TableBody>
         </Table>
       </div>
 
       {/* Invite Dialog */}
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
-        <DialogContent className="sm:max-w-[420px]">
+        <DialogContent className="sm:max-w-[480px]">
           <DialogHeader>
             <DialogTitle>Invite Team Member</DialogTitle>
           </DialogHeader>
@@ -169,17 +253,84 @@ const TeamSettings = () => {
             </div>
             <div className="space-y-1.5">
               <label className="text-sm font-medium text-foreground">Role</label>
-              <Select value={inviteRole} onValueChange={setInviteRole}>
+              <Select value={inviteRole} onValueChange={(val) => { setInviteRole(val); if (isAllAccessRole(val)) setInviteAppAccess([]); }}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {roles.map((r) => (
+                  {orgRoles.map((r) => (
                     <SelectItem key={r} value={r}>{r}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              {isAllAccessRole(inviteRole) && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  {inviteRole}s have access to all apps by default.
+                </p>
+              )}
             </div>
+
+            {isPerAppRole(inviteRole) && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-medium text-foreground">App Access</label>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={handleAddAppToInvite}
+                    disabled={inviteAppAccess.length >= availableApps.length}
+                    className="gap-1 h-7 text-xs"
+                  >
+                    <Plus className="h-3 w-3" /> Add App
+                  </Button>
+                </div>
+
+                {inviteAppAccess.length === 0 && (
+                  <p className="text-xs text-muted-foreground py-2">No apps added yet. Click "Add App" to assign per-app access.</p>
+                )}
+
+                {inviteAppAccess.map((access) => {
+                  const usedIds = inviteAppAccess.filter((a) => a.appId !== access.appId).map((a) => a.appId);
+                  return (
+                    <div key={access.appId} className="flex items-center gap-2 p-2 rounded-lg border border-border bg-muted/30">
+                      <div className="flex-1">
+                        <Select value={access.appId} onValueChange={(val) => handleUpdateInviteApp(access.appId, val)}>
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {availableApps
+                              .filter((a) => !usedIds.includes(a.id))
+                              .map((a) => (
+                                <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="w-32">
+                        <Select value={access.role} onValueChange={(val) => handleUpdateInviteAppRole(access.appId, val)}>
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {appRoles.map((r) => (
+                              <SelectItem key={r} value={r}>{r}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <button
+                        onClick={() => handleRemoveAppFromInvite(access.appId)}
+                        className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setInviteOpen(false)}>Cancel</Button>
@@ -196,11 +347,7 @@ const TeamSettings = () => {
           </DialogHeader>
           <div className="space-y-1.5 py-2">
             <label className="text-sm font-medium text-foreground">Credit Limit</label>
-            <Input
-              type="number"
-              value={editCreditValue}
-              onChange={(e) => setEditCreditValue(e.target.value)}
-            />
+            <Input type="number" value={editCreditValue} onChange={(e) => setEditCreditValue(e.target.value)} />
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditCreditId(null)}>Cancel</Button>
@@ -222,7 +369,7 @@ const TeamSettings = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {roles.map((r) => (
+                {orgRoles.map((r) => (
                   <SelectItem key={r} value={r}>{r}</SelectItem>
                 ))}
               </SelectContent>
