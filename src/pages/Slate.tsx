@@ -277,7 +277,7 @@ const SlateDashboard = () => {
 
           <div className="relative flex-1 flex flex-col items-center justify-center px-6 lg:px-16">
             {/* Heading */}
-            <h1 className="text-center text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-8">
+            <h1 className="text-center text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-8 mt-16">
               Let's start building, Srinath
             </h1>
 
