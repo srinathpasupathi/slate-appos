@@ -41,7 +41,7 @@ const PrivacySettings = () => {
           <div className="flex-1 mr-6">
             <h4 className="text-sm font-semibold text-foreground">MCP Servers Access</h4>
             <p className="text-xs text-muted-foreground mt-1">
-              Allow workspace members to use MCP servers connected to this organization.
+              Allow Org members to use MCP servers connected to this organization.
             </p>
           </div>
           <Switch checked={mcpAccess} onCheckedChange={setMcpAccess} />
