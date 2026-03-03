@@ -315,6 +315,26 @@ const PlatformIDESelector = () => {
                 </button>
               </div>
             </div>
+          ) : selected.key === 'claude-code' ? (
+            <div className="flex flex-col items-center gap-3 max-w-lg w-full">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Command</p>
+              <div className="w-full flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border font-mono text-xs text-muted-foreground">
+                <span className="truncate flex-1 select-all">claude mcp add --transport http notion https://mcp.notion.com/mcp</span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigator.clipboard.writeText('claude mcp add --transport http notion https://mcp.notion.com/mcp');
+                    const btn = e.currentTarget;
+                    btn.dataset.copied = 'true';
+                    setTimeout(() => { btn.dataset.copied = ''; }, 2000);
+                  }}
+                  className="shrink-0 h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/10 transition-colors group"
+                  title="Copy command"
+                >
+                  <Copy className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                </button>
+              </div>
+            </div>
           ) : (
             <button className="h-11 px-8 rounded-lg bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-colors shadow-sm">
               Install Om on {selected.name}
