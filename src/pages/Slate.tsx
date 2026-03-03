@@ -204,10 +204,12 @@ const ideOptions = [
 
 const PlatformIDESelector = () => {
   const [selectedIDE, setSelectedIDE] = useState<string | null>(null);
-  const [connectionPhase, setConnectionPhase] = useState<'idle' | 'copied' | 'waiting' | 'connected' | 'ready' | 'building'>('idle');
+  const [connectionPhase, setConnectionPhase] = useState<'idle' | 'copied' | 'waiting' | 'connected' | 'ready' | 'building' | 'deploy-ready' | 'deploying' | 'live'>('idle');
   const [copiedPrompt, setCopiedPrompt] = useState<string | null>(null);
   const [showNudge, setShowNudge] = useState(false);
   const [buildStep, setBuildStep] = useState(0);
+  const [deployStep, setDeployStep] = useState(0);
+  const [deployCopied, setDeployCopied] = useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const selected = ideOptions.find(ide => ide.key === selectedIDE);
@@ -251,7 +253,28 @@ const PlatformIDESelector = () => {
     setBuildStep(0);
     setTimeout(() => setBuildStep(1), 1200);
     setTimeout(() => setBuildStep(2), 2800);
-    setTimeout(() => setBuildStep(3), 5000);
+    setTimeout(() => {
+      setBuildStep(3);
+      // After provisioning completes, transition to deploy-ready
+      setTimeout(() => setConnectionPhase('deploy-ready'), 1500);
+    }, 5000);
+  };
+
+  const startDeployFlow = () => {
+    setConnectionPhase('deploying');
+    setDeployStep(0);
+    setTimeout(() => setDeployStep(1), 1000);
+    setTimeout(() => setDeployStep(2), 2200);
+    setTimeout(() => {
+      setDeployStep(3);
+      setTimeout(() => setConnectionPhase('live'), 1500);
+    }, 4000);
+  };
+
+  const handleCopyDeployPrompt = () => {
+    navigator.clipboard.writeText('Deploy my app to Om');
+    setDeployCopied(true);
+    setTimeout(() => startDeployFlow(), 3000);
   };
 
   const handleCopyPrompt = (prompt: string) => {
@@ -313,6 +336,144 @@ const PlatformIDESelector = () => {
               </div>
             );
           })}
+        </div>
+      </div>
+    );
+  }
+
+  // Deploy ready screen
+  if (connectionPhase === 'deploy-ready') {
+    return (
+      <div ref={containerRef} className="flex flex-col items-center gap-10 w-full max-w-md animate-in fade-in duration-500">
+        <div className="text-center space-y-3">
+          <h2 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            Your app is ready to deploy
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Deploy to get your live app URL.
+          </p>
+        </div>
+
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={handleCopyDeployPrompt}
+          onKeyDown={(e) => e.key === 'Enter' && handleCopyDeployPrompt()}
+          className="group w-full flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-border bg-card hover:border-foreground/20 hover:bg-muted/50 transition-all duration-200 cursor-pointer select-none"
+        >
+          <div className="flex flex-col gap-0.5">
+            <span className="text-sm font-semibold text-foreground">Deploy to Om</span>
+            <span className="text-xs text-muted-foreground">Get a hosted URL for your app</span>
+          </div>
+          <span
+            className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-200 ${
+              deployCopied
+                ? 'text-green-500 border-green-500/20 bg-green-500/5'
+                : 'text-foreground/60 border-transparent opacity-0 group-hover:opacity-100 group-hover:border-border group-hover:bg-muted/60 group-hover:text-foreground'
+            }`}
+          >
+            {deployCopied ? (
+              <><Check className="h-3 w-3" /> Copied</>
+            ) : (
+              <><Copy className="h-3 w-3" /> Copy</>
+            )}
+          </span>
+        </div>
+
+        <p className="text-xs text-muted-foreground font-mono bg-muted/40 px-3 py-1.5 rounded-lg">
+          Deploy my app to Om
+        </p>
+      </div>
+    );
+  }
+
+  // Deploying screen
+  if (connectionPhase === 'deploying') {
+    const deployChecklist = ['App detected', 'Resources ready', 'Deploying'];
+    return (
+      <div ref={containerRef} className="flex flex-col items-center gap-10 w-full max-w-md animate-in fade-in duration-500">
+        <div className="text-center space-y-3">
+          <h2 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            Deploying your app…
+          </h2>
+        </div>
+
+        <div className="flex flex-col gap-3 w-full">
+          {deployChecklist.map((item, i) => {
+            const done = deployStep > i;
+            const active = deployStep === i;
+            return (
+              <div
+                key={item}
+                className={`flex items-center gap-3 px-5 py-3 rounded-xl border transition-all duration-500 ${
+                  done
+                    ? 'border-green-500/20 bg-green-500/5'
+                    : active
+                    ? 'border-foreground/15 bg-muted/40'
+                    : 'border-border bg-card opacity-50'
+                } ${i <= deployStep ? 'animate-in fade-in slide-in-from-bottom-1 duration-300' : ''}`}
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
+                {done ? (
+                  <Check className="h-4 w-4 text-green-500 shrink-0" />
+                ) : active ? (
+                  <div className="h-4 w-4 shrink-0 rounded-full border-2 border-foreground/30 border-t-foreground animate-spin" />
+                ) : (
+                  <div className="h-4 w-4 shrink-0 rounded-full border-2 border-border" />
+                )}
+                <span className={`text-sm font-medium ${done ? 'text-foreground' : active ? 'text-foreground' : 'text-muted-foreground'}`}>
+                  {item}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // Live / success screen
+  if (connectionPhase === 'live') {
+    return (
+      <div ref={containerRef} className="flex flex-col items-center gap-8 w-full max-w-md animate-in fade-in duration-500">
+        <div className="text-center space-y-3">
+          <div className="mx-auto h-14 w-14 rounded-full bg-green-500/10 border-2 border-green-500/30 flex items-center justify-center mb-4">
+            <Check className="h-7 w-7 text-green-500" />
+          </div>
+          <h2 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            Your app is live
+          </h2>
+        </div>
+
+        <div className="w-full rounded-xl border border-border bg-card p-5 space-y-4">
+          <div className="space-y-1">
+            <p className="text-xs text-muted-foreground font-medium">App URL</p>
+            <div className="flex items-center gap-2 rounded-lg border border-input bg-muted/30 px-3 py-2">
+              <Globe className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              <span className="text-sm text-foreground flex-1">real-estate.us.omcloud.ai</span>
+              <button
+                onClick={() => navigator.clipboard.writeText('https://real-estate.us.omcloud.ai')}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Copy className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <a
+              href="https://real-estate.us.omcloud.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 h-10 rounded-lg bg-foreground text-background text-sm font-medium hover:bg-foreground/90 transition-colors"
+            >
+              Open App
+              <ArrowRight className="h-3.5 w-3.5" />
+            </a>
+            <button className="flex-1 flex items-center justify-center gap-2 h-10 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted/50 transition-colors">
+              View Project
+            </button>
+          </div>
         </div>
       </div>
     );
