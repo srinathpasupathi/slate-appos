@@ -290,15 +290,30 @@ const PlatformIDESelector = () => {
       {selected && (
         <div className="flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           {selected.key === 'custom' ? (
-            <div className="flex flex-col items-center gap-3 p-6 rounded-xl border border-border bg-card max-w-md w-full">
-              <Server className="h-6 w-6 text-muted-foreground mb-1" />
-              <p className="text-sm font-medium text-foreground">Custom MCP Server</p>
-              <p className="text-xs text-muted-foreground text-center">
-                Enter your MCP server details in Settings → Connectors to connect Om with your custom setup.
-              </p>
-              <button className="mt-2 h-10 px-6 rounded-lg bg-foreground/10 text-foreground text-sm font-semibold hover:bg-foreground/15 transition-colors">
-                Open Connector Settings
-              </button>
+            <div className="flex flex-col items-center gap-4 p-6 rounded-xl border border-border bg-card max-w-lg w-full">
+              <Server className="h-6 w-6 text-muted-foreground" />
+              <div className="text-center space-y-1">
+                <p className="text-sm font-medium text-foreground">Om MCP Server</p>
+                <p className="text-xs text-muted-foreground">
+                  Copy the MCP server URL below and add it to your preferred tool manually.
+                </p>
+              </div>
+              <div className="w-full flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border font-mono text-xs text-muted-foreground">
+                <span className="truncate flex-1 select-all">https://mcp.us.om.ai/mcp/message?key=***************</span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigator.clipboard.writeText('https://mcp.us.om.ai/mcp/message?key=***************');
+                    const btn = e.currentTarget;
+                    btn.dataset.copied = 'true';
+                    setTimeout(() => { btn.dataset.copied = ''; }, 2000);
+                  }}
+                  className="shrink-0 h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/10 transition-colors group"
+                  title="Copy URL"
+                >
+                  <Copy className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                </button>
+              </div>
             </div>
           ) : (
             <button className="h-11 px-8 rounded-lg bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-colors shadow-sm">
