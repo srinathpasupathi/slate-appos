@@ -374,7 +374,38 @@ const SlateDashboard = () => {
                         <Plus className="h-4 w-4" />
                       </button>
                     </PopoverTrigger>
-                    <PopoverContent align="start" side="top" className="w-64 p-1.5">
+                    <PopoverContent align="start" side="top" className="w-72 p-1.5">
+                      {/* Quick Starters */}
+                      <div className="px-3 py-2">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Rocket className="h-3.5 w-3.5 text-muted-foreground" />
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Start with a template</p>
+                        </div>
+                        {quickStarters.map((starter) => {
+                          const Icon = starter.icon;
+                          const isActive = activeIntent === starter.id;
+                          return (
+                            <button
+                              key={starter.id}
+                              onClick={() => { handleStarterClick(starter); setPlusMenuOpen(false); }}
+                              className={`flex items-center gap-3 w-full px-2 py-2 rounded-lg text-sm transition-colors ${
+                                isActive ? "bg-primary/10 text-primary" : "text-foreground hover:bg-muted"
+                              }`}
+                            >
+                              <div className={`h-7 w-7 rounded-md flex items-center justify-center shrink-0 ${
+                                isActive ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+                              }`}>
+                                <Icon className="h-3.5 w-3.5" />
+                              </div>
+                              <div className="text-left">
+                                <p className="text-sm font-medium">{starter.title}</p>
+                                <p className="text-xs text-muted-foreground">{starter.description}</p>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <div className="h-px bg-border my-1" />
                       <button
                         onClick={handleFileUpload}
                         className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-muted transition-colors"
@@ -434,39 +465,8 @@ const SlateDashboard = () => {
                 </div>
               </div>
 
-              {/* Quick Starter Cards */}
-              <div className="mt-8">
-                <p className="text-sm font-semibold text-foreground mb-4 text-center">
-                  Or pick a starting point..
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                  {quickStarters.map((starter) => {
-                    const Icon = starter.icon;
-                    const isActive = activeIntent === starter.id;
-                    return (
-                      <button
-                        key={starter.id}
-                        onClick={() => handleStarterClick(starter)}
-                        className={`group flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-all hover:shadow-md hover:-translate-y-0.5 ${
-                          isActive
-                            ? "border-primary/40 bg-primary/5 shadow-sm"
-                            : "border-border bg-card hover:border-foreground/20"
-                        }`}
-                      >
-                        <div className={`h-8 w-8 rounded-lg flex items-center justify-center transition-colors ${
-                          isActive ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
-                        }`}>
-                          <Icon className="h-4 w-4" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-foreground whitespace-nowrap">{starter.title}</p>
-                          <p className="text-xs text-muted-foreground">{starter.description}</p>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+
+
             </div>
           </div>
         </div>
