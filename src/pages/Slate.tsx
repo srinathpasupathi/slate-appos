@@ -203,7 +203,7 @@ const SlateDashboard = () => {
   const [sidebarHovered, setSidebarHovered] = useState(false);
   
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [mainTab, setMainTab] = useState<'build' | 'appos' | 'cloud'>('build');
+  const [mainTab, setMainTab] = useState<'build' | 'platform'>('build');
   const navigate = useNavigate();
 
   const connectedConnectors = [
@@ -321,29 +321,14 @@ const SlateDashboard = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-blue-100/60 via-indigo-50/40 to-blue-50/30 pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
 
-          {/* Top bar icons - positioned absolutely */}
-          <div className="relative flex items-center justify-end px-6 py-3">
-            <div className="flex items-center gap-3">
-              <button className="p-2 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground">
-                <Bell className="h-4.5 w-4.5" />
-              </button>
-              <button
-                onClick={() => setSettingsOpen(true)}
-                className="p-2 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground"
-              >
-                <Settings className="h-4.5 w-4.5" />
-              </button>
-              <ProfilePopover variant="topbar" />
-            </div>
-          </div>
-
-          {/* Horizontal Tabs */}
-          <div className="relative flex justify-center py-2">
+          {/* Top bar with tabs + icons */}
+          <div className="relative flex items-center justify-between px-6 py-3">
+            {/* Centered tabs */}
+            <div className="flex-1" />
             <div className="inline-flex items-center gap-1 rounded-full bg-muted/60 backdrop-blur-sm p-1 border border-border/50">
               {([
                 { key: 'build' as const, label: 'Build' },
-                { key: 'appos' as const, label: 'AppOS' },
-                { key: 'cloud' as const, label: 'Cloud' },
+                { key: 'platform' as const, label: 'Platform' },
               ]).map(tab => (
                 <button
                   key={tab.key}
@@ -358,6 +343,18 @@ const SlateDashboard = () => {
                 </button>
               ))}
             </div>
+            <div className="flex-1 flex items-center justify-end gap-3">
+              <button className="p-2 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground">
+                <Bell className="h-4.5 w-4.5" />
+              </button>
+              <button
+                onClick={() => setSettingsOpen(true)}
+                className="p-2 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <Settings className="h-4.5 w-4.5" />
+              </button>
+              <ProfilePopover variant="topbar" />
+            </div>
           </div>
 
           <div className="relative flex-1 flex flex-col items-center justify-center px-6 lg:px-16 pb-24">
@@ -371,18 +368,16 @@ const SlateDashboard = () => {
             ) : (
               <div className="flex flex-col items-center gap-4">
                 <div className="h-16 w-16 rounded-2xl bg-muted/80 flex items-center justify-center">
-                  {mainTab === 'appos' ? <Layers className="h-7 w-7 text-muted-foreground" /> : <Server className="h-7 w-7 text-muted-foreground" />}
+                  <Layers className="h-7 w-7 text-muted-foreground" />
                 </div>
                 <h2 className="text-xl font-semibold text-foreground" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                  {mainTab === 'appos' ? 'AppOS' : 'Cloud'}
+                  Platform
                 </h2>
                 <span className="inline-flex items-center px-3 py-1 rounded-full bg-muted text-muted-foreground text-xs font-medium">
                   Coming Soon
                 </span>
                 <p className="text-sm text-muted-foreground text-center max-w-md">
-                  {mainTab === 'appos'
-                    ? 'A unified operating system for all your apps — manage, monitor, and orchestrate everything from one place.'
-                    : 'Deploy and scale your apps with managed cloud infrastructure — zero config, maximum performance.'}
+                  A unified platform for deploying, managing, and scaling your apps — zero config, maximum performance.
                 </p>
               </div>
             )}
