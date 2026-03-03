@@ -327,7 +327,7 @@ const SlateDashboard = () => {
           <div className="relative flex-1 flex flex-col items-center justify-center px-6 lg:px-16 py-12">
             {/* Heading */}
             <h1 className="text-center text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-8">
-              What do you want to build, Srinath?
+              Got an idea, Srinath?
             </h1>
 
             {/* Prompt box */}
@@ -347,7 +347,7 @@ const SlateDashboard = () => {
                 <textarea
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  placeholder="Ask Slate to create an app about.."
+                  placeholder="Ask Om to create an app about it."
                   rows={4}
                   className="w-full resize-none rounded-t-xl bg-transparent px-5 pt-4 pb-2 text-sm md:text-base text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
                 />
@@ -375,37 +375,6 @@ const SlateDashboard = () => {
                       </button>
                     </PopoverTrigger>
                     <PopoverContent align="start" side="top" className="w-72 p-1.5">
-                      {/* Quick Starters */}
-                      <div className="px-3 py-2">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Rocket className="h-3.5 w-3.5 text-muted-foreground" />
-                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Start with a template</p>
-                        </div>
-                        {quickStarters.map((starter) => {
-                          const Icon = starter.icon;
-                          const isActive = activeIntent === starter.id;
-                          return (
-                            <button
-                              key={starter.id}
-                              onClick={() => { handleStarterClick(starter); setPlusMenuOpen(false); }}
-                              className={`flex items-center gap-3 w-full px-2 py-2 rounded-lg text-sm transition-colors ${
-                                isActive ? "bg-primary/10 text-primary" : "text-foreground hover:bg-muted"
-                              }`}
-                            >
-                              <div className={`h-7 w-7 rounded-md flex items-center justify-center shrink-0 ${
-                                isActive ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
-                              }`}>
-                                <Icon className="h-3.5 w-3.5" />
-                              </div>
-                              <div className="text-left">
-                                <p className="text-sm font-medium">{starter.title}</p>
-                                <p className="text-xs text-muted-foreground">{starter.description}</p>
-                              </div>
-                            </button>
-                          );
-                        })}
-                      </div>
-                      <div className="h-px bg-border my-1" />
                       <button
                         onClick={handleFileUpload}
                         className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-muted transition-colors"
