@@ -291,7 +291,6 @@ const PlatformIDESelector = () => {
     'App detected',
     'Backend selected',
     'Provisioning resources',
-    'Deploying',
   ];
 
   // Building screen — staged progress
