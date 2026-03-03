@@ -335,8 +335,8 @@ const SlateDashboard = () => {
                   onClick={() => setMainTab(tab.key)}
                   className={`relative px-6 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
                     mainTab === tab.key
-                      ? 'bg-primary text-primary-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+                      ? 'bg-foreground/10 text-foreground shadow-sm border border-border'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
                   }`}
                 >
                   {tab.label}
