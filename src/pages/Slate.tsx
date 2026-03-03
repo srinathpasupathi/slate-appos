@@ -234,6 +234,87 @@ const SlateDashboard = () => {
     setAttachedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
+const ideOptions = [
+  { key: 'cursor', name: 'Cursor', logo: '/ide-logos/cursor.png' },
+  { key: 'antigravity', name: 'Antigravity', logo: '/ide-logos/antigravity.png' },
+  { key: 'vscode', name: 'VS Code', logo: '/ide-logos/vscode.png' },
+  { key: 'windsurf', name: 'Windsurf', logo: '/ide-logos/windsurf.png' },
+  { key: 'claude-code', name: 'Claude Code', logo: '/ide-logos/claude-code.png' },
+  { key: 'mcp-server', name: 'MCP Server', logo: null },
+];
+
+const PlatformIDESelector = () => {
+  const [selectedIDE, setSelectedIDE] = useState<string | null>(null);
+
+  const selected = ideOptions.find(ide => ide.key === selectedIDE);
+
+  return (
+    <div className="flex flex-col items-center gap-8 w-full max-w-3xl">
+      <div className="text-center">
+        <h2 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          Choose your AI IDE
+        </h2>
+        <p className="text-sm text-muted-foreground mt-2">
+          Connect Om to your preferred development environment
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full">
+        {ideOptions.map(ide => (
+          <button
+            key={ide.key}
+            onClick={() => setSelectedIDE(ide.key === selectedIDE ? null : ide.key)}
+            className={`group relative flex flex-col items-center gap-3 p-6 rounded-xl border transition-all duration-200 ${
+              selectedIDE === ide.key
+                ? 'border-foreground/20 bg-foreground/5 shadow-md ring-1 ring-foreground/10'
+                : 'border-border bg-card hover:border-foreground/15 hover:bg-muted/40 hover:shadow-sm'
+            }`}
+          >
+            <div className="h-12 w-12 rounded-lg bg-muted/60 flex items-center justify-center overflow-hidden">
+              {ide.logo ? (
+                <img src={ide.logo} alt={ide.name} className="h-8 w-8 object-contain" />
+              ) : (
+                <Server className="h-6 w-6 text-muted-foreground" />
+              )}
+            </div>
+            <span className="text-sm font-medium text-foreground">{ide.name}</span>
+            {selectedIDE === ide.key && (
+              <div className="absolute top-2.5 right-2.5 h-5 w-5 rounded-full bg-foreground/10 flex items-center justify-center">
+                <Check className="h-3 w-3 text-foreground" />
+              </div>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {selected && (
+        <div className="flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          {selected.key === 'mcp-server' ? (
+            <div className="flex flex-col items-center gap-3 p-6 rounded-xl border border-border bg-card max-w-md w-full">
+              <Server className="h-6 w-6 text-muted-foreground mb-1" />
+              <p className="text-sm font-medium text-foreground">Custom MCP Server</p>
+              <p className="text-xs text-muted-foreground text-center">
+                Enter your MCP server details in Settings → Connectors to connect Om with your custom setup.
+              </p>
+              <button className="mt-2 h-10 px-6 rounded-lg bg-foreground/10 text-foreground text-sm font-semibold hover:bg-foreground/15 transition-colors">
+                Open Connector Settings
+              </button>
+            </div>
+          ) : (
+            <button className="h-11 px-8 rounded-lg bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-colors shadow-sm">
+              Install Om on {selected.name}
+            </button>
+          )}
+          <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+            <User className="h-3.5 w-3.5" />
+            Login &amp; authorize your MCP server upon install
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
 
   const handleStarterClick = (starter: typeof quickStarters[number]) => {
     setPrompt(starter.prompt);
@@ -366,20 +447,7 @@ const SlateDashboard = () => {
                 </h1>
               </>
             ) : (
-              <div className="flex flex-col items-center gap-4">
-                <div className="h-16 w-16 rounded-2xl bg-muted/80 flex items-center justify-center">
-                  <Layers className="h-7 w-7 text-muted-foreground" />
-                </div>
-                <h2 className="text-xl font-semibold text-foreground" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                  Platform
-                </h2>
-                <span className="inline-flex items-center px-3 py-1 rounded-full bg-muted text-muted-foreground text-xs font-medium">
-                  Coming Soon
-                </span>
-                <p className="text-sm text-muted-foreground text-center max-w-md">
-                  A unified platform for deploying, managing, and scaling your apps — zero config, maximum performance.
-                </p>
-              </div>
+              <PlatformIDESelector />
             )}
 
             {mainTab === 'build' && (
