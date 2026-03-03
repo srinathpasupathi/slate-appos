@@ -245,7 +245,7 @@ const ideOptions = [
 
 const PlatformIDESelector = () => {
   const [selectedIDE, setSelectedIDE] = useState<string | null>(null);
-  const [connectionPhase, setConnectionPhase] = useState<'idle' | 'waiting' | 'connected' | 'ready'>('idle');
+  const [connectionPhase, setConnectionPhase] = useState<'idle' | 'copied' | 'waiting' | 'connected' | 'ready'>('idle');
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const selected = ideOptions.find(ide => ide.key === selectedIDE);
@@ -270,8 +270,8 @@ const PlatformIDESelector = () => {
   const handleCopyAndConnect = (text: string, e: React.MouseEvent) => {
     e.stopPropagation();
     navigator.clipboard.writeText(text);
-    // Start connection flow after copy — wait 4s then show waiting
-    setTimeout(() => startConnectionFlow(), 4000);
+    setConnectionPhase('copied');
+    setTimeout(() => startConnectionFlow(), 1500);
   };
 
   const handleCardClick = (key: string) => {
@@ -367,7 +367,7 @@ const PlatformIDESelector = () => {
         ))}
       </div>
 
-      {selected && connectionPhase === 'idle' && (
+      {selected && (connectionPhase === 'idle' || connectionPhase === 'copied') && (
         <div className="flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           {selected.key === 'custom' ? (
             <div className="flex flex-col items-center gap-4 p-6 rounded-xl border border-border bg-card max-w-lg w-full">
@@ -378,29 +378,43 @@ const PlatformIDESelector = () => {
                   Copy the MCP server URL below and add it to your preferred tool manually.
                 </p>
               </div>
-              <div className="w-full flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border font-mono text-xs text-muted-foreground">
+              <div className="w-full relative flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border font-mono text-xs text-muted-foreground">
                 <span className="truncate flex-1 select-all">https://mcp.us.om.ai/mcp/message?key=***************</span>
                 <button
                   onClick={(e) => handleCopyAndConnect('https://mcp.us.om.ai/mcp/message?key=***************', e)}
-                  className="shrink-0 h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/10 transition-colors group"
+                  className="shrink-0 relative h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/10 transition-colors group"
                   title="Copy URL"
                 >
-                  <Copy className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                  {connectionPhase === 'copied' ? (
+                    <Check className="h-3.5 w-3.5 text-green-500" />
+                  ) : (
+                    <Copy className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                  )}
                 </button>
+                {connectionPhase === 'copied' && (
+                  <span className="absolute -top-7 right-0 text-[11px] font-medium text-green-500 bg-card border border-border rounded-md px-2 py-0.5 shadow-sm animate-in fade-in duration-200">Copied!</span>
+                )}
               </div>
             </div>
           ) : selected.key === 'claude-code' ? (
             <div className="flex flex-col items-center gap-3 max-w-lg w-full">
               <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Installation Command</p>
-              <div className="w-full flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border font-mono text-xs text-muted-foreground">
+              <div className="w-full relative flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border font-mono text-xs text-muted-foreground">
                 <span className="truncate flex-1 select-all">claude mcp add --transport http om https://mcp.us.om.ai/mcp/message?key=***************</span>
                 <button
                   onClick={(e) => handleCopyAndConnect('claude mcp add --transport http om https://mcp.us.om.ai/mcp/message?key=***************', e)}
-                  className="shrink-0 h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/10 transition-colors group"
+                  className="shrink-0 relative h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/10 transition-colors group"
                   title="Copy command"
                 >
-                  <Copy className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                  {connectionPhase === 'copied' ? (
+                    <Check className="h-3.5 w-3.5 text-green-500" />
+                  ) : (
+                    <Copy className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                  )}
                 </button>
+                {connectionPhase === 'copied' && (
+                  <span className="absolute -top-7 right-0 text-[11px] font-medium text-green-500 bg-card border border-border rounded-md px-2 py-0.5 shadow-sm animate-in fade-in duration-200">Copied!</span>
+                )}
               </div>
             </div>
           ) : (
