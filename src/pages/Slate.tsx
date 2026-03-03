@@ -325,7 +325,7 @@ const SlateDashboard = () => {
           <div className="relative flex items-center justify-between px-6 py-3">
             {/* Centered tabs */}
             <div className="flex-1" />
-            <div className="inline-flex items-center gap-1 rounded-full bg-muted/60 backdrop-blur-sm p-1 border border-border/50">
+            <div className="inline-flex items-center gap-1 rounded-full bg-background/90 backdrop-blur-md p-1.5 border border-border shadow-md">
               {([
                 { key: 'build' as const, label: 'Build' },
                 { key: 'platform' as const, label: 'Platform' },
@@ -333,10 +333,10 @@ const SlateDashboard = () => {
                 <button
                   key={tab.key}
                   onClick={() => setMainTab(tab.key)}
-                  className={`relative px-5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                  className={`relative px-6 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
                     mainTab === tab.key
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
+                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                   }`}
                 >
                   {tab.label}
