@@ -393,44 +393,19 @@ const PlatformIDESelector = () => {
 
   // Deploying screen
   if (connectionPhase === 'deploying') {
-    const deployChecklist = ['App detected', 'Resources ready', 'Deploying'];
     return (
-      <div ref={containerRef} className="flex flex-col items-center gap-10 w-full max-w-md animate-in fade-in duration-500">
-        <div className="text-center space-y-3">
+      <div ref={containerRef} className="flex flex-col items-center gap-8 w-full max-w-md animate-in fade-in duration-500">
+        <div className="relative h-12 w-12">
+          <div className="absolute inset-0 rounded-full border-2 border-muted" />
+          <div className="absolute inset-0 rounded-full border-2 border-t-foreground animate-spin" style={{ animationDuration: '1.2s' }} />
+        </div>
+        <div className="text-center space-y-2">
           <h2 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Deploying your app…
           </h2>
-        </div>
-
-        <div className="flex flex-col gap-3 w-full">
-          {deployChecklist.map((item, i) => {
-            const done = deployStep > i;
-            const active = deployStep === i;
-            return (
-              <div
-                key={item}
-                className={`flex items-center gap-3 px-5 py-3 rounded-xl border transition-all duration-500 ${
-                  done
-                    ? 'border-green-500/20 bg-green-500/5'
-                    : active
-                    ? 'border-foreground/15 bg-muted/40'
-                    : 'border-border bg-card opacity-50'
-                } ${i <= deployStep ? 'animate-in fade-in slide-in-from-bottom-1 duration-300' : ''}`}
-                style={{ animationDelay: `${i * 100}ms` }}
-              >
-                {done ? (
-                  <Check className="h-4 w-4 text-green-500 shrink-0" />
-                ) : active ? (
-                  <div className="h-4 w-4 shrink-0 rounded-full border-2 border-foreground/30 border-t-foreground animate-spin" />
-                ) : (
-                  <div className="h-4 w-4 shrink-0 rounded-full border-2 border-border" />
-                )}
-                <span className={`text-sm font-medium ${done ? 'text-foreground' : active ? 'text-foreground' : 'text-muted-foreground'}`}>
-                  {item}
-                </span>
-              </div>
-            );
-          })}
+          <p className="text-sm text-muted-foreground animate-in fade-in duration-700" style={{ animationDelay: '300ms', animationFillMode: 'both' }}>
+            This will only take a moment.
+          </p>
         </div>
       </div>
     );
