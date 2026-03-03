@@ -341,7 +341,7 @@ const SlateDashboard = () => {
                 <textarea
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  placeholder="Ask Om to create an app about it."
+                  placeholder="Ask Om to create an app about... "
                   rows={4}
                   className="w-full resize-none rounded-t-xl bg-transparent px-5 pt-4 pb-2 text-sm md:text-base text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
                 />
