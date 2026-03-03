@@ -299,7 +299,7 @@ const SlateDashboard = () => {
       <main className="flex-1 flex flex-col overflow-y-auto">
         {/* Hero gradient area - fills available space */}
         <div className="relative flex-1 flex flex-col min-h-[75vh]">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/8 to-primary/5 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-100/60 via-indigo-50/40 to-blue-50/30 pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
 
           {/* Top bar icons - positioned absolutely */}
