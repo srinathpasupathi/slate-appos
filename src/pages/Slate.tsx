@@ -193,47 +193,6 @@ const quickStarters = [
   },
 ];
 
-const SlateDashboard = () => {
-  const [prompt, setPrompt] = useState("");
-  const [_activeTab, setActiveTab] = useState("my");
-  const [activeIntent, setActiveIntent] = useState<string | null>(null);
-  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
-  const [plusMenuOpen, setPlusMenuOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
-  const [sidebarHovered, setSidebarHovered] = useState(false);
-  
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [mainTab, setMainTab] = useState<'build' | 'platform'>('build');
-  const navigate = useNavigate();
-
-  const connectedConnectors = [
-    { name: "Catalyst by Zoho", icon: "⚡" },
-    { name: "Zoho CRM", icon: "📊" },
-  ];
-
-  const connectedMcpServers = [
-    { name: "Zoho MCP Server", url: "https://mcp.zoho.com" },
-    { name: "Custom Analytics MCP", url: "https://analytics.example.com/mcp" },
-  ];
-
-  const handleFileUpload = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.multiple = true;
-    input.onchange = (e) => {
-      const files = (e.target as HTMLInputElement).files;
-      if (files) {
-        setAttachedFiles(prev => [...prev, ...Array.from(files)]);
-      }
-    };
-    input.click();
-    setPlusMenuOpen(false);
-  };
-
-  const removeFile = (index: number) => {
-    setAttachedFiles(prev => prev.filter((_, i) => i !== index));
-  };
-
 const ideOptions = [
   { key: 'cursor', name: 'Cursor', logo: '/ide-logos/cursor.png' },
   { key: 'antigravity', name: 'Antigravity', logo: '/ide-logos/antigravity.png' },
@@ -495,6 +454,45 @@ const PlatformIDESelector = () => {
   );
 };
 
+const SlateDashboard = () => {
+  const [prompt, setPrompt] = useState("");
+  const [_activeTab, setActiveTab] = useState("my");
+  const [activeIntent, setActiveIntent] = useState<string | null>(null);
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const [plusMenuOpen, setPlusMenuOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
+  const [sidebarHovered, setSidebarHovered] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [mainTab, setMainTab] = useState<'build' | 'platform'>('build');
+  const navigate = useNavigate();
+
+  const connectedConnectors = [
+    { name: "Catalyst by Zoho", icon: "⚡" },
+    { name: "Zoho CRM", icon: "📊" },
+  ];
+
+  const connectedMcpServers = [
+    { name: "Zoho MCP Server", url: "https://mcp.zoho.com" },
+    { name: "Custom Analytics MCP", url: "https://analytics.example.com/mcp" },
+  ];
+
+  const handleFileUpload = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.multiple = true;
+    input.onchange = (e) => {
+      const files = (e.target as HTMLInputElement).files;
+      if (files) {
+        setAttachedFiles(prev => [...prev, ...Array.from(files)]);
+      }
+    };
+    input.click();
+    setPlusMenuOpen(false);
+  };
+
+  const removeFile = (index: number) => {
+    setAttachedFiles(prev => prev.filter((_, i) => i !== index));
+  };
 
   const handleStarterClick = (starter: typeof quickStarters[number]) => {
     setPrompt(starter.prompt);
