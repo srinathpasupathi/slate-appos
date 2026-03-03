@@ -256,7 +256,6 @@ const PlatformIDESelector = () => {
       setConnectionPhase('connected');
       setTimeout(() => {
         setConnectionPhase('ready');
-        // Smooth scroll up after transition
         setTimeout(() => {
           containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
@@ -268,6 +267,13 @@ const PlatformIDESelector = () => {
     startConnectionFlow();
   };
 
+  const handleCopyAndConnect = (text: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(text);
+    // Start connection flow after copy — wait 4s then show waiting
+    setTimeout(() => startConnectionFlow(), 4000);
+  };
+
   const handleCardClick = (key: string) => {
     if (selectedIDE === key) {
       setSelectedIDE(null);
@@ -275,10 +281,6 @@ const PlatformIDESelector = () => {
     } else {
       setSelectedIDE(key);
       setConnectionPhase('idle');
-      // Auto-start connection for claude-code and custom (others)
-      if (key === 'claude-code' || key === 'custom') {
-        setTimeout(() => startConnectionFlow(), 600);
-      }
     }
   };
 
@@ -379,10 +381,7 @@ const PlatformIDESelector = () => {
               <div className="w-full flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border font-mono text-xs text-muted-foreground">
                 <span className="truncate flex-1 select-all">https://mcp.us.om.ai/mcp/message?key=***************</span>
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigator.clipboard.writeText('https://mcp.us.om.ai/mcp/message?key=***************');
-                  }}
+                  onClick={(e) => handleCopyAndConnect('https://mcp.us.om.ai/mcp/message?key=***************', e)}
                   className="shrink-0 h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/10 transition-colors group"
                   title="Copy URL"
                 >
@@ -396,10 +395,7 @@ const PlatformIDESelector = () => {
               <div className="w-full flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border font-mono text-xs text-muted-foreground">
                 <span className="truncate flex-1 select-all">claude mcp add --transport http om https://mcp.us.om.ai/mcp/message?key=***************</span>
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigator.clipboard.writeText('claude mcp add --transport http om https://mcp.us.om.ai/mcp/message?key=***************');
-                  }}
+                  onClick={(e) => handleCopyAndConnect('claude mcp add --transport http om https://mcp.us.om.ai/mcp/message?key=***************', e)}
                   className="shrink-0 h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/10 transition-colors group"
                   title="Copy command"
                 >
