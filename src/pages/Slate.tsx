@@ -240,7 +240,7 @@ const ideOptions = [
   { key: 'vscode', name: 'VS Code', logo: '/ide-logos/vscode.png' },
   { key: 'windsurf', name: 'Windsurf', logo: '/ide-logos/windsurf.png' },
   { key: 'claude-code', name: 'Claude Code', logo: '/ide-logos/claude-code.png' },
-  { key: 'mcp-server', name: 'MCP Server', logo: null },
+  { key: 'custom', name: 'Custom', logo: null },
 ];
 
 const PlatformIDESelector = () => {
@@ -289,7 +289,7 @@ const PlatformIDESelector = () => {
 
       {selected && (
         <div className="flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-          {selected.key === 'mcp-server' ? (
+          {selected.key === 'custom' ? (
             <div className="flex flex-col items-center gap-3 p-6 rounded-xl border border-border bg-card max-w-md w-full">
               <Server className="h-6 w-6 text-muted-foreground mb-1" />
               <p className="text-sm font-medium text-foreground">Custom MCP Server</p>
