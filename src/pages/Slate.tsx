@@ -297,32 +297,26 @@ const SlateDashboard = () => {
 
       {/* Main content */}
       <main className="flex-1 flex flex-col overflow-y-auto">
-        {/* Top bar with mode toggle */}
-        <div className="flex items-center justify-between px-6 py-3">
-          <div />
-          <div className="flex items-center gap-3">
-            {/* Notifications */}
-            <button className="p-2 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
-              <Bell className="h-4.5 w-4.5" />
-            </button>
-            {/* Settings */}
-            <button
-              onClick={() => setSettingsOpen(true)}
-              className="p-2 rounded-md hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
-            >
-              <Settings className="h-4.5 w-4.5" />
-            </button>
-            {/* Org popover */}
-            <ProfilePopover variant="topbar" />
-          </div>
-        </div>
-
-        
-        
         {/* Hero gradient area - fills available space */}
         <div className="relative flex-1 flex flex-col min-h-[75vh]">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/8 to-primary/5 pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
+
+          {/* Top bar icons - positioned absolutely */}
+          <div className="relative flex items-center justify-end px-6 py-3">
+            <div className="flex items-center gap-3">
+              <button className="p-2 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground">
+                <Bell className="h-4.5 w-4.5" />
+              </button>
+              <button
+                onClick={() => setSettingsOpen(true)}
+                className="p-2 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <Settings className="h-4.5 w-4.5" />
+              </button>
+              <ProfilePopover variant="topbar" />
+            </div>
+          </div>
 
           <div className="relative flex-1 flex flex-col items-center justify-center px-6 lg:px-16 py-12">
             {/* Heading */}
