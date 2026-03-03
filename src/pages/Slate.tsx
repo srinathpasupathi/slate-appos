@@ -317,7 +317,7 @@ const PlatformIDESelector = () => {
             </div>
           ) : selected.key === 'claude-code' ? (
             <div className="flex flex-col items-center gap-3 max-w-lg w-full">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Command</p>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Installation Command</p>
               <div className="w-full flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border font-mono text-xs text-muted-foreground">
                 <span className="truncate flex-1 select-all">claude mcp add --transport http om https://mcp.us.om.ai/mcp/message?key=***************</span>
                 <button
