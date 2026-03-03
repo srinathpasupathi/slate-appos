@@ -255,7 +255,7 @@ const PlatformIDESelector = () => {
           Choose your AI IDE
         </h2>
         <p className="text-sm text-muted-foreground mt-2">
-          Connect Om to your preferred development environment
+          Connect Om Platform to your preferred development tool
         </p>
       </div>
 
