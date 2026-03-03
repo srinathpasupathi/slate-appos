@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, GitBranch, ChevronUp, ChevronDown, Copy, Rocket, Bell, AppWindow, Layers, X, Database, Paperclip, Plug, Server, FileText, Trash2,
+  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, GitBranch, ChevronUp, ChevronDown, Copy, Rocket, Bell, AppWindow, Layers, X, Database, Paperclip, Plug, Server, FileText, Trash2, PanelLeftClose, PanelLeftOpen,
 } from "lucide-react";
 import slateLogo from "@/assets/slate-logo.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -199,6 +199,7 @@ const SlateDashboard = () => {
   const [activeIntent, setActiveIntent] = useState<string | null>(null);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [plusMenuOpen, setPlusMenuOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   
   const [settingsOpen, setSettingsOpen] = useState(false);
   const navigate = useNavigate();
@@ -250,30 +251,46 @@ const SlateDashboard = () => {
   return (
     <div className="flex h-screen bg-background overflow-hidden">
       {/* Sidebar */}
-      <aside className="hidden lg:flex flex-col w-[240px] border-r border-border bg-card flex-shrink-0">
-        {/* Logo */}
-        <div className="flex items-center gap-2 px-4 py-4">
-          <img src={slateLogo} alt="Slate" className="h-5 w-auto ml-2" />
-          <span className="text-lg font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Slate</span>
+      <aside className={`hidden lg:flex flex-col border-r border-border bg-card flex-shrink-0 transition-all duration-200 ${sidebarCollapsed ? 'w-[52px]' : 'w-[240px]'}`}>
+        {/* Toggle + Logo */}
+        <div className={`flex items-center ${sidebarCollapsed ? 'justify-center' : 'justify-between'} px-3 py-4`}>
+          {!sidebarCollapsed && (
+            <div className="flex items-center gap-2 ml-1">
+              <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
+              <span className="text-lg font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Slate</span>
+            </div>
+          )}
+          <button
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {sidebarCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
+          </button>
         </div>
 
         {/* Nav links */}
-        <nav className="flex-1 px-3 py-2 space-y-0.5 overflow-y-auto">
-          <SidebarLink icon={Home} label="Home" active />
-          <SidebarLink icon={Search} label="Search" />
+        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto overflow-x-hidden">
+          <SidebarLink icon={Home} label="Home" active collapsed={sidebarCollapsed} />
+          <SidebarLink icon={Search} label="Search" collapsed={sidebarCollapsed} />
 
-          <div className="pt-4 pb-1">
-            <p className="px-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Apps</p>
-          </div>
-          <SidebarLink icon={Clock} label="Recently created" />
-          <div className="pl-8 space-y-0.5">
-            {recentProjects.map((p) => (
-              <a key={p.name} href="#" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
-                {p.name}
-              </a>
-            ))}
-          </div>
-  <SidebarLink icon={Grid3X3} label="All apps" onClick={() => setActiveTab("all")} />
+          {!sidebarCollapsed && (
+            <div className="pt-4 pb-1">
+              <p className="px-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Apps</p>
+            </div>
+          )}
+          {sidebarCollapsed && <div className="pt-3" />}
+          <SidebarLink icon={Clock} label="Recently created" collapsed={sidebarCollapsed} />
+          {!sidebarCollapsed && (
+            <div className="pl-8 space-y-0.5">
+              {recentProjects.map((p) => (
+                <a key={p.name} href="#" className="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
+                  {p.name}
+                </a>
+              ))}
+            </div>
+          )}
+          <SidebarLink icon={Grid3X3} label="All apps" onClick={() => setActiveTab("all")} collapsed={sidebarCollapsed} />
         </nav>
 
       </aside>
@@ -600,18 +617,19 @@ const ProfilePopover = ({ variant = "sidebar" }: { variant?: "sidebar" | "topbar
   </Popover>
 );
 
-const SidebarLink = ({ icon: Icon, label, active, onClick }: { icon: any; label: string; active?: boolean; onClick?: () => void }) => (
+const SidebarLink = ({ icon: Icon, label, active, onClick, collapsed }: { icon: any; label: string; active?: boolean; onClick?: () => void; collapsed?: boolean }) => (
   <a
     href="#"
     onClick={(e) => { if (onClick) { e.preventDefault(); onClick(); } }}
-    className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${
+    className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3 py-2 rounded-md text-sm transition-colors ${
       active
         ? "bg-muted text-foreground font-medium"
         : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
     }`}
+    title={collapsed ? label : undefined}
   >
-    <Icon className="h-4 w-4" />
-    {label}
+    <Icon className="h-4 w-4 shrink-0" />
+    {!collapsed && label}
   </a>
 );
 
