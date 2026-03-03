@@ -253,7 +253,7 @@ const SlateDashboard = () => {
         onMouseLeave={() => setSidebarHovered(false)}
       >
         {/* Toggle + Logo */}
-        <div className={`flex items-center ${sidebarCollapsed ? 'justify-center' : 'justify-between'} px-3 py-4`}>
+        <div className={`flex items-center ${sidebarCollapsed ? 'justify-center' : 'justify-between'} px-3 py-4 relative`}>
           {!sidebarCollapsed && (
             <div className="flex items-center gap-2 ml-1">
               <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
@@ -261,17 +261,20 @@ const SlateDashboard = () => {
             </div>
           )}
           {sidebarCollapsed ? (
-            sidebarHovered ? (
+            <div className="relative h-7 w-7 flex items-center justify-center">
+              <img
+                src={slateLogo}
+                alt="Slate"
+                className={`h-5 w-auto absolute inset-0 m-auto transition-opacity duration-150 ${sidebarHovered ? 'opacity-0' : 'opacity-100'}`}
+              />
               <button
                 onClick={() => setSidebarCollapsed(false)}
-                className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                className={`p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-opacity duration-150 absolute inset-0 m-auto flex items-center justify-center ${sidebarHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                 title="Expand sidebar"
               >
                 <PanelLeftOpen className="h-4 w-4" />
               </button>
-            ) : (
-              <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
-            )
+            </div>
           ) : (
             <button
               onClick={() => setSidebarCollapsed(true)}
