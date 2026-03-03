@@ -258,7 +258,7 @@ const SlateDashboard = () => {
           {/* Expanded: logo + text (always rendered, hidden when collapsed) */}
           <div className={`flex items-center gap-2 ml-1 ${sidebarCollapsed ? 'hidden' : ''}`}>
             <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
-            <span className="text-lg font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Slate</span>
+            <span className="text-lg font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Om</span>
           </div>
 
           {/* Collapsed: logo/expand toggle swap */}
