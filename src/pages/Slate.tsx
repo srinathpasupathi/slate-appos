@@ -203,6 +203,7 @@ const SlateDashboard = () => {
   const [sidebarHovered, setSidebarHovered] = useState(false);
   
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [mainTab, setMainTab] = useState<'build' | 'appos' | 'cloud'>('build');
   const navigate = useNavigate();
 
   const connectedConnectors = [
@@ -336,12 +337,58 @@ const SlateDashboard = () => {
             </div>
           </div>
 
-          <div className="relative flex-1 flex flex-col items-center justify-center px-6 lg:px-16 pb-24">
-            {/* Heading */}
-            <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              What should we build, Srinath?
-            </h1>
+          {/* Horizontal Tabs */}
+          <div className="relative flex justify-center py-2">
+            <div className="inline-flex items-center gap-1 rounded-full bg-muted/60 backdrop-blur-sm p-1 border border-border/50">
+              {([
+                { key: 'build' as const, label: 'Build' },
+                { key: 'appos' as const, label: 'AppOS' },
+                { key: 'cloud' as const, label: 'Cloud' },
+              ]).map(tab => (
+                <button
+                  key={tab.key}
+                  onClick={() => setMainTab(tab.key)}
+                  className={`relative px-5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                    mainTab === tab.key
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
+          <div className="relative flex-1 flex flex-col items-center justify-center px-6 lg:px-16 pb-24">
+            {mainTab === 'build' ? (
+              <>
+                {/* Heading */}
+                <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                  What should we build, Srinath?
+                </h1>
+              </>
+            ) : (
+              <div className="flex flex-col items-center gap-4">
+                <div className="h-16 w-16 rounded-2xl bg-muted/80 flex items-center justify-center">
+                  {mainTab === 'appos' ? <Layers className="h-7 w-7 text-muted-foreground" /> : <Server className="h-7 w-7 text-muted-foreground" />}
+                </div>
+                <h2 className="text-xl font-semibold text-foreground" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                  {mainTab === 'appos' ? 'AppOS' : 'Cloud'}
+                </h2>
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-muted text-muted-foreground text-xs font-medium">
+                  Coming Soon
+                </span>
+                <p className="text-sm text-muted-foreground text-center max-w-md">
+                  {mainTab === 'appos'
+                    ? 'A unified operating system for all your apps — manage, monitor, and orchestrate everything from one place.'
+                    : 'Deploy and scale your apps with managed cloud infrastructure — zero config, maximum performance.'}
+                </p>
+              </div>
+            )}
+
+            {mainTab === 'build' && (
+            <>
             {/* Prompt box */}
             <div className="max-w-4xl w-full mx-auto">
               {/* Intent pill */}
@@ -449,6 +496,8 @@ const SlateDashboard = () => {
 
 
             </div>
+            </>
+            )}
           </div>
         </div>
 
