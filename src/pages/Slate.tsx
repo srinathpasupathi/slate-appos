@@ -301,27 +301,30 @@ const PlatformIDESelector = () => {
           </p>
         </div>
 
-        {/* Prompt examples */}
-        <div className="grid gap-3 w-full">
+        {/* Prompt example cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
           {[
-            { icon: Database, label: "Build a CRM using Om" },
-            { icon: FileText, label: "Create a ticketing system" },
-            { icon: Server, label: "Generate a REST API with storage" },
-          ].map((example) => (
-            <button
-              key={example.label}
-              onClick={() => {
-                setMainTab('build');
-                setPrompt(example.label);
-              }}
-              className="flex items-center gap-4 p-4 rounded-xl border border-border bg-card hover:border-foreground/15 hover:bg-muted/40 hover:shadow-sm transition-all duration-200 text-left group"
+            { title: "Real Estate CRM", subtitle: "Complete property sales system", prompt: "Build a Real Estate CRM with property listings, lead tracking, and deal pipeline" },
+            { title: "Franchise Sales App", subtitle: "Manage franchise pipeline and approvals", prompt: "Build a Franchise Sales App to manage franchise pipeline and approvals" },
+            { title: "Cloud API Backend", subtitle: "Database, storage, and REST APIs", prompt: "Generate a Cloud API Backend with database, storage, and REST APIs" },
+            { title: "SaaS Backend Starter", subtitle: "Auth, billing, and multi-tenancy", prompt: "Build a SaaS Backend Starter with auth, billing, and multi-tenancy" },
+          ].map((card) => (
+            <div
+              key={card.title}
+              className="group relative flex flex-col gap-1.5 p-5 rounded-xl border border-border bg-card hover:border-foreground/15 hover:bg-muted/40 hover:shadow-sm transition-all duration-200"
             >
-              <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                <example.icon className="h-5 w-5 text-primary" />
-              </div>
-              <span className="text-sm font-medium text-foreground group-hover:text-foreground/90">{example.label}</span>
-              <ArrowRight className="h-4 w-4 text-muted-foreground/40 ml-auto group-hover:text-foreground/60 group-hover:translate-x-0.5 transition-all" />
-            </button>
+              <span className="text-sm font-semibold text-foreground">{card.title}</span>
+              <span className="text-xs text-muted-foreground">{card.subtitle}</span>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(card.prompt);
+                }}
+                className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-150 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted"
+                title="Copy prompt"
+              >
+                <Copy className="h-3.5 w-3.5" />
+              </button>
+            </div>
           ))}
         </div>
       </div>
