@@ -204,9 +204,10 @@ const ideOptions = [
 
 const PlatformIDESelector = () => {
   const [selectedIDE, setSelectedIDE] = useState<string | null>(null);
-  const [connectionPhase, setConnectionPhase] = useState<'idle' | 'copied' | 'waiting' | 'connected' | 'ready'>('idle');
+  const [connectionPhase, setConnectionPhase] = useState<'idle' | 'copied' | 'waiting' | 'connected' | 'ready' | 'building'>('idle');
   const [copiedPrompt, setCopiedPrompt] = useState<string | null>(null);
   const [showNudge, setShowNudge] = useState(false);
+  const [buildStep, setBuildStep] = useState(0);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const selected = ideOptions.find(ide => ide.key === selectedIDE);
@@ -245,14 +246,77 @@ const PlatformIDESelector = () => {
     }
   };
 
+  const startBuildFlow = () => {
+    setConnectionPhase('building');
+    setBuildStep(0);
+    setTimeout(() => setBuildStep(1), 1200);
+    setTimeout(() => setBuildStep(2), 2800);
+    setTimeout(() => setBuildStep(3), 5000);
+  };
+
   const handleCopyPrompt = (prompt: string) => {
     navigator.clipboard.writeText(prompt);
     setCopiedPrompt(prompt);
     setShowNudge(false);
     setTimeout(() => setShowNudge(true), 4000);
+    setTimeout(() => startBuildFlow(), 8000);
   };
 
   const ideName = selected?.name || 'your IDE';
+
+  const buildChecklist = [
+    'App detected',
+    'Backend selected',
+    'Provisioning resources',
+    'Deploying',
+  ];
+
+  // Building screen — staged progress
+  if (connectionPhase === 'building') {
+    return (
+      <div ref={containerRef} className="flex flex-col items-center gap-10 w-full max-w-md animate-in fade-in duration-500">
+        <div className="text-center space-y-3">
+          <h2 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            Building your app…
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Om is provisioning backend resources.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-3 w-full">
+          {buildChecklist.map((item, i) => {
+            const done = buildStep > i;
+            const active = buildStep === i;
+            return (
+              <div
+                key={item}
+                className={`flex items-center gap-3 px-5 py-3 rounded-xl border transition-all duration-500 ${
+                  done
+                    ? 'border-green-500/20 bg-green-500/5'
+                    : active
+                    ? 'border-foreground/15 bg-muted/40'
+                    : 'border-border bg-card opacity-50'
+                } ${i <= buildStep ? 'animate-in fade-in slide-in-from-bottom-1 duration-300' : ''}`}
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
+                {done ? (
+                  <Check className="h-4 w-4 text-green-500 shrink-0" />
+                ) : active ? (
+                  <div className="h-4 w-4 shrink-0 rounded-full border-2 border-foreground/30 border-t-foreground animate-spin" />
+                ) : (
+                  <div className="h-4 w-4 shrink-0 rounded-full border-2 border-border" />
+                )}
+                <span className={`text-sm font-medium ${done ? 'text-foreground' : active ? 'text-foreground' : 'text-muted-foreground'}`}>
+                  {item}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
 
   // Ready screen — connected and showing prompts
   if (connectionPhase === 'ready') {
