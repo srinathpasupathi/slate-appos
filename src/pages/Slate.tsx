@@ -247,7 +247,6 @@ const PlatformIDESelector = () => {
   const handleCopyPrompt = (prompt: string) => {
     navigator.clipboard.writeText(prompt);
     setCopiedPrompt(prompt);
-    setTimeout(() => setCopiedPrompt(null), 2000);
   };
 
   const ideName = selected?.name || 'your IDE';
@@ -308,12 +307,10 @@ const PlatformIDESelector = () => {
           })}
         </div>
 
-        {/* Persistent helper text — appears after first copy */}
-        {copiedPrompt && (
-          <p className="text-sm text-muted-foreground text-center animate-in fade-in duration-300">
-            Paste into your IDE to start.
-          </p>
-        )}
+        {/* Helper text — always reserve space, visible after first copy */}
+        <p className={`text-sm text-muted-foreground text-center transition-opacity duration-300 ${copiedPrompt ? 'opacity-100' : 'opacity-0'}`}>
+          Paste into your IDE to start.
+        </p>
       </div>
     );
   }
