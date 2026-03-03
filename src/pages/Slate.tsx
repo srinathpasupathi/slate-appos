@@ -206,6 +206,7 @@ const PlatformIDESelector = () => {
   const [selectedIDE, setSelectedIDE] = useState<string | null>(null);
   const [connectionPhase, setConnectionPhase] = useState<'idle' | 'copied' | 'waiting' | 'connected' | 'ready'>('idle');
   const [copiedPrompt, setCopiedPrompt] = useState<string | null>(null);
+  const [showNudge, setShowNudge] = useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const selected = ideOptions.find(ide => ide.key === selectedIDE);
@@ -247,6 +248,8 @@ const PlatformIDESelector = () => {
   const handleCopyPrompt = (prompt: string) => {
     navigator.clipboard.writeText(prompt);
     setCopiedPrompt(prompt);
+    setShowNudge(false);
+    setTimeout(() => setShowNudge(true), 4000);
   };
 
   const ideName = selected?.name || 'your IDE';
@@ -307,10 +310,20 @@ const PlatformIDESelector = () => {
           })}
         </div>
 
-        {/* Helper text — always reserve space, visible after first copy */}
-        <p className={`text-sm text-muted-foreground text-center transition-opacity duration-300 ${copiedPrompt ? 'opacity-100' : 'opacity-0'}`}>
-          Paste into your IDE to start.
-        </p>
+        {/* Helper text — always reserve space, transitions between hint and nudge */}
+        <div className={`text-center transition-opacity duration-300 min-h-[40px] flex items-center justify-center ${copiedPrompt ? 'opacity-100' : 'opacity-0'}`}>
+          {showNudge ? (
+            <p className="text-sm text-muted-foreground animate-in fade-in duration-500">
+              <span className="font-semibold text-foreground">Still waiting?</span>
+              <br />
+              Make sure you've pasted the prompt into your IDE.
+            </p>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Paste into your IDE to start.
+            </p>
+          )}
+        </div>
       </div>
     );
   }
