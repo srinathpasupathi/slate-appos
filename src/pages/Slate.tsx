@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, GitBranch, ChevronUp, ChevronDown, Copy, Rocket, Bell, AppWindow, Layers, X, Database, Paperclip, Plug, Server, FileText, Trash2, PanelLeftClose, PanelLeftOpen,
@@ -240,16 +240,94 @@ const ideOptions = [
   { key: 'vscode', name: 'VS Code', logo: '/ide-logos/vscode.png' },
   { key: 'windsurf', name: 'Windsurf', logo: '/ide-logos/windsurf.png' },
   { key: 'claude-code', name: 'Claude Code', logo: '/ide-logos/claude-code.png' },
-  { key: 'custom', name: 'Custom', logo: null },
+  { key: 'custom', name: 'Others', logo: null },
 ];
 
 const PlatformIDESelector = () => {
   const [selectedIDE, setSelectedIDE] = useState<string | null>(null);
+  const [connectionPhase, setConnectionPhase] = useState<'idle' | 'waiting' | 'connected' | 'ready'>('idle');
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   const selected = ideOptions.find(ide => ide.key === selectedIDE);
 
+  const startConnectionFlow = () => {
+    setConnectionPhase('waiting');
+    setTimeout(() => {
+      setConnectionPhase('connected');
+      setTimeout(() => {
+        setConnectionPhase('ready');
+        // Smooth scroll up after transition
+        setTimeout(() => {
+          containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }, 1200);
+    }, 4000);
+  };
+
+  const handleInstallClick = () => {
+    startConnectionFlow();
+  };
+
+  const handleCardClick = (key: string) => {
+    if (selectedIDE === key) {
+      setSelectedIDE(null);
+      setConnectionPhase('idle');
+    } else {
+      setSelectedIDE(key);
+      setConnectionPhase('idle');
+      // Auto-start connection for claude-code and custom (others)
+      if (key === 'claude-code' || key === 'custom') {
+        setTimeout(() => startConnectionFlow(), 600);
+      }
+    }
+  };
+
+  // Ready screen — connected and showing prompts
+  if (connectionPhase === 'ready') {
+    return (
+      <div ref={containerRef} className="flex flex-col items-center gap-10 w-full max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+        {/* Connected header */}
+        <div className="text-center space-y-3">
+          <div className="mx-auto h-14 w-14 rounded-full bg-green-500/10 border-2 border-green-500/30 flex items-center justify-center mb-4">
+            <Check className="h-7 w-7 text-green-500" />
+          </div>
+          <h2 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            You're connected. Let's build something.
+          </h2>
+          <p className="text-sm text-muted-foreground max-w-md mx-auto">
+            Build directly from your AI IDE. Om will provision the backend automatically.
+          </p>
+        </div>
+
+        {/* Prompt examples */}
+        <div className="grid gap-3 w-full">
+          {[
+            { icon: Database, label: "Build a CRM using Om" },
+            { icon: FileText, label: "Create a ticketing system" },
+            { icon: Server, label: "Generate a REST API with storage" },
+          ].map((example) => (
+            <button
+              key={example.label}
+              onClick={() => {
+                setMainTab('build');
+                setPrompt(example.label);
+              }}
+              className="flex items-center gap-4 p-4 rounded-xl border border-border bg-card hover:border-foreground/15 hover:bg-muted/40 hover:shadow-sm transition-all duration-200 text-left group"
+            >
+              <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <example.icon className="h-5 w-5 text-primary" />
+              </div>
+              <span className="text-sm font-medium text-foreground group-hover:text-foreground/90">{example.label}</span>
+              <ArrowRight className="h-4 w-4 text-muted-foreground/40 ml-auto group-hover:text-foreground/60 group-hover:translate-x-0.5 transition-all" />
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col items-center gap-8 w-full max-w-3xl">
+    <div ref={containerRef} className="flex flex-col items-center gap-8 w-full max-w-3xl">
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
           Choose your AI IDE
@@ -263,7 +341,7 @@ const PlatformIDESelector = () => {
         {ideOptions.map(ide => (
           <button
             key={ide.key}
-            onClick={() => setSelectedIDE(ide.key === selectedIDE ? null : ide.key)}
+            onClick={() => handleCardClick(ide.key)}
             className={`group relative flex flex-col items-center gap-3 p-6 rounded-xl border transition-all duration-200 ${
               selectedIDE === ide.key
                 ? 'border-foreground/20 bg-foreground/5 shadow-md ring-1 ring-foreground/10'
@@ -287,7 +365,7 @@ const PlatformIDESelector = () => {
         ))}
       </div>
 
-      {selected && (
+      {selected && connectionPhase === 'idle' && (
         <div className="flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
           {selected.key === 'custom' ? (
             <div className="flex flex-col items-center gap-4 p-6 rounded-xl border border-border bg-card max-w-lg w-full">
@@ -304,9 +382,6 @@ const PlatformIDESelector = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     navigator.clipboard.writeText('https://mcp.us.om.ai/mcp/message?key=***************');
-                    const btn = e.currentTarget;
-                    btn.dataset.copied = 'true';
-                    setTimeout(() => { btn.dataset.copied = ''; }, 2000);
                   }}
                   className="shrink-0 h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/10 transition-colors group"
                   title="Copy URL"
@@ -324,9 +399,6 @@ const PlatformIDESelector = () => {
                   onClick={(e) => {
                     e.stopPropagation();
                     navigator.clipboard.writeText('claude mcp add --transport http om https://mcp.us.om.ai/mcp/message?key=***************');
-                    const btn = e.currentTarget;
-                    btn.dataset.copied = 'true';
-                    setTimeout(() => { btn.dataset.copied = ''; }, 2000);
                   }}
                   className="shrink-0 h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/10 transition-colors group"
                   title="Copy command"
@@ -336,7 +408,10 @@ const PlatformIDESelector = () => {
               </div>
             </div>
           ) : (
-            <button className="h-11 px-8 rounded-lg bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-colors shadow-sm">
+            <button
+              onClick={handleInstallClick}
+              className="h-11 px-8 rounded-lg bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-colors shadow-sm"
+            >
               Install Om on {selected.name}
             </button>
           )}
@@ -344,6 +419,32 @@ const PlatformIDESelector = () => {
             <User className="h-3.5 w-3.5" />
             Make sure you login &amp; authorize Om upon install
           </p>
+        </div>
+      )}
+
+      {/* Verify connection state */}
+      {(connectionPhase === 'waiting' || connectionPhase === 'connected') && (
+        <div className="flex flex-col items-center gap-5 animate-in fade-in duration-300 py-2">
+          <div className="flex flex-col items-center gap-3">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Verify Connection</p>
+            <div className={`flex items-center gap-2.5 px-5 py-2.5 rounded-full border transition-all duration-500 ${
+              connectionPhase === 'connected'
+                ? 'border-green-500/30 bg-green-500/5'
+                : 'border-border bg-muted/30'
+            }`}>
+              {connectionPhase === 'waiting' ? (
+                <>
+                  <div className="h-2.5 w-2.5 rounded-full bg-amber-400 animate-pulse" />
+                  <span className="text-sm text-muted-foreground">Waiting for connection…</span>
+                </>
+              ) : (
+                <>
+                  <div className="h-2.5 w-2.5 rounded-full bg-green-500" />
+                  <span className="text-sm text-green-600 font-medium">Connected ✓</span>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>
