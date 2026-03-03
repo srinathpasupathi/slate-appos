@@ -195,7 +195,7 @@ const quickStarters = [
 
 const SlateDashboard = () => {
   const [prompt, setPrompt] = useState("");
-  const [activeTab, setActiveTab] = useState("my");
+  const [_activeTab, setActiveTab] = useState("my");
   const [activeIntent, setActiveIntent] = useState<string | null>(null);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [plusMenuOpen, setPlusMenuOpen] = useState(false);
@@ -232,11 +232,6 @@ const SlateDashboard = () => {
     setAttachedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  const tabs = [
-    { id: "my", label: "My apps" },
-    { id: "all", label: "All apps" },
-    { id: "templates", label: "Templates" },
-  ];
 
   const handleStarterClick = (starter: typeof quickStarters[number]) => {
     setPrompt(starter.prompt);
@@ -272,15 +267,10 @@ const SlateDashboard = () => {
         {/* Nav links */}
         <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto overflow-x-hidden">
           <SidebarLink icon={Home} label="Home" active collapsed={sidebarCollapsed} />
+          <SidebarLink icon={Layers} label="Templates" collapsed={sidebarCollapsed} />
           <SidebarLink icon={Search} label="Search" collapsed={sidebarCollapsed} />
-
-          {!sidebarCollapsed && (
-            <div className="pt-4 pb-1">
-              <p className="px-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Apps</p>
-            </div>
-          )}
-          {sidebarCollapsed && <div className="pt-3" />}
-          <SidebarLink icon={Clock} label="Recently created" collapsed={sidebarCollapsed} />
+          <SidebarLink icon={Grid3X3} label="Projects" collapsed={sidebarCollapsed} />
+          <SidebarLink icon={Clock} label="Recent Projects" collapsed={sidebarCollapsed} />
           {!sidebarCollapsed && (
             <div className="pl-8 space-y-0.5">
               {recentProjects.map((p) => (
@@ -290,7 +280,6 @@ const SlateDashboard = () => {
               ))}
             </div>
           )}
-          <SidebarLink icon={Grid3X3} label="All apps" onClick={() => setActiveTab("all")} collapsed={sidebarCollapsed} />
         </nav>
 
       </aside>
@@ -434,66 +423,6 @@ const SlateDashboard = () => {
           </div>
         </div>
 
-        {/* Tabs + Projects */}
-        <div className="px-6 lg:px-16 pt-8 pb-10">
-          <div className="flex items-center mb-6">
-            <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                    activeTab === tab.id
-                      ? "bg-card text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Project cards */}
-          {(activeTab === "my" || activeTab === "all") && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {(activeTab === "all" ? [...projectCards, ...devApps.map(app => ({ title: app.name, description: `${app.stack} · ${app.source}`, color: "from-primary/15 to-accent/15" }))] : projectCards).map((card) => (
-                <div
-                  key={card.title}
-                  onClick={() => navigate(`/slate/workspace?prompt=${encodeURIComponent(card.title)}`)}
-                  className="group rounded-xl border border-border bg-card overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-                >
-                  <div className={`h-40 bg-gradient-to-br ${card.color} flex items-center justify-center`}>
-                    <div className="w-3/4 h-24 rounded-lg bg-background/60 border border-border/50 shadow-sm" />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-sm font-semibold text-foreground mb-1 font-sans">{card.title}</h3>
-                    <p className="text-xs text-muted-foreground">{card.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          {activeTab === "templates" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {projectCards.map((card) => (
-                <div
-                  key={card.title}
-                  onClick={() => navigate(`/slate/workspace?prompt=${encodeURIComponent(card.title)}`)}
-                  className="group rounded-xl border border-border bg-card overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-                >
-                  <div className={`h-40 bg-gradient-to-br ${card.color} flex items-center justify-center`}>
-                    <div className="w-3/4 h-24 rounded-lg bg-background/60 border border-border/50 shadow-sm" />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-sm font-semibold text-foreground mb-1 font-sans">{card.title}</h3>
-                    <p className="text-xs text-muted-foreground">{card.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
         
       </main>
 
