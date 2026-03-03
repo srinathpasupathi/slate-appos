@@ -398,96 +398,99 @@ const PlatformIDESelector = () => {
         ))}
       </div>
 
-      {selected && (connectionPhase === 'idle' || connectionPhase === 'copied') && (
-        <div className="flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-          {selected.key === 'custom' ? (
-            <div className="flex flex-col items-center gap-4 p-6 rounded-xl border border-border bg-card max-w-lg w-full">
-              <Server className="h-6 w-6 text-muted-foreground" />
-              <div className="text-center space-y-1">
-                <p className="text-sm font-medium text-foreground">Om MCP Server</p>
-                <p className="text-xs text-muted-foreground">
-                  Copy the MCP server URL below and add it to your preferred tool manually.
-                </p>
-              </div>
-              <div className="w-full relative flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border font-mono text-xs text-muted-foreground">
-                <span className="truncate flex-1 select-all">https://mcp.us.om.ai/mcp/message?key=***************</span>
-                <button
-                  onClick={(e) => handleCopyAndConnect('https://mcp.us.om.ai/mcp/message?key=***************', e)}
-                  className="shrink-0 relative h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/10 transition-colors group"
-                  title="Copy URL"
-                >
-                  {connectionPhase === 'copied' ? (
-                    <Check className="h-3.5 w-3.5 text-green-500" />
-                  ) : (
-                    <Copy className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+      {/* Action area — always reserve space to prevent layout shift */}
+      <div className="min-h-[120px] flex flex-col items-center justify-center w-full">
+        {selected && (connectionPhase === 'idle' || connectionPhase === 'copied') && (
+          <div className="flex flex-col items-center gap-4 animate-in fade-in duration-200">
+            {selected.key === 'custom' ? (
+              <div className="flex flex-col items-center gap-4 p-6 rounded-xl border border-border bg-card max-w-lg w-full">
+                <Server className="h-6 w-6 text-muted-foreground" />
+                <div className="text-center space-y-1">
+                  <p className="text-sm font-medium text-foreground">Om MCP Server</p>
+                  <p className="text-xs text-muted-foreground">
+                    Copy the MCP server URL below and add it to your preferred tool manually.
+                  </p>
+                </div>
+                <div className="w-full relative flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border font-mono text-xs text-muted-foreground">
+                  <span className="truncate flex-1 select-all">https://mcp.us.om.ai/mcp/message?key=***************</span>
+                  <button
+                    onClick={(e) => handleCopyAndConnect('https://mcp.us.om.ai/mcp/message?key=***************', e)}
+                    className="shrink-0 relative h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/10 transition-colors group"
+                    title="Copy URL"
+                  >
+                    {connectionPhase === 'copied' ? (
+                      <Check className="h-3.5 w-3.5 text-green-500" />
+                    ) : (
+                      <Copy className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                    )}
+                  </button>
+                  {connectionPhase === 'copied' && (
+                    <span className="absolute -top-7 right-0 text-[11px] font-medium text-green-500 bg-card border border-border rounded-md px-2 py-0.5 shadow-sm animate-in fade-in duration-200">Copied!</span>
                   )}
-                </button>
-                {connectionPhase === 'copied' && (
-                  <span className="absolute -top-7 right-0 text-[11px] font-medium text-green-500 bg-card border border-border rounded-md px-2 py-0.5 shadow-sm animate-in fade-in duration-200">Copied!</span>
-                )}
+                </div>
               </div>
-            </div>
-          ) : selected.key === 'claude-code' ? (
-            <div className="flex flex-col items-center gap-3 max-w-lg w-full">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Installation Command</p>
-              <div className="w-full relative flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border font-mono text-xs text-muted-foreground">
-                <span className="truncate flex-1 select-all">claude mcp add --transport http om https://mcp.us.om.ai/mcp/message?key=***************</span>
-                <button
-                  onClick={(e) => handleCopyAndConnect('claude mcp add --transport http om https://mcp.us.om.ai/mcp/message?key=***************', e)}
-                  className="shrink-0 relative h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/10 transition-colors group"
-                  title="Copy command"
-                >
-                  {connectionPhase === 'copied' ? (
-                    <Check className="h-3.5 w-3.5 text-green-500" />
-                  ) : (
-                    <Copy className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+            ) : selected.key === 'claude-code' ? (
+              <div className="flex flex-col items-center gap-3 max-w-lg w-full">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Installation Command</p>
+                <div className="w-full relative flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border font-mono text-xs text-muted-foreground">
+                  <span className="truncate flex-1 select-all">claude mcp add --transport http om https://mcp.us.om.ai/mcp/message?key=***************</span>
+                  <button
+                    onClick={(e) => handleCopyAndConnect('claude mcp add --transport http om https://mcp.us.om.ai/mcp/message?key=***************', e)}
+                    className="shrink-0 relative h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/10 transition-colors group"
+                    title="Copy command"
+                  >
+                    {connectionPhase === 'copied' ? (
+                      <Check className="h-3.5 w-3.5 text-green-500" />
+                    ) : (
+                      <Copy className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                    )}
+                  </button>
+                  {connectionPhase === 'copied' && (
+                    <span className="absolute -top-7 right-0 text-[11px] font-medium text-green-500 bg-card border border-border rounded-md px-2 py-0.5 shadow-sm animate-in fade-in duration-200">Copied!</span>
                   )}
-                </button>
-                {connectionPhase === 'copied' && (
-                  <span className="absolute -top-7 right-0 text-[11px] font-medium text-green-500 bg-card border border-border rounded-md px-2 py-0.5 shadow-sm animate-in fade-in duration-200">Copied!</span>
-                )}
+                </div>
               </div>
-            </div>
-          ) : (
-            <button
-              onClick={handleInstallClick}
-              className="h-11 px-8 rounded-lg bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-colors shadow-sm"
-            >
-              Install Om on {selected.name}
-            </button>
-          )}
-          <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-            <User className="h-3.5 w-3.5" />
-            Make sure you login &amp; authorize Om upon install
-          </p>
-        </div>
-      )}
+            ) : (
+              <button
+                onClick={handleInstallClick}
+                className="h-11 px-8 rounded-lg bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-colors shadow-sm"
+              >
+                Install Om on {selected.name}
+              </button>
+            )}
+            <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+              <User className="h-3.5 w-3.5" />
+              Make sure you login &amp; authorize Om upon install
+            </p>
+          </div>
+        )}
 
-      {/* Verify connection state */}
-      {(connectionPhase === 'waiting' || connectionPhase === 'connected') && (
-        <div className="flex flex-col items-center gap-5 animate-in fade-in duration-300 py-2">
-          <div className="flex flex-col items-center gap-3">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Verify Connection</p>
-            <div className={`flex items-center gap-2.5 px-5 py-2.5 rounded-full border transition-all duration-500 ${
-              connectionPhase === 'connected'
-                ? 'border-green-500/30 bg-green-500/5'
-                : 'border-border bg-muted/30'
-            }`}>
-              {connectionPhase === 'waiting' ? (
-                <>
-                  <div className="h-2.5 w-2.5 rounded-full bg-amber-400 animate-pulse" />
-                  <span className="text-sm text-muted-foreground">Waiting for connection…</span>
-                </>
-              ) : (
-                <>
-                  <div className="h-2.5 w-2.5 rounded-full bg-green-500" />
-                  <span className="text-sm text-green-600 font-medium">Connected ✓</span>
-                </>
-              )}
+        {/* Verify connection state */}
+        {(connectionPhase === 'waiting' || connectionPhase === 'connected') && (
+          <div className="flex flex-col items-center gap-5 animate-in fade-in duration-300 py-2">
+            <div className="flex flex-col items-center gap-3">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Verify Connection</p>
+              <div className={`flex items-center gap-2.5 px-5 py-2.5 rounded-full border transition-all duration-500 ${
+                connectionPhase === 'connected'
+                  ? 'border-green-500/30 bg-green-500/5'
+                  : 'border-border bg-muted/30'
+              }`}>
+                {connectionPhase === 'waiting' ? (
+                  <>
+                    <div className="h-2.5 w-2.5 rounded-full bg-amber-400 animate-pulse" />
+                    <span className="text-sm text-muted-foreground">Waiting for connection…</span>
+                  </>
+                ) : (
+                  <>
+                    <div className="h-2.5 w-2.5 rounded-full bg-green-500" />
+                    <span className="text-sm text-green-600 font-medium">Connected ✓</span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
