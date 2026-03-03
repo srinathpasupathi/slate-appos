@@ -320,7 +320,7 @@ const SlateDashboard = () => {
 
           <div className="relative flex-1 flex flex-col items-center justify-center px-6 lg:px-16 py-12">
             {/* Heading */}
-            <h1 className="text-center text-2xl md:text-3xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               What should we build, Srinath?
             </h1>
 
