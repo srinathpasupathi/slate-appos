@@ -343,8 +343,15 @@ const PlatformIDESelector = () => {
   // Deploy ready screen
   if (connectionPhase === 'deploy-ready') {
     return (
-      <div ref={containerRef} className="flex flex-col items-center gap-10 w-full max-w-md animate-in fade-in duration-500">
-        <div className="text-center space-y-3">
+      <div ref={containerRef} className="flex flex-col items-center gap-6 w-full max-w-md animate-in fade-in slide-in-from-bottom-2 duration-500">
+        <div className="flex items-center gap-2.5 animate-in fade-in duration-700">
+          <div className="h-5 w-5 rounded-full bg-green-500/15 flex items-center justify-center">
+            <Check className="h-3 w-3 text-green-500" />
+          </div>
+          <span className="text-xs font-medium text-green-600">Build complete</span>
+        </div>
+
+        <div className="text-center space-y-2">
           <h2 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Your app is ready to deploy
           </h2>
@@ -358,30 +365,28 @@ const PlatformIDESelector = () => {
           tabIndex={0}
           onClick={handleCopyDeployPrompt}
           onKeyDown={(e) => e.key === 'Enter' && handleCopyDeployPrompt()}
-          className="group w-full flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-border bg-card hover:border-foreground/20 hover:bg-muted/50 transition-all duration-200 cursor-pointer select-none"
+          className="group w-full flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-border bg-card hover:border-foreground/20 hover:shadow-md transition-all duration-200 cursor-pointer select-none animate-in fade-in slide-in-from-bottom-3 duration-500"
+          style={{ animationDelay: '150ms', animationFillMode: 'both' }}
         >
           <div className="flex flex-col gap-0.5">
             <span className="text-sm font-semibold text-foreground">Deploy to Om</span>
             <span className="text-xs text-muted-foreground">Get a hosted URL for your app</span>
           </div>
-          <span
-            className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-200 ${
+          <button
+            onClick={(e) => { e.stopPropagation(); handleCopyDeployPrompt(); }}
+            className={`shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all duration-200 ${
               deployCopied
-                ? 'text-green-500 border-green-500/20 bg-green-500/5'
-                : 'text-foreground/60 border-transparent opacity-0 group-hover:opacity-100 group-hover:border-border group-hover:bg-muted/60 group-hover:text-foreground'
+                ? 'text-green-600 bg-green-500/10 border border-green-500/25'
+                : 'text-primary-foreground bg-primary hover:bg-primary/90 shadow-sm'
             }`}
           >
             {deployCopied ? (
               <><Check className="h-3 w-3" /> Copied</>
             ) : (
-              <><Copy className="h-3 w-3" /> Copy</>
+              <><Copy className="h-3 w-3" /> Copy prompt</>
             )}
-          </span>
+          </button>
         </div>
-
-        <p className="text-xs text-muted-foreground font-mono bg-muted/40 px-3 py-1.5 rounded-lg">
-          Deploy my app to Om
-        </p>
       </div>
     );
   }
