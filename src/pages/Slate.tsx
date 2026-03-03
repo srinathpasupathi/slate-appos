@@ -302,27 +302,28 @@ const PlatformIDESelector = () => {
         </div>
 
         {/* Prompt example cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+        <div className="flex flex-col gap-3 w-full">
           {[
             { title: "Real Estate CRM", subtitle: "Complete property sales system", prompt: "Build a Real Estate CRM with property listings, lead tracking, and deal pipeline" },
             { title: "Franchise Sales App", subtitle: "Manage franchise pipeline and approvals", prompt: "Build a Franchise Sales App to manage franchise pipeline and approvals" },
             { title: "Cloud API Backend", subtitle: "Database, storage, and REST APIs", prompt: "Generate a Cloud API Backend with database, storage, and REST APIs" },
-            { title: "SaaS Backend Starter", subtitle: "Auth, billing, and multi-tenancy", prompt: "Build a SaaS Backend Starter with auth, billing, and multi-tenancy" },
           ].map((card) => (
             <div
               key={card.title}
-              className="group relative flex flex-col gap-1.5 p-5 rounded-xl border border-border bg-card hover:border-foreground/15 hover:bg-muted/40 hover:shadow-sm transition-all duration-200"
+              className="group relative flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-border bg-card hover:border-foreground/15 hover:bg-muted/40 hover:shadow-sm transition-all duration-200"
             >
-              <span className="text-sm font-semibold text-foreground">{card.title}</span>
-              <span className="text-xs text-muted-foreground">{card.subtitle}</span>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-sm font-semibold text-foreground">{card.title}</span>
+                <span className="text-xs text-muted-foreground">{card.subtitle}</span>
+              </div>
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(card.prompt);
                 }}
-                className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-150 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted"
-                title="Copy prompt"
+                className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted border border-transparent hover:border-border"
               >
-                <Copy className="h-3.5 w-3.5" />
+                <Copy className="h-3 w-3" />
+                Copy Prompt
               </button>
             </div>
           ))}
