@@ -316,39 +316,45 @@ const PlatformIDESelector = () => {
             { title: "Real Estate CRM", subtitle: "Complete property sales system", prompt: "Build a Real Estate CRM with property listings, lead tracking, and deal pipeline" },
             { title: "Franchise Sales App", subtitle: "Manage franchise pipeline and approvals", prompt: "Build a Franchise Sales App to manage franchise pipeline and approvals" },
             { title: "Cloud API Backend", subtitle: "Database, storage, and REST APIs", prompt: "Generate a Cloud API Backend with database, storage, and REST APIs" },
-          ].map((card) => (
-            <button
-              key={card.title}
-              onClick={() => handleCopyPrompt(card.prompt)}
-              className="group relative flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-border bg-card hover:border-foreground/20 hover:bg-muted/50 hover:shadow-md transition-all duration-200 cursor-pointer text-left w-full"
-            >
-              <div className="flex flex-col gap-0.5">
-                <span className="text-sm font-semibold text-foreground">{card.title}</span>
-                <span className="text-xs text-muted-foreground">{card.subtitle}</span>
-              </div>
-              <span
-                className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-150 ${
-                  copiedPrompt === card.prompt
-                    ? 'opacity-100 text-green-500 border-green-500/20 bg-green-500/5'
-                    : 'opacity-0 group-hover:opacity-100 text-foreground/60 border-border bg-muted/60 hover:text-foreground hover:bg-muted'
-                }`}
+          ].map((card) => {
+            const isCopied = copiedPrompt === card.prompt;
+            return (
+              <div
+                key={card.title}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleCopyPrompt(card.prompt)}
+                onKeyDown={(e) => e.key === 'Enter' && handleCopyPrompt(card.prompt)}
+                className="group flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-border bg-card hover:border-foreground/20 hover:bg-muted/50 hover:shadow-md transition-colors duration-200 cursor-pointer text-left w-full select-none"
               >
-                {copiedPrompt === card.prompt ? (
-                  <><Check className="h-3 w-3" /> Copied</>
-                ) : (
-                  <><Copy className="h-3 w-3" /> Copy Prompt</>
-                )}
-              </span>
-            </button>
-          ))}
-
-          {/* Helper text after copy */}
-          {copiedPrompt && (
-            <p className="text-xs text-muted-foreground text-center mt-1 animate-in fade-in duration-300">
-              Paste into {ideName} to start.
-            </p>
-          )}
+                <div className="flex flex-col gap-0.5 min-w-0">
+                  <span className="text-sm font-semibold text-foreground">{card.title}</span>
+                  <span className="text-xs text-muted-foreground">{card.subtitle}</span>
+                </div>
+                <span
+                  className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors duration-150 ${
+                    isCopied
+                      ? 'text-green-500 border-green-500/20 bg-green-500/5'
+                      : 'text-foreground/60 border-transparent group-hover:border-border group-hover:bg-muted/60 group-hover:text-foreground'
+                  }`}
+                >
+                  {isCopied ? (
+                    <><Check className="h-3 w-3" /> Copied</>
+                  ) : (
+                    <><Copy className="h-3 w-3" /> Copy Prompt</>
+                  )}
+                </span>
+              </div>
+            );
+          })}
         </div>
+
+        {/* Persistent helper text — appears after first copy */}
+        {copiedPrompt && (
+          <p className="text-sm text-muted-foreground text-center animate-in fade-in duration-300">
+            Paste into your IDE to start.
+          </p>
+        )}
       </div>
     );
   }
