@@ -246,6 +246,7 @@ const ideOptions = [
 const PlatformIDESelector = () => {
   const [selectedIDE, setSelectedIDE] = useState<string | null>(null);
   const [connectionPhase, setConnectionPhase] = useState<'idle' | 'copied' | 'waiting' | 'connected' | 'ready'>('idle');
+  const [copiedPrompt, setCopiedPrompt] = useState<string | null>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const selected = ideOptions.find(ide => ide.key === selectedIDE);
@@ -284,10 +285,18 @@ const PlatformIDESelector = () => {
     }
   };
 
+  const handleCopyPrompt = (prompt: string) => {
+    navigator.clipboard.writeText(prompt);
+    setCopiedPrompt(prompt);
+    setTimeout(() => setCopiedPrompt(null), 2000);
+  };
+
+  const ideName = selected?.name || 'your IDE';
+
   // Ready screen — connected and showing prompts
   if (connectionPhase === 'ready') {
     return (
-      <div ref={containerRef} className="flex flex-col items-center gap-10 w-full max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div ref={containerRef} className="flex flex-col items-center gap-8 w-full max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
         {/* Connected header */}
         <div className="text-center space-y-3">
           <div className="mx-auto h-14 w-14 rounded-full bg-green-500/10 border-2 border-green-500/30 flex items-center justify-center mb-4">
@@ -302,31 +311,43 @@ const PlatformIDESelector = () => {
         </div>
 
         {/* Prompt example cards */}
-        <div className="flex flex-col gap-3 w-full">
+        <div className="flex flex-col gap-2.5 w-full">
           {[
             { title: "Real Estate CRM", subtitle: "Complete property sales system", prompt: "Build a Real Estate CRM with property listings, lead tracking, and deal pipeline" },
             { title: "Franchise Sales App", subtitle: "Manage franchise pipeline and approvals", prompt: "Build a Franchise Sales App to manage franchise pipeline and approvals" },
             { title: "Cloud API Backend", subtitle: "Database, storage, and REST APIs", prompt: "Generate a Cloud API Backend with database, storage, and REST APIs" },
           ].map((card) => (
-            <div
+            <button
               key={card.title}
-              className="group relative flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-border bg-card hover:border-foreground/15 hover:bg-muted/40 hover:shadow-sm transition-all duration-200"
+              onClick={() => handleCopyPrompt(card.prompt)}
+              className="group relative flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-border bg-card hover:border-foreground/20 hover:bg-muted/50 hover:shadow-md transition-all duration-200 cursor-pointer text-left w-full"
             >
               <div className="flex flex-col gap-0.5">
                 <span className="text-sm font-semibold text-foreground">{card.title}</span>
                 <span className="text-xs text-muted-foreground">{card.subtitle}</span>
               </div>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(card.prompt);
-                }}
-                className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted border border-transparent hover:border-border"
+              <span
+                className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-150 ${
+                  copiedPrompt === card.prompt
+                    ? 'opacity-100 text-green-500 border-green-500/20 bg-green-500/5'
+                    : 'opacity-0 group-hover:opacity-100 text-foreground/60 border-border bg-muted/60 hover:text-foreground hover:bg-muted'
+                }`}
               >
-                <Copy className="h-3 w-3" />
-                Copy Prompt
-              </button>
-            </div>
+                {copiedPrompt === card.prompt ? (
+                  <><Check className="h-3 w-3" /> Copied</>
+                ) : (
+                  <><Copy className="h-3 w-3" /> Copy Prompt</>
+                )}
+              </span>
+            </button>
           ))}
+
+          {/* Helper text after copy */}
+          {copiedPrompt && (
+            <p className="text-xs text-muted-foreground text-center mt-1 animate-in fade-in duration-300">
+              Paste into {ideName} to start.
+            </p>
+          )}
         </div>
       </div>
     );
