@@ -888,6 +888,10 @@ const SlateDashboard = () => {
           </div>
 
           <div className="relative flex-1 flex flex-col items-center justify-center px-6 lg:px-16 pb-24">
+            {/* Preload IDE logos so they're cached across all layout modes */}
+            <div className="hidden">
+              {ideOptions.map(ide => ide.logo && <img key={ide.key} src={ide.logo} alt="" />)}
+            </div>
             {layoutMode === 'option1' ? (
               /* === OPTION 1: Original tabbed layout === */
               <>
