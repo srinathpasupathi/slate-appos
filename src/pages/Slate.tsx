@@ -996,115 +996,126 @@ const SlateDashboard = () => {
                 )}
               </>
             ) : (
-              /* === OPTION 2: Unified layout — prompt first, then both sections below === */
-              <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
-                <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                  What should we build, Srinath?
-                </h1>
+              /* === OPTION 2: Unified layout — prompt centered, IDE below fold === */
+              <div className="w-full flex flex-col">
+                {/* First section: prompt centered in viewport */}
+                <div className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center px-4">
+                  <div className="w-full max-w-3xl flex flex-col items-center">
+                    <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      What should we build, Srinath?
+                    </h1>
 
-                {/* Prompt box */}
-                <div className="w-full mb-16">
-                  {activeIntent && (
-                    <div className="mb-2 flex items-center">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                        Building: {quickStarters.find(s => s.id === activeIntent)?.pill}
-                        <button onClick={clearIntent} className="ml-0.5 hover:bg-primary/20 rounded-full p-0.5 transition-colors">
-                          <X className="h-3 w-3" />
-                        </button>
-                      </span>
-                    </div>
-                  )}
-                  <div className="rounded-xl border border-input bg-card shadow-lg focus-within:ring-2 focus-within:ring-ring focus-within:border-transparent transition-all">
-                    <textarea
-                      value={prompt}
-                      onChange={(e) => setPrompt(e.target.value)}
-                      placeholder="Ask Om to create an app about... "
-                      rows={4}
-                      className="w-full resize-none rounded-t-xl bg-transparent px-5 pt-4 pb-2 text-sm md:text-base text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
-                    />
-                    {attachedFiles.length > 0 && (
-                      <div className="flex flex-wrap gap-2 px-4 pb-2">
-                        {attachedFiles.map((file, i) => (
-                          <div key={i} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-muted border border-border text-xs text-foreground">
-                            <FileText className="h-3 w-3 text-muted-foreground" />
-                            <span className="max-w-[120px] truncate">{file.name}</span>
-                            <button onClick={() => removeFile(i)} className="text-muted-foreground hover:text-foreground transition-colors">
+                    {/* Prompt box */}
+                    <div className="w-full">
+                      {activeIntent && (
+                        <div className="mb-2 flex items-center">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                            Building: {quickStarters.find(s => s.id === activeIntent)?.pill}
+                            <button onClick={clearIntent} className="ml-0.5 hover:bg-primary/20 rounded-full p-0.5 transition-colors">
                               <X className="h-3 w-3" />
                             </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    <div className="flex items-center justify-between px-4 pb-3">
-                      <Popover open={plusMenuOpen} onOpenChange={setPlusMenuOpen}>
-                        <PopoverTrigger asChild>
-                          <button className="h-7 w-7 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
-                            <Plus className="h-4 w-4" />
-                          </button>
-                        </PopoverTrigger>
-                        <PopoverContent align="start" side="top" className="w-72 p-1.5">
-                          <button
-                            onClick={handleFileUpload}
-                            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-muted transition-colors"
-                          >
-                            <Paperclip className="h-4 w-4 text-muted-foreground" />
-                            <div className="text-left">
-                              <p className="font-medium">Attach Files</p>
-                              <p className="text-xs text-muted-foreground">Upload files to include</p>
-                            </div>
-                          </button>
-                          <div className="h-px bg-border my-1" />
-                          <div className="px-3 py-2">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Plug className="h-3.5 w-3.5 text-muted-foreground" />
-                              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Connectors</p>
-                            </div>
-                            {connectedConnectors.map((c) => (
-                              <div key={c.name} className="flex items-center gap-2.5 px-2 py-1.5 rounded-md hover:bg-muted transition-colors cursor-pointer">
-                                <span className="text-sm">{c.icon}</span>
-                                <span className="text-sm text-foreground">{c.name}</span>
-                                <Check className="h-3 w-3 text-primary ml-auto" />
+                          </span>
+                        </div>
+                      )}
+                      <div className="rounded-xl border border-input bg-card shadow-lg focus-within:ring-2 focus-within:ring-ring focus-within:border-transparent transition-all">
+                        <textarea
+                          value={prompt}
+                          onChange={(e) => setPrompt(e.target.value)}
+                          placeholder="Ask Om to create an app about... "
+                          rows={4}
+                          className="w-full resize-none rounded-t-xl bg-transparent px-5 pt-4 pb-2 text-sm md:text-base text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
+                        />
+                        {attachedFiles.length > 0 && (
+                          <div className="flex flex-wrap gap-2 px-4 pb-2">
+                            {attachedFiles.map((file, i) => (
+                              <div key={i} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-muted border border-border text-xs text-foreground">
+                                <FileText className="h-3 w-3 text-muted-foreground" />
+                                <span className="max-w-[120px] truncate">{file.name}</span>
+                                <button onClick={() => removeFile(i)} className="text-muted-foreground hover:text-foreground transition-colors">
+                                  <X className="h-3 w-3" />
+                                </button>
                               </div>
                             ))}
                           </div>
-                          <div className="h-px bg-border my-1" />
-                          <div className="px-3 py-2">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Server className="h-3.5 w-3.5 text-muted-foreground" />
-                              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">MCP Servers</p>
-                            </div>
-                            {connectedMcpServers.map((s) => (
-                              <div key={s.name} className="flex items-center gap-2.5 px-2 py-1.5 rounded-md hover:bg-muted transition-colors cursor-pointer">
-                                <div className="h-5 w-5 rounded bg-primary/10 flex items-center justify-center">
-                                  <Server className="h-3 w-3 text-primary" />
+                        )}
+                        <div className="flex items-center justify-between px-4 pb-3">
+                          <Popover open={plusMenuOpen} onOpenChange={setPlusMenuOpen}>
+                            <PopoverTrigger asChild>
+                              <button className="h-7 w-7 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+                                <Plus className="h-4 w-4" />
+                              </button>
+                            </PopoverTrigger>
+                            <PopoverContent align="start" side="top" className="w-72 p-1.5">
+                              <button
+                                onClick={handleFileUpload}
+                                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-muted transition-colors"
+                              >
+                                <Paperclip className="h-4 w-4 text-muted-foreground" />
+                                <div className="text-left">
+                                  <p className="font-medium">Attach Files</p>
+                                  <p className="text-xs text-muted-foreground">Upload files to include</p>
                                 </div>
-                                <span className="text-sm text-foreground truncate flex-1">{s.name}</span>
-                                <Check className="h-3 w-3 text-primary shrink-0" />
+                              </button>
+                              <div className="h-px bg-border my-1" />
+                              <div className="px-3 py-2">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <Plug className="h-3.5 w-3.5 text-muted-foreground" />
+                                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Connectors</p>
+                                </div>
+                                {connectedConnectors.map((c) => (
+                                  <div key={c.name} className="flex items-center gap-2.5 px-2 py-1.5 rounded-md hover:bg-muted transition-colors cursor-pointer">
+                                    <span className="text-sm">{c.icon}</span>
+                                    <span className="text-sm text-foreground">{c.name}</span>
+                                    <Check className="h-3 w-3 text-primary ml-auto" />
+                                  </div>
+                                ))}
                               </div>
-                            ))}
+                              <div className="h-px bg-border my-1" />
+                              <div className="px-3 py-2">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <Server className="h-3.5 w-3.5 text-muted-foreground" />
+                                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">MCP Servers</p>
+                                </div>
+                                {connectedMcpServers.map((s) => (
+                                  <div key={s.name} className="flex items-center gap-2.5 px-2 py-1.5 rounded-md hover:bg-muted transition-colors cursor-pointer">
+                                    <div className="h-5 w-5 rounded bg-primary/10 flex items-center justify-center">
+                                      <Server className="h-3 w-3 text-primary" />
+                                    </div>
+                                    <span className="text-sm text-foreground truncate flex-1">{s.name}</span>
+                                    <Check className="h-3 w-3 text-primary shrink-0" />
+                                  </div>
+                                ))}
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                          <div className="flex items-center gap-2">
+                            <button className="text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded transition-colors">Plan</button>
+                            <button
+                              onClick={() => {
+                                if (prompt.trim()) {
+                                  navigate(`/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
+                                }
+                              }}
+                              className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
+                              disabled={!prompt.trim()}
+                            >
+                              <ArrowRight className="h-4 w-4" />
+                            </button>
                           </div>
-                        </PopoverContent>
-                      </Popover>
-                      <div className="flex items-center gap-2">
-                        <button className="text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded transition-colors">Plan</button>
-                        <button
-                          onClick={() => {
-                            if (prompt.trim()) {
-                              navigate(`/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
-                            }
-                          }}
-                          className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
-                          disabled={!prompt.trim()}
-                        >
-                          <ArrowRight className="h-4 w-4" />
-                        </button>
+                        </div>
                       </div>
+                    </div>
+
+                    {/* Scroll hint */}
+                    <div className="mt-12 flex flex-col items-center gap-2 text-muted-foreground/50 animate-bounce">
+                      <ChevronDown className="h-5 w-5" />
+                      <span className="text-xs">Scroll for IDE options</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Platform IDE Selector section below prompt */}
-                <div className="w-full max-w-3xl mx-auto">
+                {/* Second section: IDE selector below the fold */}
+                <div className="w-full max-w-3xl mx-auto px-4 py-20">
                   <PlatformIDESelector />
                 </div>
               </div>
