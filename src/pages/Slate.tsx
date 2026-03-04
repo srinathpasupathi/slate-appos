@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, GitBranch, ChevronUp, ChevronDown, Copy, Rocket, Bell, AppWindow, Layers, X, Database, Paperclip, Plug, Server, FileText, Trash2, PanelLeftClose, PanelLeftOpen,
+  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, GitBranch, ChevronUp, ChevronDown, Copy, Rocket, Bell, AppWindow, Layers, X, Database, Paperclip, Plug, Server, FileText, Trash2, PanelLeftClose, PanelLeftOpen, ExternalLink, Pencil,
 } from "lucide-react";
 import slateLogo from "@/assets/slate-logo.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -210,6 +210,9 @@ const PlatformIDESelector = () => {
   const [buildStep, setBuildStep] = useState(0);
   const [deployStep, setDeployStep] = useState(0);
   const [deployCopied, setDeployCopied] = useState(false);
+  const [appName, setAppName] = useState('Real Estate CRM');
+  const [editingAppName, setEditingAppName] = useState(false);
+  const [tempAppName, setTempAppName] = useState('');
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const selected = ideOptions.find(ide => ide.key === selectedIDE);
@@ -277,9 +280,10 @@ const PlatformIDESelector = () => {
     setTimeout(() => startDeployFlow(), 3000);
   };
 
-  const handleCopyPrompt = (prompt: string) => {
+  const handleCopyPrompt = (prompt: string, title: string) => {
     navigator.clipboard.writeText(prompt);
     setCopiedPrompt(prompt);
+    setAppName(title);
     setShowNudge(false);
     setTimeout(() => setShowNudge(true), 4000);
     setTimeout(() => startBuildFlow(), 8000);
@@ -418,6 +422,47 @@ const PlatformIDESelector = () => {
         </div>
 
         <div className="w-full rounded-xl border border-border bg-card p-5 space-y-4">
+          {/* App Name */}
+          <div className="space-y-1">
+            <p className="text-xs text-muted-foreground font-medium">App Name</p>
+            {editingAppName ? (
+              <div className="flex items-center gap-2">
+                <input
+                  autoFocus
+                  value={tempAppName}
+                  onChange={(e) => setTempAppName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') { setAppName(tempAppName); setEditingAppName(false); }
+                    if (e.key === 'Escape') setEditingAppName(false);
+                  }}
+                  className="flex-1 text-sm text-foreground bg-background border border-input rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-ring"
+                />
+                <button
+                  onClick={() => { setAppName(tempAppName); setEditingAppName(false); }}
+                  className="px-3 py-2 text-xs font-medium rounded-lg bg-foreground text-background hover:bg-foreground/90 transition-colors"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => setEditingAppName(false)}
+                  className="px-3 py-2 text-xs font-medium rounded-lg border border-border text-foreground hover:bg-muted/50 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div
+                onDoubleClick={() => { setTempAppName(appName); setEditingAppName(true); }}
+                className="flex items-center gap-2 rounded-lg border border-input bg-muted/30 px-3 py-2 cursor-pointer group"
+                title="Double-click to edit"
+              >
+                <span className="text-sm font-medium text-foreground flex-1">{appName}</span>
+                <Pencil className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+            )}
+          </div>
+
+          {/* App URL */}
           <div className="space-y-1">
             <p className="text-xs text-muted-foreground font-medium">App URL</p>
             <div className="flex items-center gap-2 rounded-lg border border-input bg-muted/30 px-3 py-2">
@@ -440,7 +485,7 @@ const PlatformIDESelector = () => {
               className="flex-1 flex items-center justify-center gap-2 h-10 rounded-lg bg-foreground text-background text-sm font-medium hover:bg-foreground/90 transition-colors"
             >
               Open App
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ExternalLink className="h-3.5 w-3.5" />
             </a>
             <button className="flex-1 flex items-center justify-center gap-2 h-10 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted/50 transition-colors">
               View Project
@@ -481,8 +526,8 @@ const PlatformIDESelector = () => {
                 key={card.title}
                 role="button"
                 tabIndex={0}
-                onClick={() => handleCopyPrompt(card.prompt)}
-                onKeyDown={(e) => e.key === 'Enter' && handleCopyPrompt(card.prompt)}
+                onClick={() => handleCopyPrompt(card.prompt, card.title)}
+                onKeyDown={(e) => e.key === 'Enter' && handleCopyPrompt(card.prompt, card.title)}
                 className="group flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-border bg-card hover:border-foreground/20 hover:bg-muted/50 hover:shadow-md transition-colors duration-200 cursor-pointer text-left w-full select-none"
               >
                 <div className="flex flex-col gap-0.5 min-w-0">
