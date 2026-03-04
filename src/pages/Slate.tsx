@@ -1107,15 +1107,17 @@ const SlateDashboard = () => {
                     </div>
 
                     {/* Scroll hint */}
-                    <div className="mt-12 flex flex-col items-center gap-2 text-muted-foreground/50 animate-bounce">
-                      <ChevronDown className="h-5 w-5" />
-                      <span className="text-xs">Scroll for IDE options</span>
-                    </div>
+                    <button
+                      onClick={() => document.getElementById('ide-section')?.scrollIntoView({ behavior: 'smooth' })}
+                      className="mt-12 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                    >
+                      Connect your AI IDE ↓
+                    </button>
                   </div>
                 </div>
 
                 {/* Second section: IDE selector below the fold */}
-                <div className="w-full max-w-3xl mx-auto px-4 py-20">
+                <div id="ide-section" className="w-full max-w-3xl mx-auto px-4 py-20">
                   <PlatformIDESelector />
                 </div>
               </div>
