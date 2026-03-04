@@ -851,28 +851,8 @@ const SlateDashboard = () => {
 
           {/* Top bar with tabs + icons */}
           <div className="relative flex items-center justify-between px-6 py-3">
-            {/* Centered tabs - only show in Option 1 */}
+            {/* Spacer for top bar */}
             <div className="flex-1" />
-            {layoutMode === 'option1' && (
-              <div className="inline-flex items-center gap-1 rounded-full bg-background/90 backdrop-blur-md p-1.5 border border-border shadow-md">
-                {([
-                  { key: 'build' as const, label: 'Prompt' },
-                  { key: 'platform' as const, label: 'AI IDEs' },
-                ]).map(tab => (
-                  <button
-                    key={tab.key}
-                    onClick={() => setMainTab(tab.key)}
-                    className={`relative px-6 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
-                      mainTab === tab.key
-                        ? 'bg-foreground/10 text-foreground shadow-sm border border-border'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
-            )}
             <div className="flex-1 flex items-center justify-end gap-3">
               <button className="p-2 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground">
                 <Bell className="h-4.5 w-4.5" />
@@ -895,6 +875,26 @@ const SlateDashboard = () => {
             {layoutMode === 'option1' ? (
               /* === OPTION 1: Original tabbed layout === */
               <>
+                {/* Tabs above the heading */}
+                <div className="inline-flex items-center gap-1 rounded-full bg-background/90 backdrop-blur-md p-1.5 border border-border shadow-md mb-6">
+                  {([
+                    { key: 'build' as const, label: 'Prompt' },
+                    { key: 'platform' as const, label: 'AI IDEs' },
+                  ]).map(tab => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setMainTab(tab.key)}
+                      className={`relative px-6 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                        mainTab === tab.key
+                          ? 'bg-foreground/10 text-foreground shadow-sm border border-border'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
                 {mainTab === 'build' ? (
                   <>
                     <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
