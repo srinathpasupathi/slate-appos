@@ -1109,12 +1109,15 @@ const SlateDashboard = () => {
                     {/* IDE logos scroll hint */}
                     <button
                       onClick={() => document.getElementById('ide-section')?.scrollIntoView({ behavior: 'smooth' })}
-                      className="mt-12 flex items-center gap-3 px-4 py-2 rounded-full border border-border/50 hover:border-border bg-card/50 hover:bg-card transition-all cursor-pointer group"
+                      className="mt-12 flex flex-col items-center gap-2 cursor-pointer group"
                     >
-                      <img src="/ide-logos/cursor.png" alt="Cursor" className="h-5 w-5 rounded opacity-60 group-hover:opacity-100 transition-opacity" />
-                      <img src="/ide-logos/claude-code.png" alt="Claude Code" className="h-5 w-5 rounded opacity-60 group-hover:opacity-100 transition-opacity" />
-                      <img src="/ide-logos/vscode.png" alt="VS Code" className="h-5 w-5 rounded opacity-60 group-hover:opacity-100 transition-opacity" />
-                      <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                      <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">Connect your AI IDE</span>
+                      <div className="flex items-center gap-3 px-4 py-2 rounded-full border border-border/50 group-hover:border-border bg-card/50 group-hover:bg-card transition-all">
+                        <img src="/ide-logos/cursor.png" alt="Cursor" className="h-5 w-5 rounded opacity-60 group-hover:opacity-100 transition-opacity" />
+                        <img src="/ide-logos/claude-code.png" alt="Claude Code" className="h-5 w-5 rounded opacity-60 group-hover:opacity-100 transition-opacity" />
+                        <img src="/ide-logos/vscode.png" alt="VS Code" className="h-5 w-5 rounded opacity-60 group-hover:opacity-100 transition-opacity" />
+                        <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                      </div>
                     </button>
                   </div>
                 </div>
