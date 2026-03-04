@@ -203,7 +203,9 @@ const ideOptions = [
   { key: 'custom', name: 'Others', logo: null },
 ];
 
-const PlatformIDESelector = () => {
+const FULLSCREEN_PHASES = new Set(['ready', 'building', 'deploy-ready', 'deploying', 'live']);
+
+const PlatformIDESelector = ({ onPhaseChange }: { onPhaseChange?: (phase: string) => void }) => {
   const navigate = useNavigate();
   const [selectedIDE, setSelectedIDE] = useState<string | null>(null);
   const [connectionPhase, setConnectionPhase] = useState<'idle' | 'copied' | 'waiting' | 'connected' | 'ready' | 'building' | 'deploy-ready' | 'deploying' | 'live'>('idle');
@@ -216,6 +218,11 @@ const PlatformIDESelector = () => {
   const [editingAppName, setEditingAppName] = useState(false);
   const [tempAppName, setTempAppName] = useState('');
   const containerRef = React.useRef<HTMLDivElement>(null);
+
+  // Notify parent of phase changes
+  React.useEffect(() => {
+    onPhaseChange?.(connectionPhase);
+  }, [connectionPhase, onPhaseChange]);
 
   const selected = ideOptions.find(ide => ide.key === selectedIDE);
 
@@ -722,6 +729,7 @@ const SlateDashboard = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [mainTab, setMainTab] = useState<'build' | 'platform'>('build');
   const [layoutMode, setLayoutMode] = useState<'option1' | 'option2'>('option1');
+  const [ideFlowActive, setIdeFlowActive] = useState(false);
   const navigate = useNavigate();
 
   const connectedConnectors = [
@@ -998,7 +1006,8 @@ const SlateDashboard = () => {
             ) : (
               /* === OPTION 2: Unified layout — prompt centered, IDE below fold === */
               <div className="w-full flex flex-col">
-                {/* First section: prompt centered in viewport */}
+                {/* First section: prompt centered in viewport — hidden when IDE flow is active */}
+                {!ideFlowActive && (
                 <div className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center px-4">
                   <div className="w-full max-w-3xl flex flex-col items-center">
                     <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -1111,7 +1120,7 @@ const SlateDashboard = () => {
                       onClick={() => document.getElementById('ide-section')?.scrollIntoView({ behavior: 'smooth' })}
                       className="mt-12 flex flex-col items-center gap-2 cursor-pointer group"
                     >
-                      <span className="text-base font-medium text-muted-foreground"><span className="text-base font-medium text-muted-foreground">Prefer building from your AI IDE?</span></span>
+                      <span className="text-base font-medium text-muted-foreground">Prefer building from your AI IDE?</span>
                       <div className="flex items-center gap-4 px-5 py-2.5 rounded-full border border-border/50 group-hover:border-border group-hover:shadow-md bg-card/50 group-hover:bg-card transition-all">
                         <img src="/ide-logos/cursor.png" alt="Cursor" className="h-7 w-7 rounded" />
                         <img src="/ide-logos/claude-code.png" alt="Claude Code" className="h-7 w-7 rounded" />
@@ -1121,10 +1130,11 @@ const SlateDashboard = () => {
                     </button>
                   </div>
                 </div>
+                )}
 
-                {/* Second section: IDE selector below the fold */}
-                <div id="ide-section" className="w-full max-w-3xl mx-auto px-4 py-20">
-                  <PlatformIDESelector />
+                {/* Second section: IDE selector — fullscreen centered when flow is active */}
+                <div id="ide-section" className={`w-full max-w-3xl mx-auto px-4 ${ideFlowActive ? 'min-h-[calc(100vh-64px)] flex flex-col items-center justify-center' : 'py-20'}`}>
+                  <PlatformIDESelector onPhaseChange={(phase) => setIdeFlowActive(FULLSCREEN_PHASES.has(phase))} />
                 </div>
               </div>
             )}
