@@ -203,6 +203,7 @@ const ideOptions = [
 ];
 
 const PlatformIDESelector = () => {
+  const navigate = useNavigate();
   const [selectedIDE, setSelectedIDE] = useState<string | null>(null);
   const [connectionPhase, setConnectionPhase] = useState<'idle' | 'copied' | 'waiting' | 'connected' | 'ready' | 'building' | 'deploy-ready' | 'deploying' | 'live'>('idle');
   const [copiedPrompt, setCopiedPrompt] = useState<string | null>(null);
@@ -487,7 +488,10 @@ const PlatformIDESelector = () => {
               Open App
               <ExternalLink className="h-3.5 w-3.5" />
             </a>
-            <button className="flex-1 flex items-center justify-center gap-2 h-10 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted/50 transition-colors">
+            <button
+              onClick={() => navigate(`/slate/console?name=${encodeURIComponent(appName)}`)}
+              className="flex-1 flex items-center justify-center gap-2 h-10 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted/50 transition-colors"
+            >
               View Project
             </button>
           </div>
