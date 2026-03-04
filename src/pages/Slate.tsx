@@ -874,8 +874,8 @@ const SlateDashboard = () => {
             </div>
             {layoutMode === 'option1' ? (
               /* === OPTION 1: Original tabbed layout === */
-              <>
-                {/* Tabs above the heading */}
+              <div className="w-full flex flex-col items-center pt-[15vh]">
+                {/* Tabs - fixed position regardless of content */}
                 <div className="inline-flex items-center gap-1 rounded-full bg-background/90 backdrop-blur-md p-1.5 border border-border shadow-md mb-6">
                   {([
                     { key: 'build' as const, label: 'Prompt' },
@@ -895,15 +895,18 @@ const SlateDashboard = () => {
                   ))}
                 </div>
 
-                {mainTab === 'build' ? (
-                  <>
-                    <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                      What should we build, Srinath?
-                    </h1>
-                  </>
-                ) : (
-                  <PlatformIDESelector />
-                )}
+                {/* Content area - starts from same position regardless of tab */}
+                <div className="w-full flex flex-col items-center">
+                  {mainTab === 'build' ? (
+                    <>
+                      <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        What should we build, Srinath?
+                      </h1>
+                    </>
+                  ) : (
+                    <PlatformIDESelector />
+                  )}
+                </div>
 
                 {mainTab === 'build' && (
                   <>
@@ -1009,7 +1012,7 @@ const SlateDashboard = () => {
                     </div>
                   </>
                 )}
-              </>
+              </div>
             ) : layoutMode === 'option2' ? (
               /* === OPTION 2: Unified layout — prompt centered, IDE below fold === */
               <div className="w-full flex flex-col">
