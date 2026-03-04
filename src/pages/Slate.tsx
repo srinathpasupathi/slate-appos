@@ -562,7 +562,7 @@ const PlatformIDESelector = () => {
             </p>
           ) : (
             <p className="text-sm text-muted-foreground">
-              Paste into your IDE to start.
+              Paste the prompt into your IDE to start.
             </p>
           )}
         </div>
