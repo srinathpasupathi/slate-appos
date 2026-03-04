@@ -1111,7 +1111,7 @@ const SlateDashboard = () => {
                       onClick={() => document.getElementById('ide-section')?.scrollIntoView({ behavior: 'smooth' })}
                       className="mt-12 flex flex-col items-center gap-2 cursor-pointer group"
                     >
-                      <span className="text-base font-medium text-muted-foreground">Build from your AI IDE</span>
+                      <span className="text-base font-medium text-muted-foreground"><span className="text-base font-medium text-muted-foreground">Prefer building from your AI IDE?</span></span>
                       <div className="flex items-center gap-4 px-5 py-2.5 rounded-full border border-border/50 group-hover:border-border group-hover:shadow-md bg-card/50 group-hover:bg-card transition-all">
                         <img src="/ide-logos/cursor.png" alt="Cursor" className="h-7 w-7 rounded" />
                         <img src="/ide-logos/claude-code.png" alt="Claude Code" className="h-7 w-7 rounded" />
