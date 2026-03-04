@@ -1111,12 +1111,12 @@ const SlateDashboard = () => {
                       onClick={() => document.getElementById('ide-section')?.scrollIntoView({ behavior: 'smooth' })}
                       className="mt-12 flex flex-col items-center gap-2 cursor-pointer group"
                     >
-                      <span className="text-sm text-muted-foreground">Connect your AI IDE</span>
-                      <div className="flex items-center gap-3 px-4 py-2 rounded-full border border-border/50 group-hover:border-border group-hover:shadow-md bg-card/50 group-hover:bg-card transition-all">
-                        <img src="/ide-logos/cursor.png" alt="Cursor" className="h-5 w-5 rounded" />
-                        <img src="/ide-logos/claude-code.png" alt="Claude Code" className="h-5 w-5 rounded" />
-                        <img src="/ide-logos/vscode.png" alt="VS Code" className="h-5 w-5 rounded" />
-                        <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
+                      <span className="text-base font-medium text-muted-foreground">Build from your AI IDE</span>
+                      <div className="flex items-center gap-4 px-5 py-2.5 rounded-full border border-border/50 group-hover:border-border group-hover:shadow-md bg-card/50 group-hover:bg-card transition-all">
+                        <img src="/ide-logos/cursor.png" alt="Cursor" className="h-7 w-7 rounded" />
+                        <img src="/ide-logos/claude-code.png" alt="Claude Code" className="h-7 w-7 rounded" />
+                        <img src="/ide-logos/vscode.png" alt="VS Code" className="h-7 w-7 rounded" />
+                        <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
                       </div>
                     </button>
                   </div>
