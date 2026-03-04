@@ -529,10 +529,10 @@ const PlatformIDESelector = () => {
     <div ref={containerRef} className="flex flex-col items-center gap-8 w-full max-w-3xl">
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-          Choose your AI IDE
+          Connect Om to your AI IDE
         </h2>
         <p className="text-sm text-muted-foreground mt-2">
-          Connect Om Platform to your preferred development tool
+          Choose the development tool you want to use with Om Platform.
         </p>
       </div>
 
