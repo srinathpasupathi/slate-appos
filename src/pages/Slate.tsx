@@ -489,7 +489,7 @@ const PlatformIDESelector = () => {
               <ExternalLink className="h-3.5 w-3.5" />
             </a>
             <button
-              onClick={() => navigate(`/slate/console?name=${encodeURIComponent(appName)}`)}
+              onClick={() => navigate(`/slate/project?source=platform&name=${encodeURIComponent(appName)}`)}
               className="flex-1 flex items-center justify-center gap-2 h-10 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted/50 transition-colors"
             >
               View Project
@@ -978,7 +978,7 @@ const SlateDashboard = () => {
                     <button
                       onClick={() => {
                         if (prompt.trim()) {
-                          navigate(`/slate/workspace?prompt=${encodeURIComponent(prompt.trim())}`);
+                          navigate(`/slate/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
                         }
                       }}
                       className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
