@@ -856,8 +856,8 @@ const SlateDashboard = () => {
             {layoutMode === 'option1' && (
               <div className="inline-flex items-center gap-1 rounded-full bg-background/90 backdrop-blur-md p-1.5 border border-border shadow-md">
                 {([
-                  { key: 'build' as const, label: 'Build' },
-                  { key: 'platform' as const, label: 'Platform' },
+                  { key: 'build' as const, label: 'Prompt' },
+                  { key: 'platform' as const, label: 'AI IDEs' },
                 ]).map(tab => (
                   <button
                     key={tab.key}
