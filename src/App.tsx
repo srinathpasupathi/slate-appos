@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Slate from "./pages/Slate";
 import SlateWorkspace from "./pages/SlateWorkspace";
+import ProjectConsole from "./pages/ProjectConsole";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/slate" element={<Slate />} />
           <Route path="/slate/workspace" element={<SlateWorkspace />} />
+          <Route path="/slate/console" element={<ProjectConsole />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
