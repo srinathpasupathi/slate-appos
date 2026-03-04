@@ -274,7 +274,7 @@ const ProjectPage = () => {
     <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-card shrink-0">
       <div className="flex items-center gap-3">
         <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
-        <AppNameDropdown />
+        {AppNameDropdown()}
         {/* Tab pills */}
         <div className="flex items-center gap-0.5 ml-4 bg-muted/50 rounded-lg p-0.5">
           {availableTabs.map((tab) => (
@@ -557,10 +557,10 @@ const ProjectPage = () => {
   // ─── Tab Content Renderer ───
   const renderTabContent = () => {
     switch (activeTab) {
-      case "preview": return <PreviewContent />;
-      case "code": return <CodeContent />;
-      case "appos": return <AppOSContent />;
-      case "cloud": return <CloudContent />;
+      case "preview": return PreviewContent();
+      case "code": return CodeContent();
+      case "appos": return AppOSContent();
+      case "cloud": return CloudContent();
     }
   };
 
@@ -569,13 +569,13 @@ const ProjectPage = () => {
 
   return (
     <div className="flex flex-col h-screen bg-background overflow-hidden">
-      <TopHeader />
+      {TopHeader()}
 
       <div className="flex-1 overflow-hidden">
         {showChatPanel ? (
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel defaultSize={35} minSize={25} maxSize={55}>
-              <ChatPanel />
+              {ChatPanel()}
             </ResizablePanel>
             <ResizableHandle withHandle />
             <ResizablePanel defaultSize={65} minSize={40}>
