@@ -728,7 +728,7 @@ const SlateDashboard = () => {
   const [sidebarHovered, setSidebarHovered] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [mainTab, setMainTab] = useState<'build' | 'platform'>('build');
-  const [layoutMode, setLayoutMode] = useState<'option1' | 'option2'>('option1');
+  const [layoutMode, setLayoutMode] = useState<'option1' | 'option2' | 'option3'>('option1');
   const [ideFlowActive, setIdeFlowActive] = useState(false);
   const navigate = useNavigate();
 
@@ -1006,7 +1006,7 @@ const SlateDashboard = () => {
                   </>
                 )}
               </>
-            ) : (
+            ) : layoutMode === 'option2' ? (
               /* === OPTION 2: Unified layout — prompt centered, IDE below fold === */
               <div className="w-full flex flex-col">
                 {/* First section: prompt centered in viewport — hidden when IDE flow is active */}
@@ -1140,19 +1140,131 @@ const SlateDashboard = () => {
                   <PlatformIDESelector onPhaseChange={(phase) => setIdeFlowActive(FULLSCREEN_PHASES.has(phase))} />
                 </div>
               </div>
+            ) : (
+              /* === OPTION 3: Unified with visual divider === */
+              <div className="w-full flex flex-col">
+                {!ideFlowActive && (
+                <div className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center px-4">
+                  <div className="w-full max-w-3xl flex flex-col items-center">
+                    <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      What should we build, Srinath?
+                    </h1>
+
+                    {/* Prompt box */}
+                    <div className="w-full">
+                      {activeIntent && (
+                        <div className="mb-2 flex items-center">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                            Building: {quickStarters.find(s => s.id === activeIntent)?.pill}
+                            <button onClick={clearIntent} className="ml-0.5 hover:bg-primary/20 rounded-full p-0.5 transition-colors">
+                              <X className="h-3 w-3" />
+                            </button>
+                          </span>
+                        </div>
+                      )}
+                      <div className="rounded-xl border border-input bg-card shadow-lg focus-within:ring-2 focus-within:ring-ring focus-within:border-transparent transition-all">
+                        <textarea
+                          value={prompt}
+                          onChange={(e) => setPrompt(e.target.value)}
+                          placeholder="Ask Om to create an app about... "
+                          rows={4}
+                          className="w-full resize-none rounded-t-xl bg-transparent px-5 pt-4 pb-2 text-sm md:text-base text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
+                        />
+                        {attachedFiles.length > 0 && (
+                          <div className="flex flex-wrap gap-2 px-4 pb-2">
+                            {attachedFiles.map((file, i) => (
+                              <div key={i} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-muted border border-border text-xs text-foreground">
+                                <FileText className="h-3 w-3 text-muted-foreground" />
+                                <span className="max-w-[120px] truncate">{file.name}</span>
+                                <button onClick={() => removeFile(i)} className="text-muted-foreground hover:text-foreground transition-colors">
+                                  <X className="h-3 w-3" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        <div className="flex items-center justify-between px-4 pb-3">
+                          <Popover open={plusMenuOpen} onOpenChange={setPlusMenuOpen}>
+                            <PopoverTrigger asChild>
+                              <button className="h-7 w-7 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+                                <Plus className="h-4 w-4" />
+                              </button>
+                            </PopoverTrigger>
+                            <PopoverContent align="start" side="top" className="w-72 p-1.5">
+                              <button
+                                onClick={handleFileUpload}
+                                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-muted transition-colors"
+                              >
+                                <Paperclip className="h-4 w-4 text-muted-foreground" />
+                                <div className="text-left">
+                                  <p className="font-medium">Attach Files</p>
+                                  <p className="text-xs text-muted-foreground">Upload files to include</p>
+                                </div>
+                              </button>
+                            </PopoverContent>
+                          </Popover>
+                          <div className="flex items-center gap-2">
+                            <button className="text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded transition-colors">Plan</button>
+                            <button
+                              onClick={() => {
+                                if (prompt.trim()) {
+                                  navigate(`/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
+                                }
+                              }}
+                              className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
+                              disabled={!prompt.trim()}
+                            >
+                              <ArrowRight className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Visual divider with OR */}
+                    <div className="w-full flex items-center gap-4 my-10">
+                      <div className="flex-1 h-px bg-border" />
+                      <span className="text-sm font-medium text-muted-foreground uppercase tracking-widest">or</span>
+                      <div className="flex-1 h-px bg-border" />
+                    </div>
+
+                    {/* IDE alternative path with background container */}
+                    <div className="w-full rounded-2xl border border-border bg-muted/50 backdrop-blur-sm p-8 flex flex-col items-center">
+                      <p className="text-lg md:text-xl font-semibold text-foreground mb-1.5 tracking-tight">Build from your AI IDE</p>
+                      <p className="text-sm md:text-base text-muted-foreground mb-6">Connect your favourite IDE and start building instantly</p>
+                      <button
+                        onClick={() => document.getElementById('ide-section-opt3')?.scrollIntoView({ behavior: 'smooth' })}
+                        className="flex items-center gap-5 px-7 py-4 rounded-xl border border-border/60 hover:border-border hover:shadow-lg bg-card hover:bg-card/90 transition-all cursor-pointer group"
+                      >
+                        <img src="/ide-logos/cursor.png" alt="Cursor" className="h-9 w-9 rounded-lg" />
+                        <img src="/ide-logos/claude-code.png" alt="Claude Code" className="h-9 w-9 rounded-lg" />
+                        <img src="/ide-logos/vscode.png" alt="VS Code" className="h-9 w-9 rounded-lg" />
+                        <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                )}
+
+                {/* IDE selector section */}
+                <div id="ide-section-opt3" className={`w-full max-w-3xl mx-auto px-4 ${ideFlowActive ? 'min-h-[calc(100vh-64px)] flex flex-col items-center justify-center' : 'py-20'}`}>
+                  <PlatformIDESelector onPhaseChange={(phase) => setIdeFlowActive(FULLSCREEN_PHASES.has(phase))} />
+                </div>
+              </div>
             )}
           </div>
         </div>
 
         {/* Bottom-right layout mode dropdown */}
         <div className="fixed bottom-5 right-5 z-50">
-          <Select value={layoutMode} onValueChange={(v: 'option1' | 'option2') => setLayoutMode(v)}>
+          <Select value={layoutMode} onValueChange={(v: 'option1' | 'option2' | 'option3') => setLayoutMode(v)}>
             <SelectTrigger className="w-[130px] h-9 text-xs bg-card border-border shadow-md">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="option1">Option 1</SelectItem>
               <SelectItem value="option2">Option 2</SelectItem>
+              <SelectItem value="option3">Option 3</SelectItem>
             </SelectContent>
           </Select>
         </div>
