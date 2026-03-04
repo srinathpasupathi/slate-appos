@@ -867,7 +867,7 @@ const SlateDashboard = () => {
             </div>
           </div>
 
-          <div className="relative flex-1 flex flex-col items-center justify-center px-6 lg:px-16 pb-24">
+          <div className={`relative flex-1 flex flex-col items-center px-6 lg:px-16 pb-24 ${layoutMode !== 'option1' ? 'justify-center' : ''}`}>
             {/* Preload IDE logos so they're cached across all layout modes */}
             <div className="hidden">
               {ideOptions.map(ide => ide.logo && <img key={ide.key} src={ide.logo} alt="" />)}
