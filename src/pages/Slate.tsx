@@ -361,23 +361,16 @@ const PlatformIDESelector = () => {
         </div>
 
         <div
-          role="button"
-          tabIndex={0}
-          onClick={handleCopyDeployPrompt}
-          onKeyDown={(e) => e.key === 'Enter' && handleCopyDeployPrompt()}
-          className="group w-full flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-border bg-card hover:border-foreground/20 hover:shadow-md transition-all duration-200 cursor-pointer select-none animate-in fade-in slide-in-from-bottom-3 duration-500"
+          className="w-full flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-border bg-card animate-in fade-in slide-in-from-bottom-3 duration-500"
           style={{ animationDelay: '150ms', animationFillMode: 'both' }}
         >
-          <div className="flex flex-col gap-0.5">
-            <span className="text-sm font-semibold text-foreground">Deploy to Om</span>
-            <span className="text-xs text-muted-foreground">Get a hosted URL for your app</span>
-          </div>
+          <code className="text-sm text-muted-foreground font-mono">Deploy my app to Om</code>
           <button
-            onClick={(e) => { e.stopPropagation(); handleCopyDeployPrompt(); }}
+            onClick={handleCopyDeployPrompt}
             className={`shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all duration-200 ${
               deployCopied
                 ? 'text-green-600 bg-green-500/10 border border-green-500/25'
-                : 'text-primary-foreground bg-primary hover:bg-primary/90 shadow-sm'
+                : 'text-foreground bg-muted hover:bg-muted/80 border border-border'
             }`}
           >
             {deployCopied ? (
