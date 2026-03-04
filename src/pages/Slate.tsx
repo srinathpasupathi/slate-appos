@@ -1237,8 +1237,8 @@ const SlateDashboard = () => {
 
                     {/* IDE alternative path with background container */}
                     <div className="w-full rounded-2xl border border-border bg-muted/50 backdrop-blur-sm p-8 flex flex-col items-center">
-                      <p className="text-lg md:text-xl font-semibold text-foreground mb-1.5 tracking-tight">Build from your AI IDE</p>
-                      <p className="text-sm md:text-base text-muted-foreground mb-6">Connect your favourite IDE and start building instantly</p>
+                      <p className="text-lg md:text-xl font-semibold text-foreground mb-1.5 tracking-tight">Use your AI IDE to build on Om</p>
+                      <p className="text-sm md:text-base text-muted-foreground mb-6">Connect your IDE to develop directly on the Om platform</p>
                       <button
                         onClick={() => document.getElementById('ide-section-opt3')?.scrollIntoView({ behavior: 'smooth' })}
                         className="flex items-center gap-5 px-7 py-4 rounded-xl border border-border/60 hover:border-border hover:shadow-lg bg-card hover:bg-card/90 transition-all cursor-pointer group"
