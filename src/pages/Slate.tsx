@@ -814,7 +814,10 @@ const SlateDashboard = () => {
 
         {/* Nav links */}
         <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto overflow-x-hidden">
-          <SidebarLink icon={Home} label="Home" active collapsed={sidebarCollapsed} />
+          <SidebarLink icon={Home} label="Home" active collapsed={sidebarCollapsed} onClick={() => {
+            setIdeFlowActive(false);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }} />
           <SidebarLink icon={Grid3X3} label="Projects" collapsed={sidebarCollapsed} />
           <SidebarLink icon={Layers} label="Templates" collapsed={sidebarCollapsed} />
           <SidebarLink icon={Search} label="Search" collapsed={sidebarCollapsed} />
@@ -1240,19 +1243,25 @@ const ProfilePopover = ({ variant = "sidebar" }: { variant?: "sidebar" | "topbar
 );
 
 const SidebarLink = ({ icon: Icon, label, active, onClick, collapsed }: { icon: any; label: string; active?: boolean; onClick?: () => void; collapsed?: boolean }) => (
-  <a
-    href="#"
-    onClick={(e) => { if (onClick) { e.preventDefault(); onClick(); } }}
-    className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3 py-2 rounded-md text-sm transition-colors ${
-      active
-        ? "bg-muted text-foreground font-medium"
-        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-    }`}
-    title={collapsed ? label : undefined}
-  >
-    <Icon className="h-4 w-4 shrink-0" />
-    {!collapsed && label}
-  </a>
+  <div className="relative group">
+    <a
+      href="#"
+      onClick={(e) => { e.preventDefault(); if (onClick) onClick(); }}
+      className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3 py-2 rounded-md text-sm transition-colors ${
+        active
+          ? "bg-muted text-foreground font-medium"
+          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+      }`}
+    >
+      <Icon className="h-4 w-4 shrink-0" />
+      {!collapsed && label}
+    </a>
+    {collapsed && (
+      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2.5 py-1 rounded-md bg-foreground text-background text-xs font-medium whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-150 z-50 shadow-lg">
+        {label}
+      </div>
+    )}
+  </div>
 );
 
 export default SlateDashboard;
