@@ -104,6 +104,8 @@ const ProjectPage = () => {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const hasSeededBuildRef = useRef(false);
+  const forceCompleteTimerRef = useRef<number | null>(null);
 
   const appUrl = `${projectName.toLowerCase().replace(/\s+/g, "-")}.onslate.com`;
 
@@ -114,17 +116,24 @@ const ProjectPage = () => {
   };
 
   const handleGenerationComplete = useCallback(() => {
-    setIsGenerating(false);
-    setGenerationDone(true);
-    setActiveTab("preview");
+    setIsGenerating((prev) => {
+      if (!prev) return prev;
+      setGenerationDone(true);
+      setActiveTab("preview");
+      return false;
+    });
   }, []);
 
   // Build mode: seed initial prompt
   useEffect(() => {
-    if (source !== "build") return;
+    if (source !== "build" || hasSeededBuildRef.current) return;
+
+    hasSeededBuildRef.current = true;
     const userMsg: Message = { id: "1", role: "user", content: initialPrompt, timestamp: new Date() };
     const firstAssistant: Message = { id: "2", role: "assistant", content: `Great choice! I'll build a **Franchise Sales Management** app for you. Let me analyze the requirements and start generating the code...`, timestamp: new Date() };
+
     setMessages([userMsg, firstAssistant]);
+    setGenerationDone(false);
     setIsGenerating(true);
     setActiveTab("code");
 
@@ -133,8 +142,9 @@ const ProjectPage = () => {
         setMessages((prev) => [...prev, { id: `step-${i}`, role: "assistant" as const, content: step.content, timestamp: new Date() }]);
       }, step.delay)
     );
+
     return () => timers.forEach(clearTimeout);
-  }, []);
+  }, [source, initialPrompt]);
 
   // Progress ticker
   useEffect(() => {
@@ -146,8 +156,19 @@ const ProjectPage = () => {
         return prev + Math.random() * 12;
       });
     }, 800);
-    return () => clearInterval(interval);
-  }, [isGenerating]);
+
+    forceCompleteTimerRef.current = window.setTimeout(() => {
+      handleGenerationComplete();
+    }, 14000);
+
+    return () => {
+      clearInterval(interval);
+      if (forceCompleteTimerRef.current) {
+        clearTimeout(forceCompleteTimerRef.current);
+        forceCompleteTimerRef.current = null;
+      }
+    };
+  }, [isGenerating, handleGenerationComplete]);
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
