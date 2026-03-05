@@ -1024,11 +1024,9 @@ const SlateDashboard = () => {
         <main className="flex-1 flex flex-col overflow-hidden">
           {/* Detail view when a backend/project is selected */}
           {selectedBackend && (mainTab === 'platform' || mainTab === 'cloud') ? (
-            <div className="relative flex flex-1 overflow-hidden h-full">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-100/60 via-indigo-50/40 to-blue-50/30 pointer-events-none" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
+            <div className="flex flex-1 overflow-hidden h-full bg-background">
               {/* Service sidebar */}
-              <aside className="w-48 border-r border-border bg-card/80 backdrop-blur-sm flex flex-col shrink-0 relative z-10">
+              <aside className="w-48 border-r border-border bg-card flex flex-col shrink-0">
                 <div className="px-4 pt-4 pb-3 border-b border-border">
                   <button
                     onClick={() => setSelectedBackend(null)}
