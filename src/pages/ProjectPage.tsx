@@ -29,12 +29,14 @@ import GitHubConnectDialog from "@/components/GitHubConnectDialog";
 // ─── Types & Constants ───
 
 interface ActionCard {
-  type: "appos-promo" | "cloud-promo";
+  type: "appos-promo" | "cloud-promo" | "appos-resources" | "cloud-resources";
   title: string;
   description: string;
   features: { icon: string; label: string }[];
   ctaLabel: string;
   dismissLabel: string;
+  /** If true, show "Proceed & auto-approve" option */
+  showAutoApprove?: boolean;
 }
 
 interface Message {
@@ -167,6 +169,9 @@ const ProjectPage = () => {
   const [cloudEnabled, setCloudEnabled] = useState(false);
   const [cloudEnabling, setCloudEnabling] = useState(false);
 
+  // Auto-approve state — when true, resource creation proceeds without asking
+  const [autoApproveResources, setAutoApproveResources] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const hasSeededBuildRef = useRef(false);
@@ -298,26 +303,119 @@ const ProjectPage = () => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
 
-  const handleActionCardClick = (type: "appos-promo" | "cloud-promo", action: "enable" | "dismiss") => {
+  const handleActionCardClick = (type: ActionCard["type"], action: "enable" | "dismiss" | "auto-approve") => {
     // Remove the action card from the message
     setMessages((prev) => prev.map((msg) =>
       msg.actionCard?.type === type ? { ...msg, actionCard: undefined } : msg
     ));
 
     if (action === "dismiss") {
+      const dismissTexts: Record<string, string> = {
+        "appos-promo": "No problem! You can always enable **AppOS** later from the AppOS tab whenever you're ready.",
+        "cloud-promo": "Sure thing! **Cloud** is available anytime you need it from the Cloud tab.",
+        "appos-resources": "Okay, skipping resource creation for now. You can set these up manually from the **Resources** tab in AppOS.",
+        "cloud-resources": "No worries! You can create Cloud resources anytime from the **Cloud** tab.",
+      };
       setMessages((prev) => [...prev, {
         id: `dismiss-${type}-${Date.now()}`,
         role: "assistant",
-        content: type === "appos-promo"
-          ? "No problem! You can always enable **AppOS** later from the AppOS tab whenever you're ready."
-          : "Sure thing! **Cloud** is available anytime you need it from the Cloud tab.",
+        content: dismissTexts[type] || "Got it!",
         timestamp: new Date(),
       }]);
+      // If dismissing resource creation for AppOS, still promote Cloud
+      if (type === "appos-resources" && !cloudPromoShownRef.current) {
+        promptCloudAfterAppOS();
+      }
       return;
     }
 
-    // Trigger the enable flow
-    handleEnableService(type === "appos-promo" ? "appos" : "cloud");
+    if (action === "auto-approve") {
+      setAutoApproveResources(true);
+    }
+
+    // Route to the right handler
+    if (type === "appos-promo") {
+      handleEnableService("appos");
+    } else if (type === "cloud-promo") {
+      handleEnableService("cloud");
+    } else if (type === "appos-resources") {
+      simulateResourceCreation("appos");
+    } else if (type === "cloud-resources") {
+      simulateResourceCreation("cloud");
+    }
+  };
+
+  const promptCloudAfterAppOS = () => {
+    cloudPromoShownRef.current = true;
+    setTimeout(() => {
+      setMessages((prev) => [...prev, {
+        id: `cloud-promo-${Date.now()}`,
+        role: "assistant",
+        content: `Your app has features like **logo uploads** and **file attachments** — these need file storage. **Cloud** gives you managed object storage buckets, plus authentication and serverless functions.`,
+        timestamp: new Date(),
+        actionCard: {
+          type: "cloud-promo",
+          title: "Enable Cloud",
+          description: "Object storage for files, managed auth, and serverless functions",
+          features: [
+            { icon: "hard-drive", label: "Object Storage" },
+            { icon: "lock", label: "Authentication" },
+            { icon: "database", label: "Database" },
+            { icon: "code", label: "Functions" },
+          ],
+          ctaLabel: "Enable Cloud",
+          dismissLabel: "Not now",
+        },
+      }]);
+    }, 2500);
+  };
+
+  const simulateResourceCreation = (service: "appos" | "cloud") => {
+    const isAppOS = service === "appos";
+    const steps = isAppOS
+      ? [
+          { delay: 600, summary: "Creating Franchise module & fields" },
+          { delay: 1800, summary: "Creating Sales module & fields" },
+          { delay: 3000, summary: "Setting up user roles — Admin, Manager, Viewer" },
+          { delay: 4200, summary: "Configuring workflows — approval chains" },
+          { delay: 5200, summary: "Provisioning Users & permissions" },
+        ]
+      : [
+          { delay: 600, summary: "Creating storage bucket — franchise-assets" },
+          { delay: 1800, summary: "Setting up authentication providers" },
+          { delay: 3000, summary: "Provisioning relational database schema" },
+          { delay: 4000, summary: "Deploying serverless functions" },
+        ];
+
+    steps.forEach((step) => {
+      setTimeout(() => {
+        setMessages((prev) => [...prev, {
+          id: `resource-${service}-${step.delay}-${Date.now()}`,
+          role: "assistant",
+          content: step.summary,
+          timestamp: new Date(),
+          stepSummary: step.summary,
+        }]);
+      }, step.delay);
+    });
+
+    // Final done message
+    const totalDelay = steps[steps.length - 1].delay + 1200;
+    setTimeout(() => {
+      setMessages((prev) => [...prev, {
+        id: `resource-${service}-done-${Date.now()}`,
+        role: "assistant",
+        content: isAppOS
+          ? `✅ **AppOS resources are ready!** Modules, fields, roles, workflows, and users have been configured. Check the **AppOS** tab to explore.`
+          : `✅ **Cloud resources are ready!** Storage buckets, auth, database, and functions are provisioned. Check the **Cloud** tab to explore.`,
+        timestamp: new Date(),
+      }]);
+
+      // After AppOS resources, prompt Cloud
+      if (isAppOS && !cloudPromoShownRef.current) {
+        promptCloudAfterAppOS();
+      }
+    }, totalDelay);
   };
 
   const handleEnableService = (service: "appos" | "cloud") => {
@@ -330,21 +428,17 @@ const ProjectPage = () => {
     // If chat panel is not visible, enable directly after a brief delay
     const chatVisible = source === "build" || (source === "platform" && githubConnected);
     if (!chatVisible) {
-      setTimeout(() => {
-        setEnabling(false);
-        setEnabled(true);
-      }, 1500);
+      setTimeout(() => { setEnabling(false); setEnabled(true); }, 1500);
       return;
     }
 
     // Build mode: simulate chat conversation
-    const userMsg: Message = {
+    setMessages((prev) => [...prev, {
       id: `enable-${service}-user-${Date.now()}`,
       role: "user",
       content: `Enable ${label}`,
       timestamp: new Date(),
-    };
-    setMessages((prev) => [...prev, userMsg]);
+    }]);
     if (chatPanelCollapsed) setChatPanelCollapsed(false);
 
     setTimeout(() => {
@@ -361,36 +455,69 @@ const ProjectPage = () => {
       setMessages((prev) => [...prev, {
         id: `enable-${service}-done-${Date.now()}`,
         role: "assistant",
-        content: `✅ **${label} is ready!** Explore the **${label}** tab to get started.`,
+        content: `✅ **${label} is enabled!**`,
         timestamp: new Date(),
       }]);
       setEnabling(false);
       setEnabled(true);
 
-      // After AppOS is enabled, contextually promote Cloud
-      if (service === "appos" && !cloudPromoShownRef.current) {
-        cloudPromoShownRef.current = true;
+      // Now prompt for resource creation
+      if (autoApproveResources) {
+        // Auto-approved: skip the prompt, go straight to creation
         setTimeout(() => {
           setMessages((prev) => [...prev, {
-            id: `cloud-promo-${Date.now()}`,
+            id: `auto-resource-${service}-${Date.now()}`,
             role: "assistant",
-            content: `Your franchise app could also use **Cloud** — for storing franchise logos, securing manager logins, and running serverless logic.`,
+            content: service === "appos"
+              ? `Auto-creating **AppOS** backend resources for your app...`
+              : `Auto-creating **Cloud** resources for your app...`,
             timestamp: new Date(),
-            actionCard: {
-              type: "cloud-promo",
-              title: "Enable Cloud",
-              description: "Managed databases, auth, file storage & serverless functions",
-              features: [
-                { icon: "database", label: "Database" },
-                { icon: "lock", label: "Auth" },
-                { icon: "hard-drive", label: "Storage" },
-                { icon: "code", label: "Functions" },
-              ],
-              ctaLabel: "Enable Cloud",
-              dismissLabel: "Not now",
-            },
           }]);
-        }, 3000);
+          simulateResourceCreation(service);
+        }, 1000);
+      } else {
+        // Ask the user if they want to create resources
+        setTimeout(() => {
+          const resourceCard: ActionCard = service === "appos"
+            ? {
+                type: "appos-resources",
+                title: "Create AppOS Resources",
+                description: "Auto-generate backend modules, fields, workflows, users & roles based on your app",
+                features: [
+                  { icon: "boxes", label: "Modules & Fields" },
+                  { icon: "workflow", label: "Workflows" },
+                  { icon: "users", label: "Users" },
+                  { icon: "shield", label: "Roles & Permissions" },
+                ],
+                ctaLabel: "Proceed",
+                dismissLabel: "Skip",
+                showAutoApprove: true,
+              }
+            : {
+                type: "cloud-resources",
+                title: "Create Cloud Resources",
+                description: "Set up storage buckets for franchise logos & docs, auth providers, and database schema",
+                features: [
+                  { icon: "hard-drive", label: "Storage Buckets" },
+                  { icon: "lock", label: "Auth Providers" },
+                  { icon: "database", label: "DB Schema" },
+                  { icon: "code", label: "Functions" },
+                ],
+                ctaLabel: "Proceed",
+                dismissLabel: "Skip",
+                showAutoApprove: true,
+              };
+
+          setMessages((prev) => [...prev, {
+            id: `resource-prompt-${service}-${Date.now()}`,
+            role: "assistant",
+            content: service === "appos"
+              ? `Would you like me to automatically create the backend resources for your app? I'll set up modules, fields, workflows, and role-based access.`
+              : `Would you like me to create the Cloud resources? I'll set up storage buckets for your files, configure authentication, and provision the database.`,
+            timestamp: new Date(),
+            actionCard: resourceCard,
+          }]);
+        }, 1500);
       }
     }, 3500);
   };
@@ -690,7 +817,7 @@ const ProjectPage = () => {
                         </div>
 
                         {/* Action buttons */}
-                        <div className="px-4 pb-3.5 flex items-center gap-2">
+                        <div className="px-4 pb-3.5 flex items-center gap-2 flex-wrap">
                           <button
                             onClick={() => handleActionCardClick(msg.actionCard!.type, "enable")}
                             className="h-8 px-4 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors flex items-center gap-1.5 shadow-sm"
@@ -698,6 +825,15 @@ const ProjectPage = () => {
                             <Zap className="h-3 w-3" />
                             {msg.actionCard.ctaLabel}
                           </button>
+                          {msg.actionCard.showAutoApprove && (
+                            <button
+                              onClick={() => handleActionCardClick(msg.actionCard!.type, "auto-approve")}
+                              className="h-8 px-3 rounded-lg bg-primary/10 text-primary text-xs font-medium hover:bg-primary/20 transition-colors flex items-center gap-1.5 border border-primary/20"
+                            >
+                              <Check className="h-3 w-3" />
+                              Proceed & auto-approve future
+                            </button>
+                          )}
                           <button
                             onClick={() => handleActionCardClick(msg.actionCard!.type, "dismiss")}
                             className="h-8 px-3 rounded-lg border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
