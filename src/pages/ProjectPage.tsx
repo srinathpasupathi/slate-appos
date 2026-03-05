@@ -459,15 +459,7 @@ const ProjectPage = () => {
         </Popover>
 
         {/* GitHub */}
-        {source === "platform" && !githubConnected ? (
-          <button
-            onClick={() => setGithubDialogOpen(true)}
-            className="h-8 px-3 rounded-full bg-muted flex items-center gap-2 text-sm font-medium text-foreground hover:bg-muted/80 transition-colors"
-          >
-            <Github className="h-4 w-4" />
-            Connect Repo
-          </button>
-        ) : (
+        {source === "platform" && !githubConnected ? null : (
           <Popover open={githubPopoverOpen} onOpenChange={setGithubPopoverOpen}>
             <PopoverTrigger asChild>
               <button className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-foreground hover:bg-muted/80 transition-colors">
