@@ -29,22 +29,14 @@ const AppOSSettings = ({ enabled, onToggle }: AppOSSettingsProps) => {
       ) : (
         <div className="space-y-4">
           <div className="rounded-xl border border-border bg-card p-5">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-foreground">AppOS is enabled</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">AppOS backend services are active for this app.</p>
-                </div>
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
               </div>
-              <button
-                onClick={() => onToggle(false)}
-                className="h-8 px-3 rounded-lg border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              >
-                Disable
-              </button>
+              <div>
+                <p className="text-sm font-medium text-foreground">AppOS is enabled</p>
+                <p className="text-xs text-muted-foreground mt-0.5">AppOS backend services are active for this app.</p>
+              </div>
             </div>
           </div>
 
@@ -54,6 +46,8 @@ const AppOSSettings = ({ enabled, onToggle }: AppOSSettingsProps) => {
               <p className="text-sm text-muted-foreground">No AppOS backend is associated.</p>
             </div>
           </div>
+
+          <p className="text-xs text-muted-foreground">AppOS once enabled cannot be disabled.</p>
         </div>
       )}
     </div>

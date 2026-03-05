@@ -284,8 +284,48 @@ const ProjectPage = () => {
 
   const handleSend = () => {
     if (!input.trim()) return;
-    setMessages((prev) => [...prev, { id: Date.now().toString(), role: "user", content: input.trim(), timestamp: new Date() }]);
+    const trimmed = input.trim();
+    setMessages((prev) => [...prev, { id: Date.now().toString(), role: "user", content: trimmed, timestamp: new Date() }]);
     setInput("");
+
+    const lower = trimmed.toLowerCase();
+
+    // Handle "enable appos" / "enable cloud" via chat
+    if (lower === "enable appos" || lower === "enable appOS" || lower.includes("enable appos")) {
+      if (appOsEnabled) {
+        setTimeout(() => {
+          setMessages((prev) => [...prev, { id: (Date.now() + 1).toString(), role: "assistant", content: "**AppOS** is already enabled for this app.", timestamp: new Date() }]);
+        }, 800);
+      } else {
+        handleEnableService("appos");
+      }
+      return;
+    }
+    if (lower === "enable cloud" || lower.includes("enable cloud")) {
+      if (cloudEnabled) {
+        setTimeout(() => {
+          setMessages((prev) => [...prev, { id: (Date.now() + 1).toString(), role: "assistant", content: "**Cloud** is already enabled for this app.", timestamp: new Date() }]);
+        }, 800);
+      } else {
+        handleEnableService("cloud");
+      }
+      return;
+    }
+
+    // Handle "disable appos" / "disable cloud" via chat
+    if (lower.includes("disable appos")) {
+      setTimeout(() => {
+        setMessages((prev) => [...prev, { id: (Date.now() + 1).toString(), role: "assistant", content: "⚠️ **AppOS** once enabled cannot be disabled.", timestamp: new Date() }]);
+      }, 800);
+      return;
+    }
+    if (lower.includes("disable cloud")) {
+      setTimeout(() => {
+        setMessages((prev) => [...prev, { id: (Date.now() + 1).toString(), role: "assistant", content: "⚠️ **Cloud** once enabled cannot be disabled.", timestamp: new Date() }]);
+      }, 800);
+      return;
+    }
+
     setTimeout(() => {
       setMessages((prev) => [...prev, { id: (Date.now() + 1).toString(), role: "assistant", content: "Got it! I'm working on that change now. You'll see the preview update shortly.", timestamp: new Date() }]);
     }, 1200);
