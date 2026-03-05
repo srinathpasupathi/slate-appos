@@ -68,9 +68,9 @@ const APPOS_NAV = [
 
 const CLOUD_NAV = [
   { id: "authentication", label: "Authentication", icon: Lock },
-  { id: "relational-db", label: "Relational Database", icon: Server },
+  { id: "relational-db", label: "Relational DB", icon: Server },
   { id: "object-storage", label: "Object Storage", icon: FolderTree },
-  { id: "nosql-db", label: "NoSQL Database", icon: LayoutDashboard },
+  { id: "nosql-db", label: "NoSQL DB", icon: LayoutDashboard },
   { id: "functions", label: "Functions", icon: Zap },
   { id: "schedulers", label: "Schedulers", icon: RotateCcw },
   { id: "mail", label: "Mail", icon: Send },
