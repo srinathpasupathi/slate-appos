@@ -6,6 +6,7 @@ import {
   Home, Settings, Sun, Moon, HelpCircle, Zap, Lock, Search, AlertCircle,
   ChevronLeft, Copy, Check, ArrowLeft, Users, Rocket, LayoutDashboard, Trash2,
   RotateCcw, Server, Cloud, PanelLeftClose, PanelLeft, Boxes, DatabaseZap, Wrench,
+  MoreHorizontal, X,
 } from "lucide-react";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -39,11 +40,30 @@ const ASSISTANT_STEPS: { delay: number; content: string }[] = [
 
 type TopTab = "preview" | "code" | "appos" | "cloud";
 
-const TENANTS = [
-  { id: "ten_01HQ3X…8k", name: "Acme Corp", plan: "Pro", users: 24, created: "Jan 12, 2026" },
-  { id: "ten_01HR7Y…3m", name: "Globex Inc", plan: "Starter", users: 8, created: "Feb 03, 2026" },
-  { id: "ten_01HS2Z…9p", name: "Initech", plan: "Enterprise", users: 112, created: "Feb 18, 2026" },
-  { id: "ten_01HT4A…1r", name: "Umbrella Ltd", plan: "Pro", users: 31, created: "Mar 01, 2026" },
+interface AppUser {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  username: string;
+  userRole: string;
+  roleId: string;
+  department: string;
+  jobTitle: string;
+  orgId: string;
+  orgName: string;
+  status: string;
+  emailVerified: boolean;
+  phoneVerified: boolean;
+  signupDate: string;
+}
+
+const APP_USERS: AppUser[] = [
+  { userId: "usr_01HQ3X8k", firstName: "Alice", lastName: "Johnson", email: "alice@acme.com", phone: "+1-555-0101", username: "alicej", userRole: "Admin", roleId: "role_001", department: "Engineering", jobTitle: "CTO", orgId: "org_001", orgName: "Acme Corp", status: "Active", emailVerified: true, phoneVerified: true, signupDate: "Jan 12, 2026" },
+  { userId: "usr_01HR7Y3m", firstName: "Bob", lastName: "Smith", email: "bob@globex.com", phone: "+1-555-0102", username: "bsmith", userRole: "Editor", roleId: "role_002", department: "Marketing", jobTitle: "Marketing Lead", orgId: "org_002", orgName: "Globex Inc", status: "Active", emailVerified: true, phoneVerified: false, signupDate: "Feb 03, 2026" },
+  { userId: "usr_01HS2Z9p", firstName: "Carol", lastName: "Williams", email: "carol@initech.com", phone: "+1-555-0103", username: "cwilliams", userRole: "Viewer", roleId: "role_003", department: "Sales", jobTitle: "Sales Manager", orgId: "org_003", orgName: "Initech", status: "Inactive", emailVerified: false, phoneVerified: false, signupDate: "Feb 18, 2026" },
+  { userId: "usr_01HT4A1r", firstName: "David", lastName: "Brown", email: "david@umbrella.com", phone: "+1-555-0104", username: "dbrown", userRole: "Admin", roleId: "role_001", department: "Operations", jobTitle: "COO", orgId: "org_004", orgName: "Umbrella Ltd", status: "Active", emailVerified: true, phoneVerified: true, signupDate: "Mar 01, 2026" },
 ];
 
 const DEPLOYMENTS = [
@@ -112,7 +132,7 @@ const ProjectPage = () => {
 
   // AppOS state
   const [appOsSection, setAppOsSection] = useState("overview");
-  const [selectedTenant, setSelectedTenant] = useState<typeof TENANTS[number] | null>(null);
+  const [selectedUser, setSelectedUser] = useState<AppUser | null>(null);
   const [copied, setCopied] = useState(false);
 
   // Cloud state
@@ -526,7 +546,7 @@ const ProjectPage = () => {
           {APPOS_NAV.map((item) => (
             <button
               key={item.id}
-              onClick={() => { setAppOsSection(item.id); setSelectedTenant(null); }}
+              onClick={() => { setAppOsSection(item.id); setSelectedUser(null); }}
               className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors ${
                 appOsSection === item.id
                   ? "bg-primary/10 text-primary font-medium"
@@ -549,9 +569,7 @@ const ProjectPage = () => {
         <div className="px-6 py-6">
           {appOsSection === "overview" && <OverviewTab projectName={projectName} appUrl={appUrl} copied={copied} onCopy={handleCopy} />}
           {appOsSection === "users" && (
-            selectedTenant
-              ? <TenantDetail tenant={selectedTenant} onBack={() => setSelectedTenant(null)} />
-              : <TenantsTab tenants={TENANTS} onSelect={setSelectedTenant} />
+            <UsersTab users={APP_USERS} />
           )}
           {appOsSection === "resources" && <PlaceholderSection title="Resources" description="Manage application resources, assets, and dependencies." />}
           {appOsSection === "query-console" && <PlaceholderSection title="Query Console" description="Run queries against your application data." />}
@@ -827,73 +845,93 @@ const OverviewTab = ({ projectName, appUrl, copied, onCopy }: { projectName: str
   </div>
 );
 
-const TenantsTab = ({ tenants, onSelect }: { tenants: typeof TENANTS; onSelect: (t: typeof TENANTS[number]) => void }) => (
-  <div className="space-y-5">
-    <div className="flex items-center justify-between">
-      <div>
-        <h2 className="text-xl font-semibold tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>Tenants</h2>
-        <p className="text-sm text-muted-foreground mt-1">Organizations using this application.</p>
-      </div>
-      <button className="h-8 px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors flex items-center gap-1.5">
-        <Plus className="h-3.5 w-3.5" /> Add Tenant
-      </button>
-    </div>
-    <div className="rounded-lg border border-border bg-card overflow-hidden">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-border">
-            <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Name</th>
-            <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Tenant ID</th>
-            <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Plan</th>
-            <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Users</th>
-            <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Created</th>
-            <th className="w-8" />
-          </tr>
-        </thead>
-        <tbody>
-          {tenants.map((t) => (
-            <tr key={t.id} onClick={() => onSelect(t)} className="border-b border-border last:border-0 hover:bg-muted/50 cursor-pointer transition-colors group">
-              <td className="px-4 py-3 font-medium text-primary hover:underline">{t.name}</td>
-              <td className="px-4 py-3 font-mono text-[11px] text-muted-foreground">{t.id}</td>
-              <td className="px-4 py-3"><Badge variant="secondary" className="text-[11px]">{t.plan}</Badge></td>
-              <td className="px-4 py-3 text-muted-foreground">{t.users}</td>
-              <td className="px-4 py-3 text-muted-foreground">{t.created}</td>
-              <td className="px-4 py-3"><ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-foreground transition-colors" /></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </div>
-);
+const UsersTab = ({ users }: { users: AppUser[] }) => {
+  const [detailUser, setDetailUser] = useState<AppUser | null>(null);
 
-const TenantDetail = ({ tenant, onBack }: { tenant: typeof TENANTS[number]; onBack: () => void }) => (
-  <div className="space-y-5">
-    <button onClick={onBack} className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors">
-      <ArrowLeft className="h-3.5 w-3.5" /> Back to tenants
-    </button>
-    <div>
-      <h2 className="text-xl font-semibold tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>{tenant.name}</h2>
-      <p className="text-[11px] text-muted-foreground font-mono mt-1">{tenant.id}</p>
-    </div>
-    <div className="grid gap-4">
-      <InfoCard label="Plan"><Badge variant="secondary" className="text-[11px]">{tenant.plan}</Badge></InfoCard>
-      <InfoCard label="Active Users"><span className="text-sm text-foreground">{tenant.users} users</span></InfoCard>
-      <InfoCard label="Created"><span className="text-sm text-foreground">{tenant.created}</span></InfoCard>
-    </div>
-    <div>
-      <h3 className="text-sm font-semibold mb-2" style={{ fontFamily: "'Inter', sans-serif" }}>Modules</h3>
-      <div className="grid grid-cols-2 gap-2">
-        {["Contacts", "Invoicing", "Pipeline", "Reports"].map((mod) => (
-          <div key={mod} className="rounded-lg border border-border bg-card p-3 flex items-center justify-between">
-            <span className="text-sm font-medium">{mod}</span>
-            <Badge variant="outline" className="text-[10px]">Active</Badge>
-          </div>
-        ))}
+  return (
+    <div className="space-y-5">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>Users</h2>
+          <p className="text-sm text-muted-foreground mt-1">All registered users in this application.</p>
+        </div>
+        <button className="h-8 px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors flex items-center gap-1.5">
+          <Plus className="h-3.5 w-3.5" /> Add User
+        </button>
       </div>
+      <div className="rounded-lg border border-border bg-card overflow-hidden">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Last Name</th>
+              <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Email</th>
+              <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">User ID</th>
+              <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">User Role</th>
+              <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Signup Date</th>
+              <th className="w-10" />
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((u) => (
+              <tr key={u.userId} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
+                <td className="px-4 py-3 font-medium">{u.lastName}</td>
+                <td className="px-4 py-3 text-muted-foreground">{u.email}</td>
+                <td className="px-4 py-3 font-mono text-[11px] text-muted-foreground">{u.userId}</td>
+                <td className="px-4 py-3"><Badge variant="secondary" className="text-[11px]">{u.userRole}</Badge></td>
+                <td className="px-4 py-3 text-muted-foreground">{u.signupDate}</td>
+                <td className="px-4 py-3">
+                  <button
+                    onClick={() => setDetailUser(u)}
+                    className="p-1 rounded hover:bg-muted transition-colors"
+                    title="View more details"
+                  >
+                    <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* User Detail Dialog */}
+      <Dialog open={!!detailUser} onOpenChange={(open) => !open && setDetailUser(null)}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>User Details</DialogTitle>
+            <DialogDescription>Full profile information for this user.</DialogDescription>
+          </DialogHeader>
+          {detailUser && (
+            <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm mt-2">
+              {([
+                ["User ID", detailUser.userId],
+                ["First Name", detailUser.firstName],
+                ["Last Name", detailUser.lastName],
+                ["Email", detailUser.email],
+                ["Phone Number", detailUser.phone],
+                ["Username", detailUser.username],
+                ["User Role", detailUser.userRole],
+                ["Role ID", detailUser.roleId],
+                ["Department", detailUser.department],
+                ["Job Title", detailUser.jobTitle],
+                ["Org ID", detailUser.orgId],
+                ["Org Name", detailUser.orgName],
+                ["Status", detailUser.status],
+                ["Email Verified", detailUser.emailVerified ? "Yes" : "No"],
+                ["Phone Verified", detailUser.phoneVerified ? "Yes" : "No"],
+              ] as [string, string][]).map(([label, value]) => (
+                <div key={label}>
+                  <span className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium block mb-0.5">{label}</span>
+                  <span className="text-foreground font-medium">{value}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
-  </div>
-);
+  );
+};
 
 const DeploymentsTab = () => (
   <div className="space-y-5">
