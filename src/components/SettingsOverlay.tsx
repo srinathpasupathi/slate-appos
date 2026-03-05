@@ -37,9 +37,13 @@ interface SettingsOverlayProps {
   open: boolean;
   onClose: () => void;
   initialTab?: string;
+  appOsEnabled?: boolean;
+  onAppOsToggle?: (enabled: boolean) => void;
+  cloudEnabled?: boolean;
+  onCloudToggle?: (enabled: boolean) => void;
 }
 
-const SettingsOverlay = ({ open, onClose, initialTab }: SettingsOverlayProps) => {
+const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAppOsToggle, cloudEnabled = false, onCloudToggle }: SettingsOverlayProps) => {
   const [activeSection, setActiveSection] = useState(initialTab || "general");
 
   useEffect(() => {
@@ -134,7 +138,7 @@ const SettingsOverlay = ({ open, onClose, initialTab }: SettingsOverlayProps) =>
             </div>
           </div>
           <div className="flex-1 px-8 py-6">
-            {renderContent(activeSection)}
+            {renderContent(activeSection, { appOsEnabled, onAppOsToggle, cloudEnabled, onCloudToggle })}
           </div>
         </div>
       </div>
@@ -142,7 +146,7 @@ const SettingsOverlay = ({ open, onClose, initialTab }: SettingsOverlayProps) =>
   );
 };
 
-function renderContent(section: string) {
+function renderContent(section: string, opts: { appOsEnabled: boolean; onAppOsToggle?: (v: boolean) => void; cloudEnabled: boolean; onCloudToggle?: (v: boolean) => void }) {
   switch (section) {
     case "general":
       return <GeneralSettings />;
@@ -153,9 +157,9 @@ function renderContent(section: string) {
     case "connectors":
       return <ConnectorsSettings />;
     case "appos":
-      return <AppOSSettings />;
+      return <AppOSSettings enabled={opts.appOsEnabled} onToggle={opts.onAppOsToggle || (() => {})} />;
     case "cloud":
-      return <CloudSettings />;
+      return <CloudSettings enabled={opts.cloudEnabled} onToggle={opts.onCloudToggle || (() => {})} />;
     case "developer":
       return <DeveloperSettings />;
     case "team":
