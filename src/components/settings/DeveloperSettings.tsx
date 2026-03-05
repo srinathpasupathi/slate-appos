@@ -71,10 +71,119 @@ const DeveloperSettings = () => {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1.5">
                       <Link2 className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span className="font-mono text-xs text-foreground">franchise-sales.onslate.in</span>
+                      <span className="font-mono text-xs text-foreground">franchise-sales.us.omcloud.ai</span>
                     </div>
                   </td>
                   <td className="px-4 py-3 font-mono text-xs text-muted-foreground">initial - #4a835e1</td>
+                  <td className="px-4 py-3">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-600">
+                      Production
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                      Live
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="h-7 w-7 rounded-md flex items-center justify-center hover:bg-muted transition-colors">
+                          <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuItem className="gap-2 cursor-pointer">
+                          <RefreshCw className="h-3.5 w-3.5" />
+                          Change Deployment
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="gap-2 cursor-pointer">
+                          <Settings2 className="h-3.5 w-3.5" />
+                          Change Environment
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Connected AppSail Apps */}
+        <div>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Catalyst AppSail Apps Connected</p>
+          <div className="rounded-xl border border-border overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/40">
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">App Name</th>
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">App URL</th>
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">Deployment</th>
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">Environment</th>
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">Status</th>
+                  <th className="w-10"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-border">
+                  <td className="px-4 py-3">
+                    <a href="#" className="text-sm font-medium text-primary hover:underline">
+                      Franchise Sales API
+                    </a>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-1.5">
+                      <Link2 className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="font-mono text-xs text-foreground">franchise-sales.catalystappsail.in</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">v1.2.0 - #7b9c3d2</td>
+                  <td className="px-4 py-3">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-600">
+                      Production
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                      Live
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="h-7 w-7 rounded-md flex items-center justify-center hover:bg-muted transition-colors">
+                          <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuItem className="gap-2 cursor-pointer">
+                          <RefreshCw className="h-3.5 w-3.5" />
+                          Change Deployment
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="gap-2 cursor-pointer">
+                          <Settings2 className="h-3.5 w-3.5" />
+                          Change Environment
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3">
+                    <a href="#" className="text-sm font-medium text-primary hover:underline">
+                      Franchise Admin Portal
+                    </a>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-1.5">
+                      <Link2 className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="font-mono text-xs text-foreground">franchise-admin.catalystappsail.in</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">v2.0.1 - #3e7a1f8</td>
                   <td className="px-4 py-3">
                     <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-600">
                       Production
