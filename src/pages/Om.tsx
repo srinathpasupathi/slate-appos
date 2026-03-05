@@ -696,7 +696,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
                 onClick={handleInstallClick}
                 className="h-11 px-8 rounded-lg bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-colors shadow-sm"
               >
-                Install Om on {selected.name}
+                Install {title?.includes('AppOS') ? 'AppOS' : title?.includes('Cloud') ? 'Cloud' : 'Om'} on {selected.name}
               </button>
             )}
             <p className="text-xs text-muted-foreground flex items-center gap-1.5">
