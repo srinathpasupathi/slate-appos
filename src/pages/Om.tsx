@@ -933,7 +933,7 @@ const SlateDashboard = () => {
               onClick={() => { setMainTab(tab.key); setShowIdeSelector(null); setSelectedBackend(null); }}
               className={`relative flex items-center gap-1.5 px-5 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                 mainTab === tab.key
-                  ? 'bg-primary text-primary-foreground shadow-md shadow-primary/25'
+                  ? 'bg-foreground/10 text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
               }`}
             >
