@@ -1274,20 +1274,7 @@ const SlateDashboard = () => {
           </div>
         </div>
 
-        {/* Bottom-right layout mode dropdown */}
-        <div className="fixed bottom-5 right-5 z-50">
-          <Select value={layoutMode} onValueChange={(v: 'option1' | 'option2' | 'option3') => setLayoutMode(v)}>
-            <SelectTrigger className="w-[130px] h-9 text-xs bg-card border-border shadow-md">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="option1">Option 1</SelectItem>
-              <SelectItem value="option2">Option 2</SelectItem>
-              <SelectItem value="option3">Option 3</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
+
         </main>
       </div>
 
