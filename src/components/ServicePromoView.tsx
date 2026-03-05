@@ -36,21 +36,21 @@ const ServicePromoView = ({ type, enabling, onEnable }: PromoViewProps) => {
             Backend for business apps with built-in modules, users, workflows, and permissions.
           </p>
 
-          {/* Feature chips */}
-          <div className="flex items-center justify-center flex-wrap gap-2 mb-9">
+          {/* Feature tiles */}
+          <div className="flex items-center justify-center gap-3 mb-9">
             {[
               { icon: LayoutGrid, label: "Modules" },
               { icon: Users, label: "Users" },
               { icon: Workflow, label: "Workflows" },
               { icon: ShieldCheck, label: "Permissions" },
             ].map(({ icon: Icon, label }) => (
-              <span
+              <div
                 key={label}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/60 border border-border/50 text-xs font-medium text-muted-foreground"
+                className="flex flex-col items-center justify-center gap-2 w-20 h-20 rounded-xl bg-muted/40 border border-border/50 cursor-default transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-primary/20"
               >
-                <Icon className="h-3 w-3" />
-                {label}
-              </span>
+                <Icon className="h-5 w-5 text-muted-foreground/70" />
+                <span className="text-[11px] font-medium text-muted-foreground">{label}</span>
+              </div>
             ))}
           </div>
 
