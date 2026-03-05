@@ -924,7 +924,7 @@ const SlateDashboard = () => {
         {/* Center: Slate, AppOS & Cloud tabs */}
         <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/60 p-1">
           {([
-            { key: 'build' as const, label: 'Slate' },
+            { key: 'build' as const, label: 'Prompt' },
             { key: 'platform' as const, label: 'AppOS' },
             { key: 'cloud' as const, label: 'Cloud' },
           ]).map(tab => (
