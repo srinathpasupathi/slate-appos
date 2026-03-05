@@ -253,8 +253,9 @@ const ProjectPage = () => {
 
     setEnabling(true);
 
-    // In platform mode (no chat), enable directly after a brief delay
-    if (source === "platform") {
+    // If chat panel is not visible, enable directly after a brief delay
+    const chatVisible = source === "build" || (source === "platform" && githubConnected);
+    if (!chatVisible) {
       setTimeout(() => {
         setEnabling(false);
         setEnabled(true);
