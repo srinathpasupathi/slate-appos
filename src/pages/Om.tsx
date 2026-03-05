@@ -871,25 +871,61 @@ const SlateDashboard = () => {
               setIdeFlowActive(false);
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }} />
-            <SidebarLink icon={Grid3X3} label="Projects" collapsed={sidebarCollapsed} />
-            <SidebarLink icon={Layers} label="Templates" collapsed={sidebarCollapsed} />
-            <SidebarLink icon={Search} label="Search" collapsed={sidebarCollapsed} />
-            <SidebarLink
-              icon={Clock}
-              label="Recent"
-              collapsed={sidebarCollapsed}
-              onClick={() => {
-                if (sidebarCollapsed) setSidebarCollapsed(false);
-              }}
-            />
-            {!sidebarCollapsed && (
-              <div className="pl-8 space-y-0.5">
-                {recentProjects.map((p) => (
-                  <button key={p.name} onClick={() => navigate(`/om/project?source=${p.source}&name=${encodeURIComponent(p.name)}`)} className="block w-full text-left px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
-                    {p.name}
-                  </button>
-                ))}
-              </div>
+            {mainTab === 'build' ? (
+              <>
+                <SidebarLink icon={Grid3X3} label="Projects" collapsed={sidebarCollapsed} />
+                <SidebarLink icon={Layers} label="Templates" collapsed={sidebarCollapsed} />
+                <SidebarLink icon={Search} label="Search" collapsed={sidebarCollapsed} />
+                <SidebarLink
+                  icon={Clock}
+                  label="Recent"
+                  collapsed={sidebarCollapsed}
+                  onClick={() => {
+                    if (sidebarCollapsed) setSidebarCollapsed(false);
+                  }}
+                />
+                {!sidebarCollapsed && (
+                  <div className="pl-8 space-y-0.5">
+                    {recentProjects.map((p) => (
+                      <button key={p.name} onClick={() => navigate(`/om/project?source=${p.source}&name=${encodeURIComponent(p.name)}`)} className="block w-full text-left px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
+                        {p.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : mainTab === 'platform' ? (
+              <>
+                <SidebarLink icon={Server} label="Backends" collapsed={sidebarCollapsed} />
+                <SidebarLink icon={Search} label="Search" collapsed={sidebarCollapsed} />
+                <SidebarLink
+                  icon={Clock}
+                  label="Recent"
+                  collapsed={sidebarCollapsed}
+                  onClick={() => {
+                    if (sidebarCollapsed) setSidebarCollapsed(false);
+                  }}
+                />
+                {!sidebarCollapsed && (
+                  <div className="pl-8 space-y-0.5">
+                    {[
+                      { name: "HR Management Backend", source: "platform" },
+                      { name: "Sales Pipeline API", source: "platform" },
+                      { name: "Inventory Tracker", source: "platform" },
+                      { name: "Support Desk Engine", source: "platform" },
+                    ].map((p) => (
+                      <button key={p.name} onClick={() => navigate(`/om/project?source=${p.source}&name=${encodeURIComponent(p.name)}`)} className="block w-full text-left px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
+                        {p.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <SidebarLink icon={Database} label="Projects" collapsed={sidebarCollapsed} />
+                <SidebarLink icon={Search} label="Search" collapsed={sidebarCollapsed} />
+              </>
             )}
           </nav>
         </aside>
