@@ -106,7 +106,7 @@ const ProjectPage = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const hasSeededBuildRef = useRef(false);
   const forceCompleteTimerRef = useRef<number | null>(null);
-  const [leftPanelWidth, setLeftPanelWidth] = useState(35); // percentage
+  const [leftPanelWidth, setLeftPanelWidth] = useState(25); // percentage
   const [chatPanelCollapsed, setChatPanelCollapsed] = useState(false);
 
   const appUrl = `${projectName.toLowerCase().replace(/\s+/g, "-")}.onslate.com`;
@@ -618,7 +618,7 @@ const ProjectPage = () => {
       <div className="flex-1 overflow-hidden">
         {showChatPanel && !chatPanelCollapsed ? (
           <ResizablePanelGroup direction="horizontal" onLayout={(sizes) => setLeftPanelWidth(sizes[0])}>
-            <ResizablePanel defaultSize={35} minSize={25} maxSize={55}>
+            <ResizablePanel defaultSize={25} minSize={25} maxSize={55}>
               {ChatPanel()}
             </ResizablePanel>
             <ResizableHandle withHandle />
