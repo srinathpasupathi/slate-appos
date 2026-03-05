@@ -811,13 +811,6 @@ const SlateDashboard = () => {
         <div className="flex items-center gap-2.5">
           <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
           <span className="text-base font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Om</span>
-          <button
-            onClick={() => setSidebarCollapsed(prev => !prev)}
-            className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors ml-1"
-            title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            {sidebarCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
-          </button>
         </div>
 
         {/* Center: Slate & AppOS tabs */}
@@ -885,6 +878,17 @@ const SlateDashboard = () => {
               </div>
             )}
           </nav>
+          {/* Collapse/expand toggle at bottom */}
+          <div className="px-2 py-2 border-t border-border">
+            <button
+              onClick={() => setSidebarCollapsed(prev => !prev)}
+              className={`flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-3'} w-full px-3 py-2 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors`}
+              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {sidebarCollapsed ? <PanelLeftOpen className="h-4 w-4 shrink-0" /> : <PanelLeftClose className="h-4 w-4 shrink-0" />}
+              {!sidebarCollapsed && <span>Collapse</span>}
+            </button>
+          </div>
         </aside>
 
         {/* Main content */}
