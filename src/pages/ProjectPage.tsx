@@ -958,7 +958,7 @@ const ProjectPage = () => {
       ) : previewReady ? (
         <GeneratedPreview />
       ) : (isGenerating || generationDone) ? (
-        <PreviewLoading progress={Math.min(Math.round(generationProgress), 99)} />
+        <PreviewLoading progress={Math.min(Math.round(generationProgress), 99)} phase={backendPromptShown ? "loading" : "generating"} />
       ) : (
         <div className="h-full bg-background flex items-center justify-center">
           <div className="text-center space-y-4 px-8">
