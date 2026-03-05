@@ -845,16 +845,14 @@ const ProjectPage = () => {
                           <p className="text-[11px] text-muted-foreground ml-8">{msg.actionCard.description}</p>
                         </div>
 
-                        {/* Feature chips */}
-                        <div className="px-4 pb-2.5">
-                          <div className="flex flex-wrap gap-1.5">
-                            {msg.actionCard.features.map((feat) => (
-                              <div key={feat.label} className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-background border border-border/50 text-[11px]">
-                                <span className="text-muted-foreground/60">{getActionCardIcon(feat.icon)}</span>
-                                <span className="font-medium text-foreground">{feat.label}</span>
-                              </div>
-                            ))}
-                          </div>
+                        {/* Feature descriptions — non-interactive info rows */}
+                        <div className="px-4 pb-3 space-y-1.5">
+                          {msg.actionCard.features.map((feat) => (
+                            <div key={feat.label} className="flex items-start gap-2 text-[11px] text-muted-foreground">
+                              <span className="mt-0.5 text-muted-foreground/50 shrink-0">{getActionCardIcon(feat.icon)}</span>
+                              <span>{feat.label}</span>
+                            </div>
+                          ))}
                         </div>
 
                         {/* Action buttons */}
