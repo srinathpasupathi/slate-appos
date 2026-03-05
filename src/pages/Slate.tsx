@@ -534,9 +534,9 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject 
         {/* Prompt example cards */}
         <div className="flex flex-col gap-2.5 w-full">
           {[
-            { title: "Build a Real Estate CRM using the Om platform.", prompt: "Build a Real Estate CRM using the Om platform.\nUse Om MCP to create modules for Properties, Leads, and Deals.\nAdd workflows for lead assignment and follow-ups." },
-            { title: "Build a Franchise Sales Management app using the Om platform.", prompt: "Build a Franchise Sales Management app using the Om platform. Use Om MCP to create modules for Leads, Franchise Opportunities, and Approvals with workflow-based review." },
-            { title: "Create a backend API service using the Om platform.", prompt: "Create a backend API service using the Om platform. Use Om MCP to provision a database, storage, and REST APIs for a scalable cloud backend." },
+            { title: "Build a Real Estate CRM using the Om platform.", appName: "Real Estate CRM", prompt: "Build a Real Estate CRM using the Om platform.\nUse Om MCP to create modules for Properties, Leads, and Deals.\nAdd workflows for lead assignment and follow-ups." },
+            { title: "Build a Franchise Sales Management app using the Om platform.", appName: "Franchise Sales Management", prompt: "Build a Franchise Sales Management app using the Om platform. Use Om MCP to create modules for Leads, Franchise Opportunities, and Approvals with workflow-based review." },
+            { title: "Create a backend API service using the Om platform.", appName: "Cloud API Backend", prompt: "Create a backend API service using the Om platform. Use Om MCP to provision a database, storage, and REST APIs for a scalable cloud backend." },
           ].map((card) => {
             const isCopied = copiedPrompt === card.prompt;
             const isExpanded = expandedCard === card.title;
@@ -558,7 +558,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject 
                   </div>
                   <span
                     role="button"
-                    onClick={(e) => { e.stopPropagation(); handleCopyPrompt(card.prompt, card.title); }}
+                    onClick={(e) => { e.stopPropagation(); handleCopyPrompt(card.prompt, card.appName); }}
                     className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors duration-150 ${
                       isCopied
                         ? 'text-green-500 border-green-500/20 bg-green-500/5'
