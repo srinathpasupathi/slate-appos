@@ -270,28 +270,31 @@ const ProjectPage = () => {
   );
 
   // ─── Top Header (shared) ───
+  // ─── Tab Pills Component (reusable) ───
+  const TabPills = () => (
+    <div className="flex items-center gap-0.5 bg-muted/50 rounded-lg p-0.5">
+      {availableTabs.map((tab) => (
+        <button
+          key={tab}
+          onClick={() => setActiveTab(tab)}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+            activeTab === tab
+              ? "bg-background text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          {tabConfig[tab].icon}
+          {tabConfig[tab].label}
+        </button>
+      ))}
+    </div>
+  );
+
   const TopHeader = () => (
     <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-card shrink-0">
       <div className="flex items-center gap-3">
         <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
         {AppNameDropdown()}
-        {/* Tab pills */}
-        <div className="flex items-center gap-0.5 ml-4 bg-muted/50 rounded-lg p-0.5">
-          {availableTabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                activeTab === tab
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {tabConfig[tab].icon}
-              {tabConfig[tab].label}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* Right actions */}
@@ -580,6 +583,9 @@ const ProjectPage = () => {
             <ResizableHandle withHandle />
             <ResizablePanel defaultSize={65} minSize={40}>
               <div className="flex flex-col h-full">
+                <div className="flex items-center px-3 py-2 border-b border-border bg-card shrink-0">
+                  {TabPills()}
+                </div>
                 {renderTabContent()}
                 {(activeTab === "preview" || activeTab === "code") && (
                   <div className="shrink-0 border-t border-border bg-card">
@@ -594,6 +600,9 @@ const ProjectPage = () => {
           </ResizablePanelGroup>
         ) : (
           <div className="flex flex-col h-full">
+            <div className="flex items-center px-3 py-2 border-b border-border bg-card shrink-0">
+              {TabPills()}
+            </div>
             {renderTabContent()}
           </div>
         )}
