@@ -309,26 +309,28 @@ const ProjectPage = () => {
         )}
       </div>
 
-      {/* When expanded, position collapse button + tabs at the right panel edge */}
-      {source === "build" && !chatPanelCollapsed && (
+      {/* Collapse button + tabs: animate position based on panel state */}
+      {source === "build" && (
         <div
           className="absolute top-0 bottom-0 flex items-center gap-1"
-          style={{ left: `calc(${leftPanelWidth}% - 28px)` }}
+          style={{
+            left: chatPanelCollapsed ? '50%' : `calc(${leftPanelWidth}% - 28px)`,
+            transform: chatPanelCollapsed ? 'translateX(-50%)' : 'none',
+            transition: 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
         >
-          <button
-            onClick={() => setChatPanelCollapsed(true)}
-            className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            title="Hide chat panel"
-          >
-            <PanelLeftClose className="h-4 w-4" />
-          </button>
-          <div className="w-px h-4 bg-border mx-0.5" />
-          {TabPills()}
-        </div>
-      )}
-      {/* When collapsed, center the tab pills */}
-      {source === "build" && chatPanelCollapsed && (
-        <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 flex items-center">
+          {!chatPanelCollapsed && (
+            <>
+              <button
+                onClick={() => setChatPanelCollapsed(true)}
+                className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                title="Hide chat panel"
+              >
+                <PanelLeftClose className="h-4 w-4" />
+              </button>
+              <div className="w-px h-4 bg-border mx-0.5" />
+            </>
+          )}
           {TabPills()}
         </div>
       )}
@@ -615,32 +617,33 @@ const ProjectPage = () => {
     <div className="flex flex-col h-screen bg-background overflow-hidden">
       {TopHeader()}
 
-      <div className="flex-1 overflow-hidden">
-        {showChatPanel && !chatPanelCollapsed ? (
-          <ResizablePanelGroup direction="horizontal" onLayout={(sizes) => setLeftPanelWidth(sizes[0])}>
-            <ResizablePanel defaultSize={25} minSize={25} maxSize={55}>
+      <div className="flex-1 overflow-hidden flex">
+        {showChatPanel && (
+          <div
+            className="h-full overflow-hidden border-r border-border flex-shrink-0"
+            style={{
+              width: chatPanelCollapsed ? '0px' : `${leftPanelWidth}%`,
+              minWidth: chatPanelCollapsed ? '0px' : '25%',
+              maxWidth: '55%',
+              transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+          >
+            <div className="h-full w-full overflow-hidden" style={{ minWidth: '300px' }}>
               {ChatPanel()}
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={65} minSize={40}>
-              <div className="flex flex-col h-full">
-                {renderTabContent()}
-                {(activeTab === "preview" || activeTab === "code") && (
-                  <div className="shrink-0 border-t border-border bg-card">
-                    <button className="flex items-center gap-2 px-4 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors w-full">
-                      <Terminal className="h-3.5 w-3.5" />
-                      <span className="font-medium">Console</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        ) : (
-          <div className="flex flex-col h-full">
-            {renderTabContent()}
+            </div>
           </div>
         )}
+        <div className="flex-1 flex flex-col h-full min-w-0" style={{ transition: 'flex 0.3s cubic-bezier(0.4, 0, 0.2, 1)' }}>
+          {renderTabContent()}
+          {showChatPanel && (activeTab === "preview" || activeTab === "code") && (
+            <div className="shrink-0 border-t border-border bg-card">
+              <button className="flex items-center gap-2 px-4 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors w-full">
+                <Terminal className="h-3.5 w-3.5" />
+                <span className="font-medium">Console</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <SettingsOverlay open={settingsOpen} onClose={() => { setSettingsOpen(false); setSettingsInitialTab(undefined); }} initialTab={settingsInitialTab} />
