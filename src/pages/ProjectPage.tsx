@@ -960,10 +960,10 @@ interface WorkflowEntry {
 }
 
 const SAMPLE_WORKFLOWS: WorkflowEntry[] = [
-  { name: "New Lead Assignment", type: "Automation", moduleName: "Leads", createdOn: "10 Jan 2026, 10:00 am", trigger: "On Record Create", target: "Assign Owner Field", configuration: "Round-robin assignment among sales reps based on region" },
+  { name: "New Lead Assignment", type: "On Record Action", moduleName: "Leads", createdOn: "10 Jan 2026, 10:00 am", trigger: "On Record Create", target: "Assign Owner Field", configuration: "Round-robin assignment among sales reps based on region" },
   { name: "Invoice Overdue Alert", type: "Scheduled", moduleName: "Invoices", createdOn: "15 Jan 2026, 3:30 pm", trigger: "Daily at 9:00 AM", target: "Send Email Notification", configuration: "Email sent to billing team when invoice is overdue by 7+ days" },
-  { name: "Deal Stage Update", type: "Automation", moduleName: "Deals", createdOn: "20 Jan 2026, 11:45 am", trigger: "On Field Update (Stage)", target: "Update Probability Field", configuration: "Auto-update win probability based on deal stage mapping" },
-  { name: "Customer Onboarding", type: "Blueprint", moduleName: "Contacts", createdOn: "25 Jan 2026, 9:00 am", trigger: "On Record Create (Customer Type)", target: "Create Tasks", configuration: "Generate 5 onboarding tasks assigned to CSM with due dates" },
+  { name: "Deal Stage Update", type: "On Record Action", moduleName: "Deals", createdOn: "20 Jan 2026, 11:45 am", trigger: "On Field Update (Stage)", target: "Update Probability Field", configuration: "Auto-update win probability based on deal stage mapping" },
+  { name: "Customer Onboarding", type: "On Record Action", moduleName: "Contacts", createdOn: "25 Jan 2026, 9:00 am", trigger: "On Record Create (Customer Type)", target: "Create Tasks", configuration: "Generate 5 onboarding tasks assigned to CSM with due dates" },
   { name: "Inventory Restock", type: "Scheduled", moduleName: "Products", createdOn: "01 Feb 2026, 8:00 am", trigger: "Weekly on Monday", target: "Create Purchase Order", configuration: "Auto-create PO when stock falls below minimum threshold" },
 ];
 
@@ -1257,9 +1257,7 @@ const WorkflowSection = () => {
                 className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors cursor-pointer"
               >
                 <td className="px-4 py-3 font-medium text-primary">{w.name}</td>
-                <td className="px-4 py-3 text-muted-foreground">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-accent text-accent-foreground">{w.type}</span>
-                </td>
+                <td className="px-4 py-3 text-muted-foreground">{w.type}</td>
                 <td className="px-4 py-3 text-muted-foreground">{w.moduleName}</td>
                 <td className="px-4 py-3 text-muted-foreground">{w.createdOn}</td>
               </tr>
