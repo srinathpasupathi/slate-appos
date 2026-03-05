@@ -601,7 +601,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject 
   }
 
   return (
-    <div ref={containerRef} className="flex flex-col items-center gap-8 w-full max-w-3xl">
+    <div ref={containerRef} className="flex flex-col items-center gap-8 w-full max-w-3xl pt-16">
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
           Connect Om Platform to your AI IDE
