@@ -902,25 +902,6 @@ const SlateDashboard = () => {
             {layoutMode === 'option1' ? (
               /* === OPTION 1: Original tabbed layout === */
               <div className="w-full flex flex-col items-center pt-[15vh]">
-                {/* Tabs - fixed position regardless of content */}
-                <div className="inline-flex items-center gap-1 rounded-full bg-background/90 backdrop-blur-md p-1.5 border border-border shadow-md mb-6">
-                  {([
-                    { key: 'build' as const, label: 'Prompt' },
-                    { key: 'platform' as const, label: 'AI IDEs' },
-                  ]).map(tab => (
-                    <button
-                      key={tab.key}
-                      onClick={() => setMainTab(tab.key)}
-                      className={`relative px-6 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
-                        mainTab === tab.key
-                          ? 'bg-foreground/10 text-foreground shadow-sm border border-border'
-                          : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
 
                 {/* Content area - starts from same position regardless of tab */}
                 <div className="w-full flex flex-col items-center">
