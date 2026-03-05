@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Slate from "./pages/Slate";
 import Om from "./pages/Om";
 import ProjectPage from "./pages/ProjectPage";
+import OmProjectPage from "./pages/OmProjectPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Slate />} />
           <Route path="/om" element={<Om />} />
+          <Route path="/om/project" element={<OmProjectPage />} />
           <Route path="/project" element={<ProjectPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
