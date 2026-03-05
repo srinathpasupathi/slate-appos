@@ -573,7 +573,7 @@ const ProjectPage = () => {
           )}
           {appOsSection === "resources" && <ResourcesTab />}
           {appOsSection === "query-console" && <QueryConsoleTab />}
-          {appOsSection === "configuration" && <SettingsTab projectName={projectName} appUrl={appUrl} />}
+          {appOsSection === "configuration" && <ConfigurationTab />}
           {appOsSection === "deployments" && <DeploymentsTab />}
         </div>
       </main>
@@ -1226,63 +1226,278 @@ const DeploymentsTab = () => (
   </div>
 );
 
-const SettingsTab = ({ projectName, appUrl }: { projectName: string; appUrl: string }) => {
-  const [customDomain, setCustomDomain] = useState("");
+const ConfigurationTab = () => {
+  const [openSection, setOpenSection] = useState<string | null>("localhost");
+
+  // Localhost state
+  const [showLocalhostSetup, setShowLocalhostSetup] = useState(false);
+  const [localhostUrl, setLocalhostUrl] = useState("https://localhost:3000");
+  const [localhostSaved, setLocalhostSaved] = useState(false);
+  const [emailInput, setEmailInput] = useState("");
+  const [whitelistedEmails, setWhitelistedEmails] = useState<string[]>([]);
+
+  // Trusted domains state
+  const [trustedDomainInput, setTrustedDomainInput] = useState("");
+  const [trustedDomains, setTrustedDomains] = useState<string[]>([]);
+  const [trustedDomainError, setTrustedDomainError] = useState<string | null>(null);
+
+  const toggleSection = (id: string) => setOpenSection(openSection === id ? null : id);
+
+  const handleAddEmail = () => {
+    const trimmed = emailInput.trim();
+    if (trimmed && trimmed.includes("@") && !whitelistedEmails.includes(trimmed)) {
+      setWhitelistedEmails((prev) => [...prev, trimmed]);
+      setEmailInput("");
+    }
+  };
+
+  const handleRemoveEmail = (email: string) => {
+    setWhitelistedEmails((prev) => prev.filter((e) => e !== email));
+  };
+
+  const handleAddTrustedDomain = () => {
+    const trimmed = trustedDomainInput.trim().toLowerCase();
+    setTrustedDomainError(null);
+    if (!trimmed) return;
+    if (trimmed.includes("localhost") || trimmed.includes("127.0.0.1")) {
+      setTrustedDomainError("Localhost domains are not allowed here. Use the Trusted Domain (Local Host) section instead.");
+      return;
+    }
+    if (trustedDomains.includes(trimmed)) {
+      setTrustedDomainError("This domain is already added.");
+      return;
+    }
+    setTrustedDomains((prev) => [...prev, trimmed]);
+    setTrustedDomainInput("");
+  };
+
+  const handleRemoveTrustedDomain = (domain: string) => {
+    setTrustedDomains((prev) => prev.filter((d) => d !== domain));
+  };
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-5">
       <div>
         <h2 className="text-xl font-semibold tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>Configuration</h2>
-        <p className="text-sm text-muted-foreground mt-1">Manage project settings.</p>
+        <p className="text-sm text-muted-foreground mt-0.5">Manage app-level settings and security.</p>
       </div>
-      <section className="space-y-3">
-        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Project Details</h3>
-        <div className="rounded-lg border border-border bg-card p-4 space-y-3">
-          <div>
-            <label className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Project Name</label>
-            <p className="text-sm mt-0.5 font-medium">{projectName}</p>
-          </div>
-          <div>
-            <label className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">App URL</label>
-            <p className="text-sm mt-0.5 font-mono">{appUrl}</p>
-          </div>
-        </div>
-      </section>
-      <section className="space-y-3">
-        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Custom Domain</h3>
-        <div className="rounded-lg border border-border bg-card p-4">
-          <p className="text-sm text-muted-foreground mb-2">Connect your own domain to this project.</p>
-          <div className="flex items-center gap-2">
-            <input value={customDomain} onChange={(e) => setCustomDomain(e.target.value)} placeholder="app.yourdomain.com" className="flex-1 h-8 px-3 rounded-md border border-input bg-background text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" />
-            <button className="h-8 px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">Connect</button>
-          </div>
-        </div>
-      </section>
-      <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Environment Variables</h3>
-          <button className="text-[11px] text-primary hover:text-primary/80 font-medium transition-colors flex items-center gap-1"><Plus className="h-3 w-3" /> Add Variable</button>
-        </div>
-        <div className="rounded-lg border border-border bg-card overflow-hidden">
-          {ENV_VARS.map((v, i) => (
-            <div key={i} className={`flex items-center justify-between px-4 py-3 ${i < ENV_VARS.length - 1 ? "border-b border-border" : ""}`}>
-              <span className="text-sm font-mono font-medium">{v.key}</span>
-              <span className="text-sm text-muted-foreground font-mono">{v.value}</span>
+
+      {/* Trusted Domain (Localhost) */}
+      <div className="rounded-lg border border-border bg-card overflow-hidden">
+        <button
+          onClick={() => toggleSection("localhost")}
+          className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-muted/30 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-8 rounded-full bg-primary" />
+            <div>
+              <h3 className="text-sm font-semibold">Trusted Domain (Local Host)</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">Connect your local system for development.</p>
             </div>
-          ))}
-        </div>
-      </section>
-      <section className="space-y-3">
-        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-destructive">Danger Zone</h3>
-        <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4 flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium">Delete Project</p>
-            <p className="text-[11px] text-muted-foreground mt-0.5">This action is permanent and cannot be undone.</p>
           </div>
-          <button className="h-8 px-3 rounded-md border border-destructive text-destructive text-sm font-medium hover:bg-destructive hover:text-destructive-foreground transition-colors flex items-center gap-1.5">
-            <Trash2 className="h-3.5 w-3.5" /> Delete
-          </button>
-        </div>
-      </section>
+          <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${openSection === "localhost" ? "rotate-180" : ""}`} />
+        </button>
+        {openSection === "localhost" && (
+          <div className="px-5 pb-5 border-t border-border">
+            {!showLocalhostSetup && !localhostSaved ? (
+              <div className="flex flex-col items-center justify-center py-10 space-y-4">
+                {/* Decorative shapes */}
+                <div className="relative w-32 h-20">
+                  <div className="absolute top-2 left-4 w-3 h-3 rounded-full bg-green-400" />
+                  <div className="absolute top-5 left-10 w-5 h-5 rounded-full bg-primary/40" />
+                  <div className="absolute top-3 right-6 w-3 h-3 rotate-45 border-2 border-orange-400" />
+                  <div className="absolute top-7 left-14 w-3.5 h-3.5 rounded-full border-2 border-muted-foreground/30 flex items-center justify-center">
+                    <Globe className="h-2 w-2 text-muted-foreground/50" />
+                  </div>
+                  <div className="absolute bottom-2 left-8 w-2.5 h-2.5 rounded-full bg-primary/20" />
+                  <div className="absolute bottom-1 right-4 w-2.5 h-2.5 rounded-full bg-green-300" />
+                  <Plus className="absolute top-2 right-3 h-3 w-3 text-muted-foreground/30" />
+                </div>
+                <div className="text-center">
+                  <p className="text-sm font-semibold">SDK Overview</p>
+                  <p className="text-xs text-muted-foreground">Business process automation</p>
+                </div>
+                <button
+                  onClick={() => setShowLocalhostSetup(true)}
+                  className="h-8 px-4 rounded-md border border-border text-sm font-medium hover:bg-muted/50 transition-colors"
+                >
+                  Add
+                </button>
+              </div>
+            ) : (
+              <div className="pt-4 space-y-5">
+                {/* Step 1: Domain URL */}
+                <div className="rounded-lg border border-border p-4 space-y-3">
+                  <div>
+                    <h4 className="text-sm font-semibold">Step 1: Domain URL</h4>
+                    <p className="text-xs text-muted-foreground mt-0.5">Localhost domains are only recommended for development. For added security, only whitelisted email addresses can sign up or log in from this domain.</p>
+                  </div>
+                  <div>
+                    <label className="text-[11px] text-primary font-medium uppercase tracking-wider">URL</label>
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="flex-1 flex items-center gap-2">
+                        <input
+                          value={localhostUrl}
+                          onChange={(e) => setLocalhostUrl(e.target.value)}
+                          disabled={localhostSaved}
+                          className="flex-1 h-9 px-3 rounded-md border border-input bg-background text-sm font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:opacity-70"
+                          placeholder="https://localhost:3000"
+                        />
+                        <button
+                          onClick={() => navigator.clipboard.writeText(localhostUrl)}
+                          className="h-9 w-9 flex items-center justify-center rounded-md border border-input hover:bg-muted/50 transition-colors"
+                          title="Copy URL"
+                        >
+                          <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+                        </button>
+                      </div>
+                      {!localhostSaved && (
+                        <button
+                          onClick={() => { if (localhostUrl.trim()) setLocalhostSaved(true); }}
+                          className="text-sm text-primary font-medium hover:text-primary/80 transition-colors"
+                        >
+                          + Save
+                        </button>
+                      )}
+                      {localhostSaved && (
+                        <button
+                          onClick={() => setLocalhostSaved(false)}
+                          className="text-sm text-primary font-medium hover:text-primary/80 transition-colors"
+                        >
+                          + Edit
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Step 2: Whitelisted Email Addresses */}
+                <div className="rounded-lg border border-border p-4 space-y-3">
+                  <div>
+                    <h4 className="text-sm font-semibold">Step 2: Whitelisted Email Addresses</h4>
+                    <p className="text-xs text-muted-foreground mt-0.5">For added security, only whitelisted email addresses can sign up or log in from this localhost domain.</p>
+                  </div>
+                  <div className="rounded-md border border-border p-3 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <input
+                        value={emailInput}
+                        onChange={(e) => setEmailInput(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === "Enter") handleAddEmail(); }}
+                        placeholder="Enter Mail"
+                        className="flex-1 h-9 px-3 rounded-md border border-input bg-background text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                      />
+                      <button onClick={() => setEmailInput("")} className="h-7 w-7 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors">
+                        <X className="h-3.5 w-3.5 text-destructive" />
+                      </button>
+                      <button onClick={handleAddEmail} className="h-7 w-7 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors">
+                        <Check className="h-3.5 w-3.5 text-green-600" />
+                      </button>
+                    </div>
+                    {whitelistedEmails.map((email) => (
+                      <div key={email} className="flex items-center justify-between rounded-md border border-border px-3 py-2">
+                        <span className="text-sm">{email}</span>
+                        <button onClick={() => handleRemoveEmail(email)} className="p-1 hover:bg-muted rounded transition-colors">
+                          <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {localhostSaved && (
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => { setShowLocalhostSetup(false); setLocalhostSaved(false); setLocalhostUrl("https://localhost:3000"); setWhitelistedEmails([]); setEmailInput(""); }}
+                      className="h-8 px-4 rounded-md border border-border text-sm font-medium hover:bg-muted/50 transition-colors"
+                    >
+                      Close
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Trusted Domains */}
+      <div className="rounded-lg border border-border bg-card overflow-hidden">
+        <button
+          onClick={() => toggleSection("trusted-domains")}
+          className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-muted/30 transition-colors"
+        >
+          <div>
+            <h3 className="text-sm font-semibold">Trusted Domains</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">Add domains that are allowed to make authenticated requests to your backend.</p>
+          </div>
+          <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${openSection === "trusted-domains" ? "rotate-180" : ""}`} />
+        </button>
+        {openSection === "trusted-domains" && (
+          <div className="px-5 pb-5 border-t border-border pt-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <input
+                value={trustedDomainInput}
+                onChange={(e) => { setTrustedDomainInput(e.target.value); setTrustedDomainError(null); }}
+                onKeyDown={(e) => { if (e.key === "Enter") handleAddTrustedDomain(); }}
+                placeholder="app.yourdomain.com"
+                className="flex-1 h-9 px-3 rounded-md border border-input bg-background text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+              />
+              <button
+                onClick={handleAddTrustedDomain}
+                className="h-9 px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+              >
+                Add Domain
+              </button>
+            </div>
+            {trustedDomainError && (
+              <p className="text-xs text-destructive flex items-center gap-1"><AlertCircle className="h-3 w-3" /> {trustedDomainError}</p>
+            )}
+            {trustedDomains.length > 0 && (
+              <div className="rounded-lg border border-border overflow-hidden">
+                {trustedDomains.map((domain, i) => (
+                  <div key={domain} className={`flex items-center justify-between px-4 py-3 ${i < trustedDomains.length - 1 ? "border-b border-border" : ""}`}>
+                    <span className="text-sm font-mono">{domain}</span>
+                    <button onClick={() => handleRemoveTrustedDomain(domain)} className="p-1 hover:bg-muted rounded transition-colors">
+                      <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            {trustedDomains.length === 0 && (
+              <p className="text-xs text-muted-foreground text-center py-4">No trusted domains added yet.</p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* SDK Overview */}
+      <div className="rounded-lg border border-border bg-card overflow-hidden">
+        <button
+          onClick={() => toggleSection("sdk")}
+          className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-muted/30 transition-colors"
+        >
+          <div>
+            <h3 className="text-sm font-semibold">SDK Overview</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">View SDK integration details and API configuration.</p>
+          </div>
+          <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${openSection === "sdk" ? "rotate-180" : ""}`} />
+        </button>
+        {openSection === "sdk" && (
+          <div className="px-5 pb-5 border-t border-border pt-4 space-y-3">
+            <div className="rounded-md border border-border p-3 space-y-2">
+              <div>
+                <label className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">API Endpoint</label>
+                <p className="text-sm font-mono mt-0.5">https://api.slate-appos.lovable.app/v1</p>
+              </div>
+              <div>
+                <label className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">SDK Version</label>
+                <p className="text-sm font-mono mt-0.5">v2.4.1</p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
