@@ -839,7 +839,7 @@ const SlateDashboard = () => {
   const [selectedBackend, setSelectedBackend] = useState<string | null>(null);
   const [appOsSection, setAppOsSection] = useState("overview");
   const [cloudSection, setCloudSection] = useState("authentication");
-  const [hideCards, setHideCards] = useState(false);
+  const [hideCards, setHideCards] = useState(true);
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
 
