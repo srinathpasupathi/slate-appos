@@ -215,8 +215,8 @@ const ProjectPage = () => {
         id: `backend-choice-${Date.now()}`,
         role: "assistant",
         content: isLikelyInternal
-          ? `Your **frontend is ready** 🎉\n\nWant to add a backend? You have two options:`
-          : `Your **frontend is ready** 🎉\n\nWant to add a backend? Pick based on how users will sign in:`,
+          ? `Your **frontend is ready** 🎉\n\nBased on your prompt, it looks like you're building a business app — **AppOS** would be a great fit since your team can sign in with their existing **Zoho accounts** via SSO, no separate credentials needed.\n\nIf you'd prefer a fully independent app with its own signup and login, you can go with **Cloud** instead.`
+          : `Your **frontend is ready** 🎉\n\nNow let's wire up the backend. You have two options depending on how you want users to sign in:`,
         timestamp: new Date(),
         actionCard: {
           type: "backend-choice",
