@@ -1226,15 +1226,26 @@ const DeploymentsTab = () => (
   </div>
 );
 
+interface LocalhostEntry {
+  url: string;
+  emails: string[];
+}
+
 const ConfigurationTab = () => {
   const [openSection, setOpenSection] = useState<string | null>("localhost");
 
-  // Localhost state
-  const [showLocalhostSetup, setShowLocalhostSetup] = useState(false);
-  const [localhostUrl, setLocalhostUrl] = useState("https://localhost:3000");
-  const [localhostSaved, setLocalhostSaved] = useState(false);
-  const [emailInput, setEmailInput] = useState("");
-  const [whitelistedEmails, setWhitelistedEmails] = useState<string[]>([]);
+  // Localhost entries (saved)
+  const [localhostEntries, setLocalhostEntries] = useState<LocalhostEntry[]>([]);
+
+  // Form state for adding new localhost
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newUrl, setNewUrl] = useState("https://localhost:3000");
+  const [newEmailInput, setNewEmailInput] = useState("");
+  const [newEmails, setNewEmails] = useState<string[]>([]);
+
+  // Editing state
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editEmailInput, setEditEmailInput] = useState("");
 
   // Trusted domains state
   const [trustedDomainInput, setTrustedDomainInput] = useState("");
@@ -1243,18 +1254,51 @@ const ConfigurationTab = () => {
 
   const toggleSection = (id: string) => setOpenSection(openSection === id ? null : id);
 
-  const handleAddEmail = () => {
-    const trimmed = emailInput.trim();
-    if (trimmed && trimmed.includes("@") && !whitelistedEmails.includes(trimmed)) {
-      setWhitelistedEmails((prev) => [...prev, trimmed]);
-      setEmailInput("");
+  const font = "'Inter', sans-serif";
+
+  // New localhost form handlers
+  const handleAddNewEmail = () => {
+    const trimmed = newEmailInput.trim();
+    if (trimmed && trimmed.includes("@") && !newEmails.includes(trimmed)) {
+      setNewEmails((prev) => [...prev, trimmed]);
+      setNewEmailInput("");
     }
   };
 
-  const handleRemoveEmail = (email: string) => {
-    setWhitelistedEmails((prev) => prev.filter((e) => e !== email));
+  const handleSaveNewEntry = () => {
+    if (newUrl.trim() && newEmails.length > 0) {
+      setLocalhostEntries((prev) => [...prev, { url: newUrl.trim(), emails: newEmails }]);
+      setNewUrl("https://localhost:3000");
+      setNewEmails([]);
+      setNewEmailInput("");
+      setShowAddForm(false);
+    }
   };
 
+  const handleDeleteEntry = (index: number) => {
+    setLocalhostEntries((prev) => prev.filter((_, i) => i !== index));
+    if (editingIndex === index) setEditingIndex(null);
+  };
+
+  const handleAddEditEmail = (index: number) => {
+    const trimmed = editEmailInput.trim();
+    if (trimmed && trimmed.includes("@")) {
+      setLocalhostEntries((prev) => prev.map((entry, i) =>
+        i === index && !entry.emails.includes(trimmed)
+          ? { ...entry, emails: [...entry.emails, trimmed] }
+          : entry
+      ));
+      setEditEmailInput("");
+    }
+  };
+
+  const handleRemoveEntryEmail = (entryIndex: number, email: string) => {
+    setLocalhostEntries((prev) => prev.map((entry, i) =>
+      i === entryIndex ? { ...entry, emails: entry.emails.filter((e) => e !== email) } : entry
+    ));
+  };
+
+  // Trusted domain handlers
   const handleAddTrustedDomain = () => {
     const trimmed = trustedDomainInput.trim().toLowerCase();
     setTrustedDomainError(null);
@@ -1276,9 +1320,9 @@ const ConfigurationTab = () => {
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5" style={{ fontFamily: font }}>
       <div>
-        <h2 className="text-xl font-semibold tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>Configuration</h2>
+        <h2 className="text-xl font-semibold tracking-tight">Configuration</h2>
         <p className="text-sm text-muted-foreground mt-0.5">Manage app-level settings and security.</p>
       </div>
 
@@ -1292,129 +1336,137 @@ const ConfigurationTab = () => {
             <div className="w-1 h-8 rounded-full bg-primary" />
             <div>
               <h3 className="text-sm font-semibold">Trusted Domain (Local Host)</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">Connect your local system for development.</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Connect your local system for development. Only whitelisted emails can log in from each localhost domain.</p>
             </div>
           </div>
           <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${openSection === "localhost" ? "rotate-180" : ""}`} />
         </button>
         {openSection === "localhost" && (
-          <div className="px-5 pb-5 border-t border-border">
-            {!showLocalhostSetup && !localhostSaved ? (
-              <div className="flex flex-col items-center justify-center py-10 space-y-4">
-                {/* Decorative shapes */}
-                <div className="relative w-32 h-20">
-                  <div className="absolute top-2 left-4 w-3 h-3 rounded-full bg-green-400" />
-                  <div className="absolute top-5 left-10 w-5 h-5 rounded-full bg-primary/40" />
-                  <div className="absolute top-3 right-6 w-3 h-3 rotate-45 border-2 border-orange-400" />
-                  <div className="absolute top-7 left-14 w-3.5 h-3.5 rounded-full border-2 border-muted-foreground/30 flex items-center justify-center">
-                    <Globe className="h-2 w-2 text-muted-foreground/50" />
-                  </div>
-                  <div className="absolute bottom-2 left-8 w-2.5 h-2.5 rounded-full bg-primary/20" />
-                  <div className="absolute bottom-1 right-4 w-2.5 h-2.5 rounded-full bg-green-300" />
-                  <Plus className="absolute top-2 right-3 h-3 w-3 text-muted-foreground/30" />
-                </div>
-                <div className="text-center">
-                  <p className="text-sm font-semibold">SDK Overview</p>
-                  <p className="text-xs text-muted-foreground">Business process automation</p>
-                </div>
-                <button
-                  onClick={() => setShowLocalhostSetup(true)}
-                  className="h-8 px-4 rounded-md border border-border text-sm font-medium hover:bg-muted/50 transition-colors"
-                >
-                  Add
-                </button>
-              </div>
-            ) : (
-              <div className="pt-4 space-y-5">
-                {/* Step 1: Domain URL */}
-                <div className="rounded-lg border border-border p-4 space-y-3">
+          <div className="px-5 pb-5 border-t border-border pt-4 space-y-4">
+
+            {/* Saved localhost entries */}
+            {localhostEntries.map((entry, idx) => (
+              <div key={idx} className="rounded-lg border border-border p-4 space-y-3">
+                <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="text-sm font-semibold">Step 1: Domain URL</h4>
-                    <p className="text-xs text-muted-foreground mt-0.5">Localhost domains are only recommended for development. For added security, only whitelisted email addresses can sign up or log in from this domain.</p>
+                    <label className="text-[11px] text-primary font-medium uppercase tracking-wider">Domain URL</label>
+                    <p className="text-sm font-mono mt-0.5">{entry.url}</p>
                   </div>
-                  <div>
-                    <label className="text-[11px] text-primary font-medium uppercase tracking-wider">URL</label>
-                    <div className="flex items-center gap-2 mt-1">
-                      <div className="flex-1 flex items-center gap-2">
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => { setEditingIndex(editingIndex === idx ? null : idx); setEditEmailInput(""); }}
+                      className="text-xs text-primary font-medium hover:text-primary/80 transition-colors px-2 py-1 rounded hover:bg-muted/50"
+                    >
+                      {editingIndex === idx ? "Done" : "Edit"}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteEntry(idx)}
+                      className="p-1.5 hover:bg-muted rounded transition-colors"
+                    >
+                      <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">Whitelisted Emails</label>
+                  <div className="mt-1.5 space-y-1.5">
+                    {entry.emails.map((email) => (
+                      <div key={email} className="flex items-center justify-between rounded-md border border-border px-3 py-2">
+                        <span className="text-sm">{email}</span>
+                        {editingIndex === idx && (
+                          <button onClick={() => handleRemoveEntryEmail(idx, email)} className="p-1 hover:bg-muted rounded transition-colors">
+                            <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                    {editingIndex === idx && (
+                      <div className="flex items-center gap-2 mt-1">
                         <input
-                          value={localhostUrl}
-                          onChange={(e) => setLocalhostUrl(e.target.value)}
-                          disabled={localhostSaved}
-                          className="flex-1 h-9 px-3 rounded-md border border-input bg-background text-sm font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:opacity-70"
-                          placeholder="https://localhost:3000"
+                          value={editEmailInput}
+                          onChange={(e) => setEditEmailInput(e.target.value)}
+                          onKeyDown={(e) => { if (e.key === "Enter") handleAddEditEmail(idx); }}
+                          placeholder="Add email address"
+                          className="flex-1 h-9 px-3 rounded-md border border-input bg-background text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
                         />
-                        <button
-                          onClick={() => navigator.clipboard.writeText(localhostUrl)}
-                          className="h-9 w-9 flex items-center justify-center rounded-md border border-input hover:bg-muted/50 transition-colors"
-                          title="Copy URL"
-                        >
-                          <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+                        <button onClick={() => setEditEmailInput("")} className="h-7 w-7 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors">
+                          <X className="h-3.5 w-3.5 text-destructive" />
+                        </button>
+                        <button onClick={() => handleAddEditEmail(idx)} className="h-7 w-7 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors">
+                          <Check className="h-3.5 w-3.5 text-green-600" />
                         </button>
                       </div>
-                      {!localhostSaved && (
-                        <button
-                          onClick={() => { if (localhostUrl.trim()) setLocalhostSaved(true); }}
-                          className="text-sm text-primary font-medium hover:text-primary/80 transition-colors"
-                        >
-                          + Save
-                        </button>
-                      )}
-                      {localhostSaved && (
-                        <button
-                          onClick={() => setLocalhostSaved(false)}
-                          className="text-sm text-primary font-medium hover:text-primary/80 transition-colors"
-                        >
-                          + Edit
-                        </button>
-                      )}
-                    </div>
+                    )}
                   </div>
                 </div>
+              </div>
+            ))}
 
-                {/* Step 2: Whitelisted Email Addresses */}
-                <div className="rounded-lg border border-border p-4 space-y-3">
-                  <div>
-                    <h4 className="text-sm font-semibold">Step 2: Whitelisted Email Addresses</h4>
-                    <p className="text-xs text-muted-foreground mt-0.5">For added security, only whitelisted email addresses can sign up or log in from this localhost domain.</p>
-                  </div>
-                  <div className="rounded-md border border-border p-3 space-y-2">
+            {/* Add new localhost form */}
+            {showAddForm ? (
+              <div className="rounded-lg border border-dashed border-primary/40 p-4 space-y-4">
+                <div className="space-y-2">
+                  <label className="text-[11px] text-primary font-medium uppercase tracking-wider">Domain URL</label>
+                  <p className="text-xs text-muted-foreground">Enter your localhost domain for development access.</p>
+                  <input
+                    value={newUrl}
+                    onChange={(e) => setNewUrl(e.target.value)}
+                    className="w-full h-9 px-3 rounded-md border border-input bg-background text-sm font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                    placeholder="https://localhost:3000"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">Whitelisted Email Addresses</label>
+                  <p className="text-xs text-muted-foreground">Only these email addresses can sign up or log in from this localhost domain.</p>
+                  <div className="space-y-1.5">
                     <div className="flex items-center gap-2">
                       <input
-                        value={emailInput}
-                        onChange={(e) => setEmailInput(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === "Enter") handleAddEmail(); }}
-                        placeholder="Enter Mail"
+                        value={newEmailInput}
+                        onChange={(e) => setNewEmailInput(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === "Enter") handleAddNewEmail(); }}
+                        placeholder="Enter email"
                         className="flex-1 h-9 px-3 rounded-md border border-input bg-background text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
                       />
-                      <button onClick={() => setEmailInput("")} className="h-7 w-7 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors">
+                      <button onClick={() => setNewEmailInput("")} className="h-7 w-7 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors">
                         <X className="h-3.5 w-3.5 text-destructive" />
                       </button>
-                      <button onClick={handleAddEmail} className="h-7 w-7 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors">
+                      <button onClick={handleAddNewEmail} className="h-7 w-7 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors">
                         <Check className="h-3.5 w-3.5 text-green-600" />
                       </button>
                     </div>
-                    {whitelistedEmails.map((email) => (
+                    {newEmails.map((email) => (
                       <div key={email} className="flex items-center justify-between rounded-md border border-border px-3 py-2">
                         <span className="text-sm">{email}</span>
-                        <button onClick={() => handleRemoveEmail(email)} className="p-1 hover:bg-muted rounded transition-colors">
+                        <button onClick={() => setNewEmails((prev) => prev.filter((e) => e !== email))} className="p-1 hover:bg-muted rounded transition-colors">
                           <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
                         </button>
                       </div>
                     ))}
                   </div>
                 </div>
-
-                {localhostSaved && (
-                  <div className="flex justify-end">
-                    <button
-                      onClick={() => { setShowLocalhostSetup(false); setLocalhostSaved(false); setLocalhostUrl("https://localhost:3000"); setWhitelistedEmails([]); setEmailInput(""); }}
-                      className="h-8 px-4 rounded-md border border-border text-sm font-medium hover:bg-muted/50 transition-colors"
-                    >
-                      Close
-                    </button>
-                  </div>
-                )}
+                <div className="flex items-center gap-2 justify-end">
+                  <button
+                    onClick={() => { setShowAddForm(false); setNewUrl("https://localhost:3000"); setNewEmails([]); setNewEmailInput(""); }}
+                    className="h-8 px-4 rounded-md border border-border text-sm font-medium hover:bg-muted/50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveNewEntry}
+                    disabled={!newUrl.trim() || newEmails.length === 0}
+                    className="h-8 px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+                  >
+                    Save
+                  </button>
+                </div>
               </div>
+            ) : (
+              <button
+                onClick={() => setShowAddForm(true)}
+                className="w-full h-10 rounded-lg border border-dashed border-border text-sm text-muted-foreground font-medium hover:border-primary/40 hover:text-primary hover:bg-primary/5 transition-colors flex items-center justify-center gap-1.5"
+              >
+                <Plus className="h-3.5 w-3.5" /> Add Localhost Domain
+              </button>
             )}
           </div>
         )}
@@ -1467,34 +1519,6 @@ const ConfigurationTab = () => {
             {trustedDomains.length === 0 && (
               <p className="text-xs text-muted-foreground text-center py-4">No trusted domains added yet.</p>
             )}
-          </div>
-        )}
-      </div>
-
-      {/* SDK Overview */}
-      <div className="rounded-lg border border-border bg-card overflow-hidden">
-        <button
-          onClick={() => toggleSection("sdk")}
-          className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-muted/30 transition-colors"
-        >
-          <div>
-            <h3 className="text-sm font-semibold">SDK Overview</h3>
-            <p className="text-xs text-muted-foreground mt-0.5">View SDK integration details and API configuration.</p>
-          </div>
-          <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${openSection === "sdk" ? "rotate-180" : ""}`} />
-        </button>
-        {openSection === "sdk" && (
-          <div className="px-5 pb-5 border-t border-border pt-4 space-y-3">
-            <div className="rounded-md border border-border p-3 space-y-2">
-              <div>
-                <label className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">API Endpoint</label>
-                <p className="text-sm font-mono mt-0.5">https://api.slate-appos.lovable.app/v1</p>
-              </div>
-              <div>
-                <label className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">SDK Version</label>
-                <p className="text-sm font-mono mt-0.5">v2.4.1</p>
-              </div>
-            </div>
           </div>
         )}
       </div>
