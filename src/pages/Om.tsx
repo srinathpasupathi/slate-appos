@@ -1530,27 +1530,18 @@ const SlateDashboard = () => {
       {/* Hide/Show cards dropdown for AppOS/Cloud */}
       {(mainTab === 'platform' || mainTab === 'cloud') && !selectedBackend && (
         <div className="fixed bottom-5 right-5 z-40">
-          <Popover>
-            <PopoverTrigger asChild>
-              <button className="h-8 px-3 rounded-lg border border-border bg-card shadow-md text-xs text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
-                {hideCards ? 'Hidden' : 'Visible'}
-              </button>
-            </PopoverTrigger>
-            <PopoverContent align="end" side="top" className="w-28 p-1">
-              <button
-                onClick={() => setHideCards(true)}
-                className={`w-full px-3 py-1.5 rounded-md text-sm transition-colors ${hideCards ? 'bg-primary/10 text-primary font-medium' : 'text-foreground hover:bg-muted'}`}
-              >
-                Hide
-              </button>
-              <button
-                onClick={() => { setHideCards(false); setShowIdeSelector(null); }}
-                className={`w-full px-3 py-1.5 rounded-md text-sm transition-colors ${!hideCards ? 'bg-primary/10 text-primary font-medium' : 'text-foreground hover:bg-muted'}`}
-              >
-                Show
-              </button>
-            </PopoverContent>
-          </Popover>
+          <select
+            value={hideCards ? 'hide' : 'show'}
+            onChange={(e) => {
+              const val = e.target.value === 'hide';
+              setHideCards(val);
+              if (!val) setShowIdeSelector(null);
+            }}
+            className="h-8 px-2 rounded-md border border-border bg-card text-xs text-muted-foreground cursor-pointer outline-none"
+          >
+            <option value="hide">Hide</option>
+            <option value="show">Show</option>
+          </select>
         </div>
       )}
     </div>
