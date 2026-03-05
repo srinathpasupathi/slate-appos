@@ -29,7 +29,7 @@ import GitHubConnectDialog from "@/components/GitHubConnectDialog";
 // ─── Types & Constants ───
 
 interface ActionCard {
-  type: "appos-promo" | "cloud-promo" | "appos-resources" | "cloud-resources";
+  type: "appos-promo" | "cloud-promo" | "appos-resources" | "cloud-resources" | "backend-choice";
   title: string;
   description: string;
   features: { icon: string; label: string }[];
@@ -37,6 +37,8 @@ interface ActionCard {
   dismissLabel: string;
   /** If true, show "Proceed & auto-approve" option */
   showAutoApprove?: boolean;
+  /** Secondary CTA for backend-choice cards */
+  secondaryCtaLabel?: string;
 }
 
 interface Message {
@@ -199,35 +201,42 @@ const ProjectPage = () => {
     });
   }, []);
 
-  // After generation completes, promote AppOS contextually
+  // After generation completes, ask user what kind of backend they need
   useEffect(() => {
     if (!generationDone || appOsPromoShownRef.current || source !== "build") return;
     appOsPromoShownRef.current = true;
 
+    // Simple heuristic: check if prompt mentions internal/business/zoho/employee/team keywords
+    const lowerPrompt = initialPrompt.toLowerCase();
+    const isLikelyInternal = /\b(internal|employee|team|crm|erp|hrm|business|franchise|inventory|operations|management|admin panel|dashboard)\b/.test(lowerPrompt);
+
     const timer = setTimeout(() => {
       setMessages((prev) => [...prev, {
-        id: `appos-promo-${Date.now()}`,
+        id: `backend-choice-${Date.now()}`,
         role: "assistant",
-        content: `Your **frontend is ready** 🎉 — the UI is fully built. Now, want to wire up a backend too? **AppOS** can auto-generate user management, roles, workflows, and data modules so your app is fully functional end-to-end.`,
+        content: isLikelyInternal
+          ? `Your **frontend is ready** 🎉\n\nNow let's set up the backend. Since this looks like a **business/internal app**, I'd recommend **AppOS** — it integrates with your existing **Zoho account**, so your team can sign in with Zoho SSO without needing separate credentials.\n\nBut if you'd rather have this app be **completely independent** with its own signup/login, go with **Cloud** instead.`
+          : `Your **frontend is ready** 🎉\n\nNow let's set up the backend. You have two options depending on how you want users to sign in:`,
         timestamp: new Date(),
         actionCard: {
-          type: "appos-promo",
-          title: "Enable AppOS",
-          description: "Business backend with users, roles, workflows & resource modules",
+          type: "backend-choice",
+          title: "Choose your backend",
+          description: isLikelyInternal
+            ? "AppOS uses Zoho SSO for your team. Cloud gives you standalone auth."
+            : "Pick the option that matches how you want your app to work.",
           features: [
-            { icon: "users", label: "Users" },
-            { icon: "shield", label: "Permissions" },
-            { icon: "workflow", label: "Workflows" },
-            { icon: "boxes", label: "Resources" },
+            { icon: "server", label: "AppOS — Zoho SSO, internal apps" },
+            { icon: "cloud", label: "Cloud — Independent signup/login" },
           ],
-          ctaLabel: "Enable AppOS",
-          dismissLabel: "Maybe later",
+          ctaLabel: isLikelyInternal ? "Use AppOS (Recommended)" : "Use AppOS — Zoho SSO",
+          secondaryCtaLabel: isLikelyInternal ? "Use Cloud instead" : "Use Cloud — Independent auth",
+          dismissLabel: "Decide later",
         },
       }]);
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [generationDone, source]);
+  }, [generationDone, source, initialPrompt]);
 
   // Build mode: seed initial prompt
   useEffect(() => {
@@ -303,7 +312,7 @@ const ProjectPage = () => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
 
-  const handleActionCardClick = (type: ActionCard["type"], action: "enable" | "dismiss" | "auto-approve") => {
+  const handleActionCardClick = (type: ActionCard["type"], action: "enable" | "dismiss" | "auto-approve" | "secondary") => {
     // Remove the action card from the message
     setMessages((prev) => prev.map((msg) =>
       msg.actionCard?.type === type ? { ...msg, actionCard: undefined } : msg
@@ -311,6 +320,7 @@ const ProjectPage = () => {
 
     if (action === "dismiss") {
       const dismissTexts: Record<string, string> = {
+        "backend-choice": "No problem! You can enable **AppOS** or **Cloud** anytime from their respective tabs.",
         "appos-promo": "No problem! You can always enable **AppOS** later from the AppOS tab whenever you're ready.",
         "cloud-promo": "Sure thing! **Cloud** is available anytime you need it from the Cloud tab.",
         "appos-resources": "Okay, skipping resource creation for now. You can set these up manually from the **Resources** tab in AppOS.",
@@ -322,7 +332,6 @@ const ProjectPage = () => {
         content: dismissTexts[type] || "Got it!",
         timestamp: new Date(),
       }]);
-      // If dismissing resource creation for AppOS, still promote Cloud
       if (type === "appos-resources" && !cloudPromoShownRef.current) {
         promptCloudAfterAppOS();
       }
@@ -334,7 +343,15 @@ const ProjectPage = () => {
     }
 
     // Route to the right handler
-    if (type === "appos-promo") {
+    if (type === "backend-choice") {
+      if (action === "secondary") {
+        // User chose Cloud (independent app)
+        handleEnableService("cloud");
+      } else {
+        // User chose AppOS (Zoho SSO)
+        handleEnableService("appos");
+      }
+    } else if (type === "appos-promo") {
       handleEnableService("appos");
     } else if (type === "cloud-promo") {
       handleEnableService("cloud");
@@ -738,7 +755,24 @@ const ProjectPage = () => {
       case "lock": return <Lock className="h-4 w-4" />;
       case "hard-drive": return <FolderTree className="h-4 w-4" />;
       case "code": return <Code className="h-4 w-4" />;
+      case "server": return <Server className="h-4 w-4" />;
+      case "cloud": return <Cloud className="h-4 w-4" />;
       default: return <Zap className="h-4 w-4" />;
+    }
+  };
+
+  const getCardHeaderIcon = (type: ActionCard["type"]) => {
+    switch (type) {
+      case "appos-promo":
+      case "appos-resources":
+        return <Server className="h-3 w-3 text-primary" />;
+      case "cloud-promo":
+      case "cloud-resources":
+        return <Cloud className="h-3 w-3 text-primary" />;
+      case "backend-choice":
+        return <Zap className="h-3 w-3 text-primary" />;
+      default:
+        return <Zap className="h-3 w-3 text-primary" />;
     }
   };
 
@@ -806,17 +840,14 @@ const ProjectPage = () => {
                         <div className="px-4 pt-3.5 pb-2.5">
                           <div className="flex items-center gap-2 mb-1">
                             <div className="h-6 w-6 rounded-md bg-primary/10 flex items-center justify-center">
-                              {msg.actionCard.type === "appos-promo"
-                                ? <Server className="h-3 w-3 text-primary" />
-                                : <Cloud className="h-3 w-3 text-primary" />
-                              }
+                              {getCardHeaderIcon(msg.actionCard.type)}
                             </div>
                             <span className="text-[13px] font-semibold text-foreground">{msg.actionCard.title}</span>
                           </div>
                           <p className="text-[11px] text-muted-foreground ml-8">{msg.actionCard.description}</p>
                         </div>
 
-                        {/* Feature chips – inline row */}
+                        {/* Feature chips */}
                         <div className="px-4 pb-2.5">
                           <div className="flex flex-wrap gap-1.5">
                             {msg.actionCard.features.map((feat) => (
@@ -837,6 +868,15 @@ const ProjectPage = () => {
                             <Zap className="h-3 w-3" />
                             {msg.actionCard.ctaLabel}
                           </button>
+                          {msg.actionCard.secondaryCtaLabel && (
+                            <button
+                              onClick={() => handleActionCardClick(msg.actionCard!.type, "secondary")}
+                              className="h-8 px-4 rounded-lg bg-muted text-foreground text-xs font-medium hover:bg-muted/80 transition-colors flex items-center gap-1.5 border border-border"
+                            >
+                              <Cloud className="h-3 w-3" />
+                              {msg.actionCard.secondaryCtaLabel}
+                            </button>
+                          )}
                           {msg.actionCard.showAutoApprove && (
                             <button
                               onClick={() => handleActionCardClick(msg.actionCard!.type, "auto-approve")}
