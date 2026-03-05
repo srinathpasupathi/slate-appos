@@ -208,7 +208,7 @@ const ProjectPage = () => {
       setMessages((prev) => [...prev, {
         id: `appos-promo-${Date.now()}`,
         role: "assistant",
-        content: `Your app would be a great fit for **AppOS** — it handles the business backend so you don't have to build user management, permissions, or workflows from scratch.`,
+        content: `Your **frontend is ready** 🎉 — the UI is fully built. Now, want to wire up a backend too? **AppOS** can auto-generate user management, roles, workflows, and data modules so your app is fully functional end-to-end.`,
         timestamp: new Date(),
         actionCard: {
           type: "appos-promo",
@@ -407,9 +407,21 @@ const ProjectPage = () => {
         role: "assistant",
         content: isAppOS
           ? `✅ **AppOS resources are ready!** Modules, fields, roles, workflows, and users have been configured. Check the **AppOS** tab to explore.`
-          : `✅ **Cloud resources are ready!** Storage buckets, auth, database, and functions are provisioned. Check the **Cloud** tab to explore.`,
+          : `✅ **Cloud resources are ready!** Storage, auth, database, and functions are all provisioned.`,
         timestamp: new Date(),
       }]);
+
+      // After Cloud resources, show the "fully functional" celebration
+      if (!isAppOS) {
+        setTimeout(() => {
+          setMessages((prev) => [...prev, {
+            id: `fully-functional-${Date.now()}`,
+            role: "assistant",
+            content: `🚀 **Your app is now fully functional!** The frontend UI and the entire backend — data persistence, user authentication, file storage, and business logic — are all wired up and ready to go.\n\nGo ahead, take it for a spin! You can interact with the app in the **Preview** tab, or explore what was set up in the **AppOS** and **Cloud** tabs.`,
+            timestamp: new Date(),
+          }]);
+        }, 1500);
+      }
 
       // After AppOS resources, prompt Cloud
       if (isAppOS && !cloudPromoShownRef.current) {
