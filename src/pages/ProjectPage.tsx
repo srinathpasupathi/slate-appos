@@ -5,7 +5,7 @@ import {
   Link2, Globe, UserPlus, ChevronRight, Pencil, Plus, ExternalLink, ChevronDown,
   Home, Settings, Sun, Moon, HelpCircle, Zap, Lock, Search, AlertCircle,
   ChevronLeft, Copy, Check, ArrowLeft, Users, Rocket, LayoutDashboard, Trash2,
-  RotateCcw, Server, Cloud, PanelLeftClose, PanelLeft,
+  RotateCcw, Server, Cloud, PanelLeftClose, PanelLeft, Boxes, DatabaseZap, Wrench,
 } from "lucide-react";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -61,9 +61,11 @@ const ENV_VARS = [
 
 const APPOS_NAV = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "tenants", label: "Tenants", icon: Users },
+  { id: "users", label: "Users", icon: Users },
+  { id: "resources", label: "Resources", icon: Boxes },
+  { id: "query-console", label: "Query Console", icon: DatabaseZap },
+  { id: "configuration", label: "Configuration", icon: Wrench },
   { id: "deployments", label: "Deployments", icon: Rocket },
-  { id: "settings", label: "Configuration", icon: Settings },
 ];
 
 const CLOUD_NAV = [
@@ -546,13 +548,15 @@ const ProjectPage = () => {
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto px-8 py-8">
           {appOsSection === "overview" && <OverviewTab projectName={projectName} appUrl={appUrl} copied={copied} onCopy={handleCopy} />}
-          {appOsSection === "tenants" && (
+          {appOsSection === "users" && (
             selectedTenant
               ? <TenantDetail tenant={selectedTenant} onBack={() => setSelectedTenant(null)} />
               : <TenantsTab tenants={TENANTS} onSelect={setSelectedTenant} />
           )}
+          {appOsSection === "resources" && <PlaceholderSection title="Resources" description="Manage application resources, assets, and dependencies." />}
+          {appOsSection === "query-console" && <PlaceholderSection title="Query Console" description="Run queries against your application data." />}
+          {appOsSection === "configuration" && <SettingsTab projectName={projectName} appUrl={appUrl} />}
           {appOsSection === "deployments" && <DeploymentsTab />}
-          {appOsSection === "settings" && <SettingsTab projectName={projectName} appUrl={appUrl} />}
         </div>
       </main>
     </div>
@@ -771,6 +775,19 @@ const InfoCard = ({ label, children }: { label: string; children: React.ReactNod
   <div className="rounded-lg border border-border bg-card p-4">
     <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium mb-1.5">{label}</p>
     {children}
+  </div>
+);
+
+// ─── Placeholder Section ───
+const PlaceholderSection = ({ title, description }: { title: string; description: string }) => (
+  <div className="space-y-4">
+    <div>
+      <h2 className="text-lg font-semibold text-foreground">{title}</h2>
+      <p className="text-sm text-muted-foreground mt-1">{description}</p>
+    </div>
+    <div className="rounded-lg border border-border bg-muted/30 p-8 text-center text-sm text-muted-foreground">
+      Coming soon
+    </div>
   </div>
 );
 
