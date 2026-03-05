@@ -174,6 +174,7 @@ const ProjectPage = () => {
   // Auto-approve state — when true, resource creation proceeds without asking
   const [autoApproveResources, setAutoApproveResources] = useState(false);
   const [backendPromptShown, setBackendPromptShown] = useState(false);
+  const [previewReady, setPreviewReady] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -202,14 +203,24 @@ const ProjectPage = () => {
     });
   }, []);
 
-  // After generation completes, smoothly increase progress while waiting for backend prompt
+  // After generation completes, smoothly increase progress while waiting for preview ready
   useEffect(() => {
-    if (!generationDone || backendPromptShown) return;
+    if (!generationDone || previewReady) return;
     const interval = setInterval(() => {
-      setGenerationProgress((prev) => Math.min(prev + 2, 98));
+      setGenerationProgress((prev) => Math.min(prev + 2, 99));
     }, 300);
     return () => clearInterval(interval);
-  }, [generationDone, backendPromptShown]);
+  }, [generationDone, previewReady]);
+
+  // 3 seconds after backend prompt shown, reveal the preview
+  useEffect(() => {
+    if (!backendPromptShown) return;
+    const timer = setTimeout(() => {
+      setGenerationProgress(100);
+      setPreviewReady(true);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [backendPromptShown]);
 
   // After generation completes, ask user what kind of backend they need
   useEffect(() => {
@@ -939,15 +950,15 @@ const ProjectPage = () => {
     <div className="flex-1 overflow-hidden">
       {source === "platform" ? (
         <GeneratedPreview appName={projectName} />
-      ) : backendPromptShown && previewReloading ? (
+      ) : previewReady && previewReloading ? (
         <div className="h-full bg-background flex flex-col items-center justify-center gap-4">
           <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
           <p className="text-sm text-muted-foreground">Reconnecting with backend...</p>
         </div>
-      ) : backendPromptShown ? (
+      ) : previewReady ? (
         <GeneratedPreview />
       ) : (isGenerating || generationDone) ? (
-        <PreviewLoading progress={generationDone ? Math.min(Math.round(generationProgress), 95) : Math.min(Math.round(generationProgress), 95)} />
+        <PreviewLoading progress={Math.min(Math.round(generationProgress), 99)} />
       ) : (
         <div className="h-full bg-background flex items-center justify-center">
           <div className="text-center space-y-4 px-8">
