@@ -5,7 +5,7 @@ import {
   Link2, Globe, UserPlus, ChevronRight, Pencil, Plus, ExternalLink, ChevronDown,
   Home, Settings, Sun, Moon, HelpCircle, Zap, Lock, Search, AlertCircle,
   ChevronLeft, Copy, Check, ArrowLeft, Users, Rocket, LayoutDashboard, Trash2,
-  RotateCcw, Server, Cloud,
+  RotateCcw, Server, Cloud, PanelLeftClose, PanelLeft,
 } from "lucide-react";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -107,6 +107,7 @@ const ProjectPage = () => {
   const hasSeededBuildRef = useRef(false);
   const forceCompleteTimerRef = useRef<number | null>(null);
   const [leftPanelWidth, setLeftPanelWidth] = useState(35); // percentage
+  const [chatPanelCollapsed, setChatPanelCollapsed] = useState(false);
 
   const appUrl = `${projectName.toLowerCase().replace(/\s+/g, "-")}.onslate.com`;
 
@@ -298,16 +299,24 @@ const ProjectPage = () => {
         {AppNameDropdown()}
       </div>
 
-      {/* Tabs positioned to align with right panel edge */}
-      {showChatPanel && (
+      {/* Collapse/expand toggle + Tabs positioned to align with right panel edge */}
+      {source === "build" && (activeTab === "preview" || activeTab === "code") && (
         <div
-          className="absolute top-0 bottom-0 flex items-center"
-          style={{ left: `calc(${leftPanelWidth}% + 8px)` }}
+          className="absolute top-0 bottom-0 flex items-center gap-1"
+          style={{ left: chatPanelCollapsed ? '16px' : `calc(${leftPanelWidth}% - 28px)` }}
         >
+          <button
+            onClick={() => setChatPanelCollapsed(!chatPanelCollapsed)}
+            className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            title={chatPanelCollapsed ? "Show chat panel" : "Hide chat panel"}
+          >
+            {chatPanelCollapsed ? <PanelLeft className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
+          </button>
+          <div className="w-px h-4 bg-border mx-0.5" />
           {TabPills()}
         </div>
       )}
-      {!showChatPanel && (
+      {!(source === "build" && (activeTab === "preview" || activeTab === "code")) && (
         <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 flex items-center">
           {TabPills()}
         </div>
@@ -591,7 +600,7 @@ const ProjectPage = () => {
       {TopHeader()}
 
       <div className="flex-1 overflow-hidden">
-        {showChatPanel ? (
+        {showChatPanel && !chatPanelCollapsed ? (
           <ResizablePanelGroup direction="horizontal" onLayout={(sizes) => setLeftPanelWidth(sizes[0])}>
             <ResizablePanel defaultSize={35} minSize={25} maxSize={55}>
               {ChatPanel()}
