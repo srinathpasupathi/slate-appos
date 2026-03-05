@@ -1532,24 +1532,22 @@ const SlateDashboard = () => {
         <div className="fixed bottom-5 right-5 z-40">
           <Popover>
             <PopoverTrigger asChild>
-              <button className="h-9 px-4 rounded-lg border border-border bg-card shadow-md text-sm font-medium text-foreground hover:bg-muted transition-colors flex items-center gap-2">
-                <Settings className="h-3.5 w-3.5 text-muted-foreground" />
-                View
-                <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" />
+              <button className="h-8 px-3 rounded-lg border border-border bg-card shadow-md text-xs text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                {hideCards ? 'Hidden' : 'Visible'}
               </button>
             </PopoverTrigger>
-            <PopoverContent align="end" side="top" className="w-44 p-1">
+            <PopoverContent align="end" side="top" className="w-28 p-1">
               <button
                 onClick={() => setHideCards(true)}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors ${hideCards ? 'bg-primary/10 text-primary font-medium' : 'text-foreground hover:bg-muted'}`}
+                className={`w-full px-3 py-1.5 rounded-md text-sm transition-colors ${hideCards ? 'bg-primary/10 text-primary font-medium' : 'text-foreground hover:bg-muted'}`}
               >
-                Hide {mainTab === 'platform' ? 'Backends' : 'Projects'}
+                Hide
               </button>
               <button
                 onClick={() => { setHideCards(false); setShowIdeSelector(null); }}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors ${!hideCards ? 'bg-primary/10 text-primary font-medium' : 'text-foreground hover:bg-muted'}`}
+                className={`w-full px-3 py-1.5 rounded-md text-sm transition-colors ${!hideCards ? 'bg-primary/10 text-primary font-medium' : 'text-foreground hover:bg-muted'}`}
               >
-                Show {mainTab === 'platform' ? 'Backends' : 'Projects'}
+                Show
               </button>
             </PopoverContent>
           </Popover>
