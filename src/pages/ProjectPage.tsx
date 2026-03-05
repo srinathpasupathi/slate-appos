@@ -215,22 +215,20 @@ const ProjectPage = () => {
         id: `backend-choice-${Date.now()}`,
         role: "assistant",
         content: isLikelyInternal
-          ? `Your **frontend is ready** 🎉\n\nNow let's set up the backend. Since this looks like a **business/internal app**, I'd recommend **AppOS** — it integrates with your existing **Zoho account**, so your team can sign in with Zoho SSO without needing separate credentials.\n\nBut if you'd rather have this app be **completely independent** with its own signup/login, go with **Cloud** instead.`
-          : `Your **frontend is ready** 🎉\n\nNow let's set up the backend. You have two options depending on how you want users to sign in:`,
+          ? `Your **frontend is ready** 🎉\n\nWant to add a backend? You have two options:`
+          : `Your **frontend is ready** 🎉\n\nWant to add a backend? Pick based on how users will sign in:`,
         timestamp: new Date(),
         actionCard: {
           type: "backend-choice",
-          title: "Choose your backend",
-          description: isLikelyInternal
-            ? "AppOS uses Zoho SSO for your team. Cloud gives you standalone auth."
-            : "Pick the option that matches how you want your app to work.",
+          title: "Add a backend to your app",
+          description: "",
           features: [
-            { icon: "server", label: "AppOS — Zoho SSO, internal apps" },
-            { icon: "cloud", label: "Cloud — Independent signup/login" },
+            { icon: "server", label: isLikelyInternal ? "AppOS · Zoho SSO · Best for internal/business apps (Recommended)" : "AppOS · Zoho SSO · Best for internal/business apps" },
+            { icon: "cloud", label: "Cloud · Own signup/login · Best for standalone apps" },
           ],
-          ctaLabel: isLikelyInternal ? "Use AppOS (Recommended)" : "Use AppOS — Zoho SSO",
-          secondaryCtaLabel: isLikelyInternal ? "Use Cloud instead" : "Use Cloud — Independent auth",
-          dismissLabel: "Decide later",
+          ctaLabel: isLikelyInternal ? "Use AppOS (Recommended)" : "Use AppOS",
+          secondaryCtaLabel: "Use Cloud",
+          dismissLabel: "I'll integrate backend later",
         },
       }]);
     }, 2000);
