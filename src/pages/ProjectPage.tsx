@@ -20,6 +20,7 @@ import PreviewLoading from "@/components/slate/PreviewLoading";
 import GeneratedPreview from "@/components/slate/GeneratedPreview";
 import SettingsOverlay from "@/components/SettingsOverlay";
 import RelationalDBView from "@/components/cloud/RelationalDBView";
+import ObjectStorageView from "@/components/cloud/ObjectStorageView";
 
 // ─── Types & Constants ───
 
@@ -587,6 +588,9 @@ const ProjectPage = () => {
       if (cloudSection === "relational-db") {
         return <RelationalDBView />;
       }
+      if (cloudSection === "object-storage") {
+        return <ObjectStorageView />;
+      }
       const sectionItem = CLOUD_NAV.find(n => n.id === cloudSection);
       const title = sectionItem?.label || "Cloud";
       return (
@@ -609,19 +613,7 @@ const ProjectPage = () => {
             </div>
           )}
           {cloudSection === "object-storage" && (
-            <div className="grid gap-4">
-              <InfoCard label="Buckets">
-                <span className="text-sm text-foreground">3 buckets</span>
-              </InfoCard>
-              <InfoCard label="Storage Used">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-foreground">1.8 GB / 5 GB</span>
-                  <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden max-w-[120px]">
-                    <div className="h-full rounded-full bg-primary transition-all" style={{ width: "36%" }} />
-                  </div>
-                </div>
-              </InfoCard>
-            </div>
+            <ObjectStorageView />
           )}
           {cloudSection === "nosql-db" && (
             <div className="grid gap-4">
@@ -701,7 +693,7 @@ const ProjectPage = () => {
           </div>
         </aside>
         <main className="flex-1 overflow-y-auto">
-          {cloudSection === "relational-db" ? (
+          {(cloudSection === "relational-db" || cloudSection === "object-storage") ? (
             renderCloudSection()
           ) : (
             <div className="px-6 py-6">
