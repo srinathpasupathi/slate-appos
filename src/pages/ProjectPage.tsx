@@ -857,27 +857,58 @@ const OverviewTab = ({ projectName, appUrl, copied, onCopy }: { projectName: str
         </div>
       </div>
 
-      {/* API Calls Chart */}
+      {/* API Calls Chart – Line + Area */}
       <div className="rounded-xl border border-border bg-card p-5">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-4">API Calls · Last 7 Days</p>
-        <div className="flex items-end gap-3 h-40">
-          {API_CALLS_7D.map(d => (
-            <div key={d.day} className="flex-1 flex flex-col items-center gap-2">
-              <span className="text-[10px] text-muted-foreground font-medium">{d.calls.toLocaleString()}</span>
-              <div className="w-full relative">
-                <div
-                  className="w-full rounded-t-md bg-primary/20 transition-all"
-                  style={{ height: `${(d.calls / maxCalls) * 120}px` }}
-                >
-                  <div
-                    className="absolute bottom-0 left-0 right-0 rounded-t-md bg-primary transition-all"
-                    style={{ height: `${(d.calls / maxCalls) * 120}px` }}
-                  />
-                </div>
-              </div>
-              <span className="text-[11px] text-muted-foreground">{d.day}</span>
-            </div>
-          ))}
+        <div className="h-44">
+          <svg viewBox="0 0 600 180" className="w-full h-full" preserveAspectRatio="none">
+            {/* Grid lines */}
+            {[0, 1, 2, 3, 4].map(i => (
+              <line key={i} x1="0" y1={i * 35 + 10} x2="600" y2={i * 35 + 10} stroke="hsl(var(--border))" strokeWidth="1" strokeDasharray="4 4" />
+            ))}
+            {/* Area fill */}
+            <defs>
+              <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.15" />
+                <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.02" />
+              </linearGradient>
+            </defs>
+            <path
+              d={(() => {
+                const pts = API_CALLS_7D.map((d, i) => ({
+                  x: i * (600 / 6),
+                  y: 150 - (d.calls / maxCalls) * 130,
+                }));
+                const line = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
+                return `${line} L${pts[pts.length - 1].x},160 L${pts[0].x},160 Z`;
+              })()}
+              fill="url(#areaGradient)"
+            />
+            {/* Line */}
+            <path
+              d={API_CALLS_7D.map((d, i) => {
+                const x = i * (600 / 6);
+                const y = 150 - (d.calls / maxCalls) * 130;
+                return `${i === 0 ? "M" : "L"}${x},${y}`;
+              }).join(" ")}
+              fill="none"
+              stroke="hsl(var(--primary))"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity="0.6"
+            />
+            {/* Dots */}
+            {API_CALLS_7D.map((d, i) => {
+              const x = i * (600 / 6);
+              const y = 150 - (d.calls / maxCalls) * 130;
+              return <circle key={i} cx={x} cy={y} r="3.5" fill="hsl(var(--primary))" opacity="0.5" />;
+            })}
+            {/* Day labels */}
+            {API_CALLS_7D.map((d, i) => (
+              <text key={i} x={i * (600 / 6)} y="175" textAnchor="middle" className="fill-muted-foreground text-[11px]">{d.day}</text>
+            ))}
+          </svg>
         </div>
       </div>
     </div>
