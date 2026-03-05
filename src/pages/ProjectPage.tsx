@@ -544,7 +544,9 @@ const ProjectPage = () => {
   // ─── Preview Content ───
   const PreviewContent = () => (
     <div className="flex-1 overflow-hidden">
-      {source === "platform" || generationDone ? (
+      {source === "platform" ? (
+        <GeneratedPreview appName={projectName} />
+      ) : generationDone ? (
         <GeneratedPreview />
       ) : isGenerating ? (
         <PreviewLoading progress={Math.min(Math.round(generationProgress), 95)} />

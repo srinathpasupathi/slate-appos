@@ -19,7 +19,7 @@ const kpis = [
   { icon: TrendingUp, label: "Avg Growth", value: "+18.2%", change: "vs 12.1% last yr", color: "text-amber-600 bg-amber-50" },
 ];
 
-const GeneratedPreview = () => {
+const GeneratedPreview = ({ appName }: { appName?: string }) => {
   const [search, setSearch] = useState("");
 
   const filtered = franchises.filter((f) =>
@@ -31,8 +31,8 @@ const GeneratedPreview = () => {
     <div className="h-full min-h-0 overflow-auto bg-slate-50 animate-fade-in">
       {/* Header */}
       <div className="bg-white border-b border-slate-200 px-6 py-5">
-        <h1 className="text-xl font-bold text-slate-900">Franchise Sales Management</h1>
-        <p className="text-sm text-slate-500 mt-0.5">Manage all your franchises across the globe</p>
+        <h1 className="text-xl font-bold text-slate-900">{appName || "Franchise Sales Management"}</h1>
+        <p className="text-sm text-slate-500 mt-0.5">Manage all your {appName ? appName.toLowerCase() : "franchises across the globe"}</p>
       </div>
 
       {/* KPIs */}
