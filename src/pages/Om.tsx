@@ -902,14 +902,14 @@ const SlateDashboard = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-blue-100/60 via-indigo-50/40 to-blue-50/30 pointer-events-none" />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
 
-          <div className={`relative flex-1 flex flex-col items-center px-6 lg:px-16 pb-24 ${layoutMode !== 'option1' ? 'justify-center' : ''}`}>
+          <div className={`relative flex-1 flex flex-col items-center justify-center px-6 lg:px-16 pb-24`}>
             {/* Preload IDE logos so they're cached across all layout modes */}
             <div className="hidden">
               {ideOptions.map(ide => ide.logo && <img key={ide.key} src={ide.logo} alt="" />)}
             </div>
             {layoutMode === 'option1' ? (
               /* === OPTION 1: Original tabbed layout === */
-              <div className="w-full flex flex-col items-center pt-[15vh]">
+              <div className="w-full flex flex-col items-center">
 
                 {/* Content area - starts from same position regardless of tab */}
                 <div className="w-full flex flex-col items-center">
