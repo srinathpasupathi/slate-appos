@@ -1,6 +1,7 @@
 import { Loader2 } from "lucide-react";
 
-const PreviewLoading = ({ progress }: { progress: number }) => {
+const PreviewLoading = ({ progress, phase = "generating" }: { progress: number; phase?: "generating" | "loading" }) => {
+  const isLoading = phase === "loading";
   return (
     <div className="h-full bg-background flex items-center justify-center">
       <div className="text-center space-y-6 px-8">
@@ -23,14 +24,18 @@ const PreviewLoading = ({ progress }: { progress: number }) => {
           </div>
         </div>
         <div>
-          <h3 className="text-base font-semibold text-foreground mb-1">Generating your app...</h3>
+          <h3 className="text-base font-semibold text-foreground mb-1">
+            {isLoading ? "Loading your app..." : "Generating your app..."}
+          </h3>
           <p className="text-sm text-muted-foreground max-w-sm">
-            Om is building your application. The preview will appear here once ready.
+            {isLoading
+              ? "Almost there! Your preview is loading now."
+              : "Om is building your application. The preview will appear here once ready."}
           </p>
         </div>
         <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
           <Loader2 className="h-3 w-3 animate-spin" />
-          <span>This usually takes about 10 seconds</span>
+          <span>{isLoading ? "Just a moment..." : "This usually takes about 10 seconds"}</span>
         </div>
       </div>
     </div>
