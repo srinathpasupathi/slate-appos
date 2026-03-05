@@ -24,6 +24,7 @@ import ObjectStorageView from "@/components/cloud/ObjectStorageView";
 import NoSQLDBView from "@/components/cloud/NoSQLDBView";
 import AuthenticationView from "@/components/cloud/AuthenticationView";
 import ServicePromoView from "@/components/ServicePromoView";
+import GitHubConnectDialog from "@/components/GitHubConnectDialog";
 
 // ─── Types & Constants ───
 
@@ -113,10 +114,16 @@ const ProjectPage = () => {
   const initialPrompt = searchParams.get("prompt") || DEFAULT_PROMPT;
   const projectName = searchParams.get("name") || "Franchise Sales App";
 
+  // GitHub connect state (platform mode)
+  const [githubConnected, setGithubConnected] = useState(false);
+  const [githubDialogOpen, setGithubDialogOpen] = useState(false);
+
   // Determine available tabs
   const availableTabs: TopTab[] = source === "build"
     ? ["preview", "code", "appos", "cloud"]
-    : ["appos", "cloud", "preview"];
+    : githubConnected
+      ? ["preview", "code", "appos", "cloud"]
+      : ["appos", "cloud", "preview"];
 
   const [activeTab, setActiveTab] = useState<TopTab>(availableTabs[0]);
 
@@ -394,7 +401,7 @@ const ProjectPage = () => {
         <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
         {AppNameDropdown()}
         {/* When collapsed, show expand button inline next to app name */}
-        {source === "build" && chatPanelCollapsed && (
+        {showChatPanel && chatPanelCollapsed && (
           <button
             onClick={() => setChatPanelCollapsed(false)}
             className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors ml-1"
@@ -406,13 +413,13 @@ const ProjectPage = () => {
       </div>
 
       {/* Tabs always centered */}
-      {source === "build" && (
+      {showChatPanel && (
         <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 flex items-center">
           {TabPills()}
         </div>
       )}
       {/* Collapse button animates at panel edge */}
-      {source === "build" && !chatPanelCollapsed && (
+      {showChatPanel && !chatPanelCollapsed && (
         <div
           className="absolute top-0 bottom-0 flex items-center"
           style={{
@@ -429,7 +436,7 @@ const ProjectPage = () => {
           </button>
         </div>
       )}
-      {source !== "build" && (
+      {!showChatPanel && (
         <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 flex items-center">
           {TabPills()}
         </div>
@@ -451,30 +458,40 @@ const ProjectPage = () => {
         </Popover>
 
         {/* GitHub */}
-        <Popover open={githubPopoverOpen} onOpenChange={setGithubPopoverOpen}>
-          <PopoverTrigger asChild>
-            <button className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-foreground hover:bg-muted/80 transition-colors">
-              <Github className="h-4 w-4" />
-            </button>
-          </PopoverTrigger>
-          <PopoverContent align="end" className="w-[320px] bg-card border-border p-0 rounded-xl">
-            <div className="p-5">
-              <h3 className="text-base font-semibold text-foreground mb-1">GitHub</h3>
-              <p className="text-sm text-muted-foreground">Sync your app 2-way with GitHub to collaborate at source.</p>
-            </div>
-            <div className="border-t border-border px-5 py-3 flex items-center justify-between">
-              <button className="h-7 w-7 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
-                <HelpCircle className="h-4 w-4" />
+        {source === "platform" && !githubConnected ? (
+          <button
+            onClick={() => setGithubDialogOpen(true)}
+            className="h-8 px-3 rounded-full bg-muted flex items-center gap-2 text-sm font-medium text-foreground hover:bg-muted/80 transition-colors"
+          >
+            <Github className="h-4 w-4" />
+            Connect Repo
+          </button>
+        ) : (
+          <Popover open={githubPopoverOpen} onOpenChange={setGithubPopoverOpen}>
+            <PopoverTrigger asChild>
+              <button className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-foreground hover:bg-muted/80 transition-colors">
+                <Github className="h-4 w-4" />
               </button>
-              <button
-                onClick={() => { setGithubPopoverOpen(false); setSettingsInitialTab("developer"); setSettingsOpen(true); }}
-                className="h-9 px-4 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted/50 flex items-center gap-2 transition-colors"
-              >
-                <Github className="h-4 w-4" /> Connect GitHub
-              </button>
-            </div>
-          </PopoverContent>
-        </Popover>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-[320px] bg-card border-border p-0 rounded-xl">
+              <div className="p-5">
+                <h3 className="text-base font-semibold text-foreground mb-1">GitHub</h3>
+                <p className="text-sm text-muted-foreground">Sync your app 2-way with GitHub to collaborate at source.</p>
+              </div>
+              <div className="border-t border-border px-5 py-3 flex items-center justify-between">
+                <button className="h-7 w-7 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                  <HelpCircle className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => { setGithubPopoverOpen(false); setSettingsInitialTab("developer"); setSettingsOpen(true); }}
+                  className="h-9 px-4 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted/50 flex items-center gap-2 transition-colors"
+                >
+                  <Github className="h-4 w-4" /> Connect GitHub
+                </button>
+              </div>
+            </PopoverContent>
+          </Popover>
+        )}
 
         <PublishButton externalOpen={publishOpen} onExternalOpenChange={setPublishOpen} initialPublished={source === "platform"} />
       </div>
@@ -776,7 +793,14 @@ const ProjectPage = () => {
   };
 
   // ─── Determine if chat panel should show ───
-  const showChatPanel = source === "build";
+  const showChatPanel = source === "build" || (source === "platform" && githubConnected);
+
+  const handleGithubConnected = (repoName: string) => {
+    setGithubDialogOpen(false);
+    setGithubConnected(true);
+    setGenerationDone(true);
+    setActiveTab("preview");
+  };
 
   return (
     <div className="flex flex-col h-screen bg-background overflow-hidden">
@@ -812,6 +836,7 @@ const ProjectPage = () => {
       </div>
 
       <SettingsOverlay open={settingsOpen} onClose={() => { setSettingsOpen(false); setSettingsInitialTab(undefined); }} initialTab={settingsInitialTab} />
+      <GitHubConnectDialog open={githubDialogOpen} onOpenChange={setGithubDialogOpen} onConnected={handleGithubConnected} />
     </div>
   );
 };
