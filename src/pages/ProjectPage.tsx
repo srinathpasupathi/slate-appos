@@ -298,7 +298,7 @@ const ProjectPage = () => {
         <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
         {AppNameDropdown()}
         {/* When collapsed, show expand button inline next to app name */}
-        {source === "build" && (activeTab === "preview" || activeTab === "code") && chatPanelCollapsed && (
+        {source === "build" && chatPanelCollapsed && (
           <button
             onClick={() => setChatPanelCollapsed(false)}
             className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors ml-1"
@@ -310,7 +310,7 @@ const ProjectPage = () => {
       </div>
 
       {/* When expanded, position collapse button + tabs at the right panel edge */}
-      {source === "build" && (activeTab === "preview" || activeTab === "code") && !chatPanelCollapsed && (
+      {source === "build" && !chatPanelCollapsed && (
         <div
           className="absolute top-0 bottom-0 flex items-center gap-1"
           style={{ left: `calc(${leftPanelWidth}% - 28px)` }}
@@ -326,13 +326,13 @@ const ProjectPage = () => {
           {TabPills()}
         </div>
       )}
-      {/* When collapsed or non-build tabs, center the tab pills */}
-      {source === "build" && (activeTab === "preview" || activeTab === "code") && chatPanelCollapsed && (
+      {/* When collapsed, center the tab pills */}
+      {source === "build" && chatPanelCollapsed && (
         <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 flex items-center">
           {TabPills()}
         </div>
       )}
-      {!(source === "build" && (activeTab === "preview" || activeTab === "code")) && (
+      {source !== "build" && (
         <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 flex items-center">
           {TabPills()}
         </div>
@@ -609,7 +609,7 @@ const ProjectPage = () => {
   };
 
   // ─── Determine if chat panel should show ───
-  const showChatPanel = source === "build" && (activeTab === "preview" || activeTab === "code");
+  const showChatPanel = source === "build";
 
   return (
     <div className="flex flex-col h-screen bg-background overflow-hidden">
