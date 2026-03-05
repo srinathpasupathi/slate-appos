@@ -758,23 +758,25 @@ const BackendProjectsListing = ({ type, onCreateNew, onCardClick }: { type: 'pla
 
   return (
     <div className="w-full space-y-6 self-start pt-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-semibold text-foreground">{isAppOS ? 'AppOS' : 'Cloud'} {pluralLabel}</h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            {items.length} {items.length === 1 ? label.toLowerCase() : pluralLabel.toLowerCase()} created
-          </p>
-        </div>
-        <button
-          onClick={onCreateNew}
-          className="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors flex items-center gap-2"
-        >
-          <Plus className="h-4 w-4" />
-          Create {label}
-        </button>
+      <div>
+        <h2 className="text-xl font-semibold text-foreground">{isAppOS ? 'AppOS' : 'Cloud'} {pluralLabel}</h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          {items.length} {items.length === 1 ? label.toLowerCase() : pluralLabel.toLowerCase()} created
+        </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {/* Create new card - always first */}
+        <button
+          onClick={onCreateNew}
+          className="rounded-xl border-2 border-dashed border-border hover:border-primary/40 bg-muted/20 hover:bg-muted/40 p-5 flex flex-col items-center justify-center gap-3 transition-all min-h-[160px]"
+        >
+          <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center">
+            <Plus className="h-5 w-5 text-muted-foreground" />
+          </div>
+          <p className="text-sm font-medium text-muted-foreground">Create {label}</p>
+        </button>
+
         {items.map((item) => (
           <button
             key={item.name}
@@ -795,17 +797,6 @@ const BackendProjectsListing = ({ type, onCreateNew, onCardClick }: { type: 'pla
             <p className="text-xs text-muted-foreground mt-2">Created {item.createdAt}</p>
           </button>
         ))}
-
-        {/* Create new card */}
-        <button
-          onClick={onCreateNew}
-          className="rounded-xl border-2 border-dashed border-border hover:border-primary/40 bg-muted/20 hover:bg-muted/40 p-5 flex flex-col items-center justify-center gap-3 transition-all min-h-[160px]"
-        >
-          <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center">
-            <Plus className="h-5 w-5 text-muted-foreground" />
-          </div>
-          <p className="text-sm font-medium text-muted-foreground">Create {label}</p>
-        </button>
       </div>
     </div>
   );
