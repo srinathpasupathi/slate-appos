@@ -1254,7 +1254,7 @@ const ConfigurationTab = () => {
 
   const toggleSection = (id: string) => setOpenSection(openSection === id ? null : id);
 
-  const font = "'Inter', sans-serif";
+  
 
   // New localhost form handlers
   const handleAddNewEmail = () => {
@@ -1320,9 +1320,9 @@ const ConfigurationTab = () => {
   };
 
   return (
-    <div className="space-y-5" style={{ fontFamily: font }}>
+    <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-semibold tracking-tight">Configuration</h2>
+        <h2 className="text-xl font-semibold tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>Configuration</h2>
         <p className="text-sm text-muted-foreground mt-0.5">Manage app-level settings and security.</p>
       </div>
 
