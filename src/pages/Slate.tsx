@@ -920,7 +920,7 @@ const SlateDashboard = () => {
                   {mainTab === 'build' ? (
                     <>
                       <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        What should we build, Srinath?
+                        What should we build on Om, Srinath?
                       </h1>
                     </>
                   ) : (
@@ -946,7 +946,7 @@ const SlateDashboard = () => {
                         <textarea
                           value={prompt}
                           onChange={(e) => setPrompt(e.target.value)}
-                          placeholder="Ask Om to create an app about... "
+                          placeholder="Describe the app you want to build…"
                           rows={4}
                           className="w-full resize-none rounded-t-xl bg-transparent px-5 pt-4 pb-2 text-sm md:text-base text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
                         />
@@ -1041,7 +1041,7 @@ const SlateDashboard = () => {
                 <div className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center px-4">
                   <div className="w-full max-w-3xl flex flex-col items-center">
                     <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                      What should we build, Srinath?
+                      What should we build on Om, Srinath?
                     </h1>
 
                     {/* Prompt box */}
@@ -1060,7 +1060,7 @@ const SlateDashboard = () => {
                         <textarea
                           value={prompt}
                           onChange={(e) => setPrompt(e.target.value)}
-                          placeholder="Ask Om to create an app about... "
+                          placeholder="Describe the app you want to build…"
                           rows={4}
                           className="w-full resize-none rounded-t-xl bg-transparent px-5 pt-4 pb-2 text-sm md:text-base text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
                         />
@@ -1174,7 +1174,7 @@ const SlateDashboard = () => {
                 <div className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center px-4">
                   <div className="w-full max-w-3xl flex flex-col items-center">
                     <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                      What should we build, Srinath?
+                      What should we build on Om, Srinath?
                     </h1>
 
                     {/* Prompt box */}
@@ -1193,7 +1193,7 @@ const SlateDashboard = () => {
                         <textarea
                           value={prompt}
                           onChange={(e) => setPrompt(e.target.value)}
-                          placeholder="Ask Om to create an app about... "
+                          placeholder="Describe the app you want to build…"
                           rows={4}
                           className="w-full resize-none rounded-t-xl bg-transparent px-5 pt-4 pb-2 text-sm md:text-base text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
                         />
