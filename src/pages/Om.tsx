@@ -944,7 +944,7 @@ const SlateDashboard = () => {
             </div>
             {layoutMode === 'option1' ? (
               /* === OPTION 1: Original tabbed layout === */
-              <div className="w-full flex flex-col items-center">
+              <div className="w-full flex flex-col items-center flex-1 justify-center">
 
                 {/* Content area - starts from same position regardless of tab */}
                 <div className="w-full flex flex-col items-center">
