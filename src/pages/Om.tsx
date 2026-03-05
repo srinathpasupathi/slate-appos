@@ -736,6 +736,74 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
   );
 };
 
+const appOsBackends = [
+  { name: "franchise-sales-mgmt", url: "franchise-sales.us.omcloud.ai", status: "Active", createdAt: "Feb 10, 2026" },
+  { name: "crm-analytics-dashboard", url: "crm-analytics.us.omcloud.ai", status: "Active", createdAt: "Jan 18, 2026" },
+];
+
+const cloudProjects = [
+  { name: "franchise-sales-cloud", url: "franchise-sales.catalystcloud.in", status: "Active", createdAt: "Feb 12, 2026" },
+];
+
+const BackendProjectsListing = ({ type, onCreateNew }: { type: 'platform' | 'cloud'; onCreateNew: () => void }) => {
+  const isAppOS = type === 'platform';
+  const items = isAppOS ? appOsBackends : cloudProjects;
+  const label = isAppOS ? 'Backend' : 'Project';
+  const pluralLabel = isAppOS ? 'Backends' : 'Projects';
+
+  return (
+    <div className="w-full max-w-3xl mx-auto space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold text-foreground">{isAppOS ? 'AppOS' : 'Cloud'} {pluralLabel}</h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            {items.length} {items.length === 1 ? label.toLowerCase() : pluralLabel.toLowerCase()} created
+          </p>
+        </div>
+        <button
+          onClick={onCreateNew}
+          className="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          Create {label}
+        </button>
+      </div>
+
+      <div className="space-y-3">
+        {items.map((item) => (
+          <div key={item.name} className="rounded-xl border border-border bg-card p-5 hover:border-primary/30 transition-colors">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  {isAppOS ? <Server className="h-5 w-5 text-primary" /> : <Database className="h-5 w-5 text-primary" />}
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground">{item.name}</p>
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="text-xs text-muted-foreground">{item.url}</span>
+                    <span className="text-xs text-muted-foreground">·</span>
+                    <span className="text-xs text-muted-foreground">{item.createdAt}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  {item.status}
+                </span>
+                <button className="h-8 w-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                  <ExternalLink className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
 const SlateDashboard = () => {
   const [prompt, setPrompt] = useState("");
   const [_activeTab, setActiveTab] = useState("my");
@@ -748,6 +816,7 @@ const SlateDashboard = () => {
   const [mainTab, setMainTab] = useState<'build' | 'platform' | 'cloud'>('build');
   const [layoutMode, setLayoutMode] = useState<'option1' | 'option2' | 'option3'>('option1');
   const [ideFlowActive, setIdeFlowActive] = useState(false);
+  const [showIdeSelector, setShowIdeSelector] = useState<'platform' | 'cloud' | null>(null);
   const [recentProjects, setRecentProjects] = useState(defaultRecentProjects);
   const navigate = useNavigate();
 
@@ -832,7 +901,7 @@ const SlateDashboard = () => {
           ]).map(tab => (
             <button
               key={tab.key}
-              onClick={() => setMainTab(tab.key)}
+              onClick={() => { setMainTab(tab.key); setShowIdeSelector(null); }}
               className={`px-5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
                 mainTab === tab.key
                   ? 'bg-background text-foreground shadow-sm'
@@ -954,8 +1023,13 @@ const SlateDashboard = () => {
                         What should we build, Srinath?
                       </h1>
                     </>
-                  ) : (
+                  ) : showIdeSelector === mainTab ? (
                     <PlatformIDESelector onCreateUntitled={handleCreateUntitled} onRenameProject={handleRenameProject} title={mainTab === 'platform' ? 'Connect AppOS to your AI IDE' : 'Connect Om Cloud to your AI IDE'} />
+                  ) : (
+                    <BackendProjectsListing
+                      type={mainTab}
+                      onCreateNew={() => setShowIdeSelector(mainTab)}
+                    />
                   )}
                 </div>
 
