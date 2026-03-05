@@ -212,14 +212,30 @@ const ProjectPage = () => {
     return () => clearInterval(interval);
   }, [generationDone, previewReady]);
 
-  // After generation completes, reveal the preview immediately
+  // After generation completes, show success message then reveal preview
   useEffect(() => {
     if (!generationDone || previewReady) return;
-    const timer = setTimeout(() => {
+
+    // Show success message
+    const successTimer = setTimeout(() => {
+      setMessages((prev) => [...prev, {
+        id: `frontend-ready-${Date.now()}`,
+        role: "assistant",
+        content: `Your **frontend app is ready** 🎉\n\nLoading your preview now...`,
+        timestamp: new Date(),
+      }]);
+    }, 500);
+
+    // Then reveal the preview
+    const previewTimer = setTimeout(() => {
       setGenerationProgress(100);
       setPreviewReady(true);
-    }, 1500);
-    return () => clearTimeout(timer);
+    }, 3000);
+
+    return () => {
+      clearTimeout(successTimer);
+      clearTimeout(previewTimer);
+    };
   }, [generationDone, previewReady]);
 
   // Build mode: seed initial prompt
