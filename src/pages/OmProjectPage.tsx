@@ -134,12 +134,12 @@ const ProjectPage = () => {
   const [githubConnected, setGithubConnected] = useState(false);
   const [githubDialogOpen, setGithubDialogOpen] = useState(false);
 
-  // Determine available tabs
+  // Determine available tabs (AppOS and Cloud tabs hidden from top bar)
   const availableTabs: TopTab[] = source === "build"
-    ? ["preview", "code", "appos", "cloud"]
+    ? ["preview", "code"]
     : githubConnected
-      ? ["preview", "code", "appos", "cloud"]
-      : ["preview", "appos", "cloud"];
+      ? ["preview", "code"]
+      : ["preview"];
 
   const [activeTab, setActiveTab] = useState<TopTab>(source === "build" ? "preview" : "appos");
 
