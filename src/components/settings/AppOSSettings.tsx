@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { Database, CheckCircle2, AlertCircle } from "lucide-react";
+import { CheckCircle2, AlertCircle, Database } from "lucide-react";
 
-const AppOSSettings = () => {
-  const [enabled, setEnabled] = useState(false);
+interface AppOSSettingsProps {
+  enabled: boolean;
+  onToggle: (enabled: boolean) => void;
+}
 
+const AppOSSettings = ({ enabled, onToggle }: AppOSSettingsProps) => {
   return (
     <div className="space-y-6">
       {!enabled ? (
@@ -18,7 +20,7 @@ const AppOSSettings = () => {
             </p>
           </div>
           <button
-            onClick={() => setEnabled(true)}
+            onClick={() => onToggle(true)}
             className="h-9 px-5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
           >
             Enable AppOS
@@ -27,14 +29,22 @@ const AppOSSettings = () => {
       ) : (
         <div className="space-y-4">
           <div className="rounded-xl border border-border bg-card p-5">
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground">AppOS is enabled</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">AppOS backend services are active for this app.</p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-medium text-foreground">AppOS is enabled</p>
-                <p className="text-xs text-muted-foreground mt-0.5">AppOS backend services are active for this app.</p>
-              </div>
+              <button
+                onClick={() => onToggle(false)}
+                className="h-8 px-3 rounded-lg border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              >
+                Disable
+              </button>
             </div>
           </div>
 

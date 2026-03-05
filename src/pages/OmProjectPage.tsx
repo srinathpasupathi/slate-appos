@@ -134,12 +134,7 @@ const ProjectPage = () => {
   const [githubConnected, setGithubConnected] = useState(false);
   const [githubDialogOpen, setGithubDialogOpen] = useState(false);
 
-  // Determine available tabs (AppOS and Cloud tabs hidden from top bar)
-  const availableTabs: TopTab[] = source === "build"
-    ? ["preview", "code"]
-    : githubConnected
-      ? ["preview", "code"]
-      : ["preview"];
+  
 
   const [activeTab, setActiveTab] = useState<TopTab>(source === "build" ? "preview" : "appos");
 
@@ -175,6 +170,13 @@ const ProjectPage = () => {
   const [autoApproveResources, setAutoApproveResources] = useState(false);
   const [backendPromptShown, setBackendPromptShown] = useState(false);
   const [previewReady, setPreviewReady] = useState(false);
+
+  // Determine available tabs — AppOS/Cloud shown only when enabled
+  const availableTabs: TopTab[] = source === "build"
+    ? ["preview", "code", ...(appOsEnabled ? ["appos" as TopTab] : []), ...(cloudEnabled ? ["cloud" as TopTab] : [])]
+    : githubConnected
+      ? ["preview", "code", ...(appOsEnabled ? ["appos" as TopTab] : []), ...(cloudEnabled ? ["cloud" as TopTab] : [])]
+      : ["preview", ...(appOsEnabled ? ["appos" as TopTab] : []), ...(cloudEnabled ? ["cloud" as TopTab] : [])];
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -1227,7 +1229,7 @@ const ProjectPage = () => {
         </div>
       </div>
 
-      <SettingsOverlay open={settingsOpen} onClose={() => { setSettingsOpen(false); setSettingsInitialTab(undefined); }} initialTab={settingsInitialTab} />
+      <SettingsOverlay open={settingsOpen} onClose={() => { setSettingsOpen(false); setSettingsInitialTab(undefined); }} initialTab={settingsInitialTab} appOsEnabled={appOsEnabled} onAppOsToggle={setAppOsEnabled} cloudEnabled={cloudEnabled} onCloudToggle={setCloudEnabled} />
       <GitHubConnectDialog open={githubDialogOpen} onOpenChange={setGithubDialogOpen} onConnected={handleGithubConnected} />
     </div>
   );
