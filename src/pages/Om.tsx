@@ -816,7 +816,10 @@ const SlateDashboard = () => {
             className="p-1 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground"
             title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            <Layers className="h-4 w-4" />
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="1.5" y="2.5" width="5" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
+              <rect x="9.5" y="2.5" width="5" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
           </button>
         </div>
 
