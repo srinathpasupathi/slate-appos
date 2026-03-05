@@ -476,7 +476,7 @@ const ProjectPage = () => {
           </PopoverContent>
         </Popover>
 
-        <PublishButton externalOpen={publishOpen} onExternalOpenChange={setPublishOpen} />
+        <PublishButton externalOpen={publishOpen} onExternalOpenChange={setPublishOpen} initialPublished={source === "platform"} />
       </div>
     </div>
   );
@@ -1949,11 +1949,11 @@ const SharePanel = ({ onPublishClick }: { onPublishClick?: () => void }) => {
 };
 
 // ─── Publish Button ───
-const PublishButton = ({ externalOpen, onExternalOpenChange }: { externalOpen?: boolean; onExternalOpenChange?: (v: boolean) => void }) => {
+const PublishButton = ({ externalOpen, onExternalOpenChange, initialPublished = false }: { externalOpen?: boolean; onExternalOpenChange?: (v: boolean) => void; initialPublished?: boolean }) => {
   const [internalOpen, setInternalOpen] = useState(false);
   const open = externalOpen !== undefined ? externalOpen : internalOpen;
   const setOpen = (v: boolean) => { setInternalOpen(v); onExternalOpenChange?.(v); };
-  const [isPublished, setIsPublished] = useState(false);
+  const [isPublished, setIsPublished] = useState(initialPublished);
   const [copied, setCopied] = useState(false);
   const [view, setView] = useState<"main" | "editSettings" | "websiteInfo" | "websiteAccess" | "editUrl">("main");
   const [appTitle, setAppTitle] = useState("Slate app");
