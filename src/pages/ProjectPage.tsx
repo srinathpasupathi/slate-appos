@@ -23,6 +23,7 @@ import RelationalDBView from "@/components/cloud/RelationalDBView";
 import ObjectStorageView from "@/components/cloud/ObjectStorageView";
 import NoSQLDBView from "@/components/cloud/NoSQLDBView";
 import AuthenticationView from "@/components/cloud/AuthenticationView";
+import ServicePromoView from "@/components/ServicePromoView";
 
 // ─── Types & Constants ───
 
@@ -138,9 +139,13 @@ const ProjectPage = () => {
   const [appOsSection, setAppOsSection] = useState("overview");
   const [selectedUser, setSelectedUser] = useState<AppUser | null>(null);
   const [copied, setCopied] = useState(false);
+  const [appOsEnabled, setAppOsEnabled] = useState(source === "platform");
+  const [appOsEnabling, setAppOsEnabling] = useState(false);
 
   // Cloud state
   const [cloudSection, setCloudSection] = useState("authentication");
+  const [cloudEnabled, setCloudEnabled] = useState(source === "platform");
+  const [cloudEnabling, setCloudEnabling] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -232,6 +237,46 @@ const ProjectPage = () => {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); }
+  };
+
+  const handleEnableService = (service: "appos" | "cloud") => {
+    const label = service === "appos" ? "AppOS" : "Cloud";
+    const setEnabling = service === "appos" ? setAppOsEnabling : setCloudEnabling;
+    const setEnabled = service === "appos" ? setAppOsEnabled : setCloudEnabled;
+
+    const userMsg: Message = {
+      id: `enable-${service}-user-${Date.now()}`,
+      role: "user",
+      content: `Enable ${label} for this project`,
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, userMsg]);
+    setEnabling(true);
+    if (chatPanelCollapsed) setChatPanelCollapsed(false);
+
+    setTimeout(() => {
+      setMessages((prev) => [...prev, {
+        id: `enable-${service}-ack-${Date.now()}`,
+        role: "assistant",
+        content: `Sure! I'm enabling **${label}** for your project now. Setting up the required infrastructure...`,
+        timestamp: new Date(),
+      }]);
+    }, 800);
+
+    setTimeout(() => {
+      setMessages((prev) => [...prev, {
+        id: `enable-${service}-done-${Date.now()}`,
+        role: "assistant",
+        content: `✅ **${label} has been enabled** for your project!\n\n${
+          service === "appos"
+            ? "You now have access to:\n• **Users & Profiles** – Manage application users\n• **Workflows & Automation** – Build business logic\n• **Roles & Permissions** – Fine-grained access control\n• **Query Console** – Run data queries\n• **Deployments** – Manage releases"
+            : "You now have access to:\n• **Authentication** – User sign-in & management\n• **Relational DB** – PostgreSQL database\n• **Object Storage** – File & media storage\n• **NoSQL DB** – Document database\n• **Functions** – Serverless backend logic\n• **Schedulers, Mail & Logs**"
+        }\n\nYou can explore the **${label}** tab now.`,
+        timestamp: new Date(),
+      }]);
+      setEnabling(false);
+      setEnabled(true);
+    }, 3500);
   };
 
   // ─── Tab label config ───
@@ -542,7 +587,11 @@ const ProjectPage = () => {
   );
 
   // ─── AppOS Content ───
-  const AppOSContent = () => (
+  const AppOSContent = () => {
+    if (!appOsEnabled) {
+      return <ServicePromoView type="appos" enabling={appOsEnabling} onEnable={() => handleEnableService("appos")} />;
+    }
+    return (
     <div className="flex flex-1 overflow-hidden h-full">
       {/* Sidebar nav */}
       <aside className="w-48 border-r border-border bg-card flex flex-col shrink-0">
@@ -585,10 +634,14 @@ const ProjectPage = () => {
         </div>
       </main>
     </div>
-  );
+    );
+  };
 
   // ─── Cloud Content ───
   const CloudContent = () => {
+    if (!cloudEnabled) {
+      return <ServicePromoView type="cloud" enabling={cloudEnabling} onEnable={() => handleEnableService("cloud")} />;
+    }
     const renderCloudSection = () => {
       if (cloudSection === "authentication") {
         return <AuthenticationView />;
@@ -1537,8 +1590,6 @@ const ConfigurationTab = () => {
   const [trustedDomainError, setTrustedDomainError] = useState<string | null>(null);
 
   const toggleSection = (id: string) => setOpenSection(openSection === id ? null : id);
-
-  
 
   // New localhost form handlers
   const handleAddNewEmail = () => {
