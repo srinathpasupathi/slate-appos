@@ -1,4 +1,4 @@
-import { Boxes, Server } from "lucide-react";
+import { Boxes, Server, Users, Workflow, ShieldCheck, LayoutGrid, Database, Lock, HardDrive, Code } from "lucide-react";
 
 interface PromoViewProps {
   type: "appos" | "cloud";
@@ -6,41 +6,114 @@ interface PromoViewProps {
   onEnable: () => void;
 }
 
-const APPOS_HIGHLIGHTS = ["User Management", "Workflows", "Permissions"];
-const CLOUD_HIGHLIGHTS = ["Database", "Auth", "Storage", "Functions"];
-
 const ServicePromoView = ({ type, enabling, onEnable }: PromoViewProps) => {
   const isAppOS = type === "appos";
-  const highlights = isAppOS ? APPOS_HIGHLIGHTS : CLOUD_HIGHLIGHTS;
 
+  if (isAppOS) {
+    return (
+      <div className="flex-1 flex items-center justify-center p-8">
+        <div className="max-w-lg w-full text-center">
+          {/* Illustration cluster */}
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <div className="h-10 w-10 rounded-xl bg-primary/[0.07] flex items-center justify-center">
+              <LayoutGrid className="h-5 w-5 text-primary/60" />
+            </div>
+            <div className="h-14 w-14 rounded-2xl bg-primary/[0.10] flex items-center justify-center ring-1 ring-primary/[0.08]">
+              <Boxes className="h-7 w-7 text-primary/80" />
+            </div>
+            <div className="h-10 w-10 rounded-xl bg-primary/[0.07] flex items-center justify-center">
+              <Workflow className="h-5 w-5 text-primary/60" />
+            </div>
+          </div>
+
+          {/* Heading */}
+          <h2 className="text-2xl font-semibold text-foreground tracking-tight mb-2">
+            AppOS <span className="text-muted-foreground font-normal">— Business Backend</span>
+          </h2>
+
+          {/* Description */}
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-md mx-auto mb-7">
+            A ready-to-use backend for building business applications with built-in modules, user management, workflows, and permissions.
+          </p>
+
+          {/* Feature chips */}
+          <div className="flex items-center justify-center flex-wrap gap-2 mb-9">
+            {[
+              { icon: LayoutGrid, label: "Modules" },
+              { icon: Users, label: "Users" },
+              { icon: Workflow, label: "Workflows" },
+              { icon: ShieldCheck, label: "Permissions" },
+            ].map(({ icon: Icon, label }) => (
+              <span
+                key={label}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/60 border border-border/50 text-xs font-medium text-muted-foreground"
+              >
+                <Icon className="h-3 w-3" />
+                {label}
+              </span>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <button
+            onClick={onEnable}
+            disabled={enabling}
+            className="h-10 px-8 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-2 shadow-sm"
+          >
+            {enabling ? (
+              <>
+                <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="opacity-25" />
+                  <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                </svg>
+                Enabling…
+              </>
+            ) : (
+              "Enable AppOS"
+            )}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Cloud promo
   return (
-    <div className="flex-1 flex items-center justify-center">
-      <div className="max-w-md w-full px-8 text-center">
-        <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-primary/8 mb-5">
-          {isAppOS
-            ? <Boxes className="h-6 w-6 text-primary/70" />
-            : <Server className="h-6 w-6 text-primary/70" />
-          }
+    <div className="flex-1 flex items-center justify-center p-8">
+      <div className="max-w-lg w-full text-center">
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <div className="h-10 w-10 rounded-xl bg-primary/[0.07] flex items-center justify-center">
+            <Database className="h-5 w-5 text-primary/60" />
+          </div>
+          <div className="h-14 w-14 rounded-2xl bg-primary/[0.10] flex items-center justify-center ring-1 ring-primary/[0.08]">
+            <Server className="h-7 w-7 text-primary/80" />
+          </div>
+          <div className="h-10 w-10 rounded-xl bg-primary/[0.07] flex items-center justify-center">
+            <Lock className="h-5 w-5 text-primary/60" />
+          </div>
         </div>
 
-        <h2 className="text-xl font-semibold text-foreground mb-2">
-          {isAppOS ? "AppOS" : "Cloud"}
+        <h2 className="text-2xl font-semibold text-foreground tracking-tight mb-2">
+          Cloud <span className="text-muted-foreground font-normal">— Managed Infrastructure</span>
         </h2>
 
-        <p className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-sm mx-auto">
-          {isAppOS
-            ? "A business-grade backend with built-in user management, workflow automation, and role-based access control."
-            : "Managed infrastructure with databases, authentication, file storage, and serverless functions."
-          }
+        <p className="text-sm text-muted-foreground leading-relaxed max-w-md mx-auto mb-7">
+          Managed infrastructure with databases, authentication, file storage, and serverless functions — ready to scale.
         </p>
 
-        <div className="flex items-center justify-center gap-2 mb-8">
-          {highlights.map((h, i) => (
+        <div className="flex items-center justify-center flex-wrap gap-2 mb-9">
+          {[
+            { icon: Database, label: "Database" },
+            { icon: Lock, label: "Auth" },
+            { icon: HardDrive, label: "Storage" },
+            { icon: Code, label: "Functions" },
+          ].map(({ icon: Icon, label }) => (
             <span
-              key={h}
-              className="text-xs text-muted-foreground/80 font-medium"
+              key={label}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/60 border border-border/50 text-xs font-medium text-muted-foreground"
             >
-              {h}{i < highlights.length - 1 && <span className="ml-2 text-border">·</span>}
+              <Icon className="h-3 w-3" />
+              {label}
             </span>
           ))}
         </div>
@@ -48,7 +121,7 @@ const ServicePromoView = ({ type, enabling, onEnable }: PromoViewProps) => {
         <button
           onClick={onEnable}
           disabled={enabling}
-          className="h-10 px-7 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-2"
+          className="h-10 px-8 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-2 shadow-sm"
         >
           {enabling ? (
             <>
@@ -56,10 +129,10 @@ const ServicePromoView = ({ type, enabling, onEnable }: PromoViewProps) => {
                 <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="opacity-25" />
                 <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
               </svg>
-              Enabling...
+              Enabling…
             </>
           ) : (
-            `Enable ${isAppOS ? "AppOS" : "Cloud"}`
+            "Enable Cloud"
           )}
         </button>
       </div>
