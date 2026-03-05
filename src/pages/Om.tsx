@@ -1253,42 +1253,59 @@ const SlateDashboard = () => {
                     </div>
 
                     {/* All Projects / Templates tabs - peeks at bottom */}
-                    <div className="max-w-4xl w-full mx-auto px-4 pb-16">
-                      <div className="flex items-center gap-1 border-b border-border mb-4">
-                        {(['all', 'templates'] as const).map(tab => (
-                          <button
-                            key={tab}
-                            onClick={() => setProjectListTab(tab)}
-                            className={`px-4 py-2 text-sm font-medium transition-colors relative ${
-                              projectListTab === tab
-                                ? 'text-foreground'
-                                : 'text-muted-foreground hover:text-foreground'
-                            }`}
-                          >
-                            {tab === 'all' ? 'All Projects' : 'Templates'}
-                            {projectListTab === tab && (
-                              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
-                            )}
-                          </button>
-                        ))}
+                    <div className="max-w-5xl w-full mx-auto px-4 pb-16">
+                      <div className="flex items-center border-b border-border mb-6">
+                        <div className="flex items-center gap-1 flex-1">
+                          {(['all', 'templates'] as const).map(tab => (
+                            <button
+                              key={tab}
+                              onClick={() => setProjectListTab(tab)}
+                              className={`px-4 py-2 text-sm font-medium transition-colors relative ${
+                                projectListTab === tab
+                                  ? 'text-foreground'
+                                  : 'text-muted-foreground hover:text-foreground'
+                              }`}
+                            >
+                              {tab === 'all' ? 'All Projects' : 'Templates'}
+                              {projectListTab === tab && (
+                                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                        <button className="p-2 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground mb-1">
+                          <Search className="h-4 w-4" />
+                        </button>
                       </div>
 
                       {projectListTab === 'all' ? (
-                        <div className="grid gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                           {projectCards.map((project) => (
                             <button
                               key={project.title}
                               onClick={() => navigate(`/om/project?source=build&name=${encodeURIComponent(project.title)}`)}
-                              className="flex items-center gap-4 px-4 py-3.5 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-left group"
+                              className="rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-md transition-all text-left group overflow-hidden"
                             >
-                              <div className={`h-9 w-9 rounded-lg bg-gradient-to-br ${project.color} flex items-center justify-center shrink-0`}>
-                                <Layers className="h-4 w-4 text-primary" />
+                              {/* Thumbnail preview */}
+                              <div className={`h-32 w-full bg-gradient-to-br ${project.color} flex items-center justify-center`}>
+                                <div className="w-[85%] h-[80%] rounded-md bg-card/80 border border-border/50 shadow-sm flex flex-col p-2.5 gap-1.5">
+                                  <div className="flex items-center gap-1.5">
+                                    <div className="h-2 w-2 rounded-full bg-red-400/60" />
+                                    <div className="h-2 w-2 rounded-full bg-yellow-400/60" />
+                                    <div className="h-2 w-2 rounded-full bg-green-400/60" />
+                                  </div>
+                                  <div className="flex-1 flex flex-col gap-1">
+                                    <div className="h-1.5 w-3/4 rounded-full bg-muted-foreground/15" />
+                                    <div className="h-1.5 w-1/2 rounded-full bg-muted-foreground/10" />
+                                    <div className="h-1.5 w-2/3 rounded-full bg-muted-foreground/10" />
+                                  </div>
+                                </div>
                               </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{project.title}</p>
-                                <p className="text-xs text-muted-foreground truncate">{project.description}</p>
+                              {/* App name */}
+                              <div className="px-3.5 py-3">
+                                <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors truncate">{project.title}</p>
+                                <p className="text-xs text-muted-foreground truncate mt-0.5">{project.description}</p>
                               </div>
-                              <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                             </button>
                           ))}
                         </div>
