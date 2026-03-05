@@ -22,6 +22,7 @@ import SettingsOverlay from "@/components/SettingsOverlay";
 import RelationalDBView from "@/components/cloud/RelationalDBView";
 import ObjectStorageView from "@/components/cloud/ObjectStorageView";
 import NoSQLDBView from "@/components/cloud/NoSQLDBView";
+import AuthenticationView from "@/components/cloud/AuthenticationView";
 
 // ─── Types & Constants ───
 
@@ -586,6 +587,9 @@ const ProjectPage = () => {
   // ─── Cloud Content ───
   const CloudContent = () => {
     const renderCloudSection = () => {
+      if (cloudSection === "authentication") {
+        return <AuthenticationView />;
+      }
       if (cloudSection === "relational-db") {
         return <RelationalDBView />;
       }
@@ -603,19 +607,6 @@ const ProjectPage = () => {
             <h2 className="text-xl font-semibold tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>{title}</h2>
             <p className="text-sm text-muted-foreground mt-1">Manage {title.toLowerCase()} for your application.</p>
           </div>
-          {cloudSection === "authentication" && (
-            <div className="grid gap-4">
-              <InfoCard label="Provider">
-                <Badge variant="secondary" className="text-xs font-medium">Email + OAuth</Badge>
-              </InfoCard>
-              <InfoCard label="Active Users">
-                <span className="text-sm text-foreground">156 active users</span>
-              </InfoCard>
-              <InfoCard label="Sessions">
-                <span className="text-sm text-foreground">1,248 sessions (30d)</span>
-              </InfoCard>
-            </div>
-          )}
           {cloudSection === "object-storage" && (
             <ObjectStorageView />
           )}
@@ -690,7 +681,7 @@ const ProjectPage = () => {
           </div>
         </aside>
         <main className="flex-1 overflow-y-auto">
-          {(cloudSection === "relational-db" || cloudSection === "object-storage" || cloudSection === "nosql-db") ? (
+          {(cloudSection === "authentication" || cloudSection === "relational-db" || cloudSection === "object-storage" || cloudSection === "nosql-db") ? (
             renderCloudSection()
           ) : (
             <div className="px-6 py-6">
