@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, GitBranch, ChevronUp, ChevronDown, Copy, Rocket, Bell, AppWindow, Layers, X, Database, Paperclip, Plug, Server, FileText, Trash2, PanelLeftClose, PanelLeftOpen, ExternalLink, Pencil,
+  Home, Search, Clock, Grid3X3, Users, Plus, ArrowRight, Settings, UserPlus, Globe, Check, LogOut, User, Code2, GitBranch, ChevronUp, ChevronDown, Copy, Rocket, Bell, AppWindow, Layers, X, Database, Paperclip, Plug, Server, FileText, Trash2, PanelLeftClose, PanelLeftOpen, ExternalLink, Pencil, ArrowLeft, LayoutDashboard, Boxes, DatabaseZap, Wrench, Lock, FolderTree, Zap, RotateCcw, Send, Terminal,
 } from "lucide-react";
 import slateLogo from "@/assets/slate-logo.svg";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import SettingsOverlay from "@/components/SettingsOverlay";
+import RelationalDBView from "@/components/cloud/RelationalDBView";
+import ObjectStorageView from "@/components/cloud/ObjectStorageView";
+import NoSQLDBView from "@/components/cloud/NoSQLDBView";
+import AuthenticationView from "@/components/cloud/AuthenticationView";
 
 const defaultRecentProjects = [
   { name: "CRM Analytics Dashboard", source: "build" },
@@ -806,6 +811,24 @@ const BackendProjectsListing = ({ type, onCreateNew, onCardClick }: { type: 'pla
   );
 };
 
+const APPOS_NAV = [
+  { id: "overview", label: "Overview", icon: LayoutDashboard },
+  { id: "users", label: "Users", icon: Users },
+  { id: "resources", label: "Resources", icon: Boxes },
+  { id: "query-console", label: "Query Console", icon: DatabaseZap },
+  { id: "configuration", label: "Configuration", icon: Wrench },
+];
+
+const CLOUD_NAV = [
+  { id: "authentication", label: "Authentication", icon: Lock },
+  { id: "relational-db", label: "Relational DB", icon: Server },
+  { id: "object-storage", label: "Object Storage", icon: FolderTree },
+  { id: "nosql-db", label: "NoSQL DB", icon: LayoutDashboard },
+  { id: "functions", label: "Functions", icon: Zap },
+  { id: "schedulers", label: "Schedulers", icon: RotateCcw },
+  { id: "mail", label: "Mail", icon: Send },
+  { id: "logs", label: "Logs", icon: Terminal },
+];
 
 const SlateDashboard = () => {
   const [prompt, setPrompt] = useState("");
@@ -821,6 +844,9 @@ const SlateDashboard = () => {
   const [ideFlowActive, setIdeFlowActive] = useState(false);
   const [showIdeSelector, setShowIdeSelector] = useState<'platform' | 'cloud' | null>(null);
   const [recentProjects, setRecentProjects] = useState(defaultRecentProjects);
+  const [selectedBackend, setSelectedBackend] = useState<string | null>(null);
+  const [appOsSection, setAppOsSection] = useState("overview");
+  const [cloudSection, setCloudSection] = useState("authentication");
   const navigate = useNavigate();
 
   const handleCreateUntitled = () => {
@@ -904,7 +930,7 @@ const SlateDashboard = () => {
           ]).map(tab => (
             <button
               key={tab.key}
-              onClick={() => { setMainTab(tab.key); setShowIdeSelector(null); }}
+              onClick={() => { setMainTab(tab.key); setShowIdeSelector(null); setSelectedBackend(null); }}
               className={`px-5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
                 mainTab === tab.key
                   ? 'bg-background text-foreground shadow-sm'
@@ -1003,9 +1029,118 @@ const SlateDashboard = () => {
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 flex flex-col overflow-y-auto">
+        <main className="flex-1 flex flex-col overflow-hidden">
+          {/* Detail view when a backend/project is selected */}
+          {selectedBackend && (mainTab === 'platform' || mainTab === 'cloud') ? (
+            <div className="flex flex-1 overflow-hidden h-full">
+              {/* Service sidebar */}
+              <aside className="w-48 border-r border-border bg-card flex flex-col shrink-0">
+                <div className="px-4 pt-4 pb-3 border-b border-border">
+                  <button
+                    onClick={() => setSelectedBackend(null)}
+                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-3"
+                  >
+                    <ArrowLeft className="h-3.5 w-3.5" />
+                    Back
+                  </button>
+                  <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{mainTab === 'platform' ? 'AppOS' : 'Cloud'}</h3>
+                  <p className="text-xs text-foreground font-medium mt-1 truncate">{selectedBackend}</p>
+                </div>
+                <nav className="flex-1 p-2 pt-1 space-y-0.5">
+                  {(mainTab === 'platform' ? APPOS_NAV : CLOUD_NAV).map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => mainTab === 'platform' ? setAppOsSection(item.id) : setCloudSection(item.id)}
+                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors ${
+                        (mainTab === 'platform' ? appOsSection : cloudSection) === item.id
+                          ? "bg-primary/10 text-primary font-medium"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      }`}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      {item.label}
+                    </button>
+                  ))}
+                </nav>
+                <div className="p-3 border-t border-border">
+                  {mainTab === 'platform' ? (
+                    <>
+                      <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Project ID</p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5 font-mono">prj_01HQ…7x</p>
+                    </>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                      <span className="text-[11px] text-muted-foreground">Cloud Active</span>
+                    </div>
+                  )}
+                </div>
+              </aside>
+
+              {/* Detail content */}
+              <div className="flex-1 overflow-y-auto">
+                {mainTab === 'platform' ? (
+                  <div className="px-6 py-6">
+                    {appOsSection === "overview" && (
+                      <div className="space-y-6">
+                        <div>
+                          <h2 className="text-xl font-semibold tracking-tight">Overview</h2>
+                          <p className="text-sm text-muted-foreground mt-1">Backend overview for {selectedBackend}</p>
+                        </div>
+                        <div className="grid grid-cols-3 gap-4">
+                          <div className="rounded-xl border border-border bg-card p-4">
+                            <p className="text-xs text-muted-foreground font-medium">Status</p>
+                            <p className="text-lg font-semibold text-foreground mt-1">Active</p>
+                          </div>
+                          <div className="rounded-xl border border-border bg-card p-4">
+                            <p className="text-xs text-muted-foreground font-medium">Users</p>
+                            <p className="text-lg font-semibold text-foreground mt-1">24</p>
+                          </div>
+                          <div className="rounded-xl border border-border bg-card p-4">
+                            <p className="text-xs text-muted-foreground font-medium">Resources</p>
+                            <p className="text-lg font-semibold text-foreground mt-1">8 modules</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {appOsSection !== "overview" && (
+                      <div className="space-y-4">
+                        <h2 className="text-xl font-semibold tracking-tight">{APPOS_NAV.find(n => n.id === appOsSection)?.label}</h2>
+                        <p className="text-sm text-muted-foreground">Manage {APPOS_NAV.find(n => n.id === appOsSection)?.label.toLowerCase()} for {selectedBackend}.</p>
+                        <div className="rounded-xl border border-dashed border-border bg-muted/20 h-60 flex items-center justify-center">
+                          <p className="text-sm text-muted-foreground">{APPOS_NAV.find(n => n.id === appOsSection)?.label} content</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <>
+                    {(cloudSection === "authentication" || cloudSection === "relational-db" || cloudSection === "object-storage" || cloudSection === "nosql-db") ? (
+                      <>
+                        {cloudSection === "authentication" && <AuthenticationView />}
+                        {cloudSection === "relational-db" && <RelationalDBView />}
+                        {cloudSection === "object-storage" && <ObjectStorageView />}
+                        {cloudSection === "nosql-db" && <NoSQLDBView />}
+                      </>
+                    ) : (
+                      <div className="px-6 py-6 space-y-6">
+                        <div>
+                          <h2 className="text-xl font-semibold tracking-tight">{CLOUD_NAV.find(n => n.id === cloudSection)?.label}</h2>
+                          <p className="text-sm text-muted-foreground mt-1">Manage {CLOUD_NAV.find(n => n.id === cloudSection)?.label.toLowerCase()} for {selectedBackend}.</p>
+                        </div>
+                        <div className="rounded-xl border border-dashed border-border bg-muted/20 h-60 flex items-center justify-center">
+                          <p className="text-sm text-muted-foreground">{CLOUD_NAV.find(n => n.id === cloudSection)?.label} content</p>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          ) : (
+          <>
           {/* Hero gradient area - fills available space */}
-          <div className={`relative flex-1 flex flex-col ${mainTab === 'build' ? 'min-h-[75vh]' : 'min-h-0'}`}>
+          <div className={`relative flex-1 flex flex-col overflow-y-auto ${mainTab === 'build' ? 'min-h-[75vh]' : 'min-h-0'}`}>
             {mainTab === 'build' && (
               <>
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-100/60 via-indigo-50/40 to-blue-50/30 pointer-events-none" />
@@ -1036,7 +1171,7 @@ const SlateDashboard = () => {
                     <BackendProjectsListing
                       type={mainTab}
                       onCreateNew={() => setShowIdeSelector(mainTab)}
-                      onCardClick={(name) => navigate(`/om/project?source=${mainTab}&name=${encodeURIComponent(name)}&tab=${mainTab === 'platform' ? 'appos' : 'cloud'}`)}
+                      onCardClick={(name) => setSelectedBackend(name)}
                     />
                   )}
                 </div>
@@ -1394,8 +1529,8 @@ const SlateDashboard = () => {
             )}
           </div>
         </div>
-
-
+          </>
+          )}
         </main>
       </div>
 
