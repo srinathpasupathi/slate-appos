@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, type ElementRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Send, Paperclip, Code, Eye, FolderTree, Terminal, Share2, Github, Upload,
@@ -8,7 +8,6 @@ import {
   RotateCcw, Server, Cloud, PanelLeftClose, PanelLeft,
 } from "lucide-react";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
-import type { ImperativePanelHandle } from "react-resizable-panels";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
@@ -109,17 +108,6 @@ const ProjectPage = () => {
   const forceCompleteTimerRef = useRef<number | null>(null);
   const [leftPanelWidth, setLeftPanelWidth] = useState(25); // percentage
   const [chatPanelCollapsed, setChatPanelCollapsed] = useState(false);
-  const chatPanelRef = useRef<ImperativePanelHandle>(null);
-
-  const toggleChatPanel = useCallback(() => {
-    if (chatPanelRef.current) {
-      if (chatPanelCollapsed) {
-        chatPanelRef.current.expand();
-      } else {
-        chatPanelRef.current.collapse();
-      }
-    }
-  }, [chatPanelCollapsed]);
 
   const appUrl = `${projectName.toLowerCase().replace(/\s+/g, "-")}.onslate.com`;
 
@@ -312,7 +300,7 @@ const ProjectPage = () => {
         {/* When collapsed, show expand button inline next to app name */}
         {source === "build" && chatPanelCollapsed && (
           <button
-            onClick={toggleChatPanel}
+            onClick={() => setChatPanelCollapsed(false)}
             className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors ml-1"
             title="Show chat panel"
           >
@@ -321,22 +309,26 @@ const ProjectPage = () => {
         )}
       </div>
 
-      {/* Tabs - always positioned consistently based on leftPanelWidth */}
-      {source === "build" && (
+      {/* When expanded, position collapse button + tabs at the right panel edge */}
+      {source === "build" && !chatPanelCollapsed && (
         <div
-          className="absolute top-0 bottom-0 flex items-center gap-1 transition-[left] duration-300 ease-in-out"
-          style={{ left: `calc(${leftPanelWidth}% + 8px)` }}
+          className="absolute top-0 bottom-0 flex items-center gap-1"
+          style={{ left: `calc(${leftPanelWidth}% - 28px)` }}
         >
-          {!chatPanelCollapsed && (
-            <button
-              onClick={toggleChatPanel}
-              className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              title="Hide chat panel"
-            >
-              <PanelLeftClose className="h-4 w-4" />
-            </button>
-          )}
-          {!chatPanelCollapsed && <div className="w-px h-4 bg-border mx-0.5" />}
+          <button
+            onClick={() => setChatPanelCollapsed(true)}
+            className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            title="Hide chat panel"
+          >
+            <PanelLeftClose className="h-4 w-4" />
+          </button>
+          <div className="w-px h-4 bg-border mx-0.5" />
+          {TabPills()}
+        </div>
+      )}
+      {/* When collapsed, center the tab pills */}
+      {source === "build" && chatPanelCollapsed && (
+        <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 flex items-center">
           {TabPills()}
         </div>
       )}
@@ -624,22 +616,13 @@ const ProjectPage = () => {
       {TopHeader()}
 
       <div className="flex-1 overflow-hidden">
-        {showChatPanel ? (
+        {showChatPanel && !chatPanelCollapsed ? (
           <ResizablePanelGroup direction="horizontal" onLayout={(sizes) => setLeftPanelWidth(sizes[0])}>
-            <ResizablePanel
-              ref={chatPanelRef}
-              defaultSize={25}
-              minSize={25}
-              maxSize={55}
-              collapsible
-              collapsedSize={0}
-              onCollapse={() => setChatPanelCollapsed(true)}
-              onExpand={() => setChatPanelCollapsed(false)}
-            >
+            <ResizablePanel defaultSize={25} minSize={25} maxSize={55}>
               {ChatPanel()}
             </ResizablePanel>
             <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={75} minSize={40}>
+            <ResizablePanel defaultSize={65} minSize={40}>
               <div className="flex flex-col h-full">
                 {renderTabContent()}
                 {(activeTab === "preview" || activeTab === "code") && (
