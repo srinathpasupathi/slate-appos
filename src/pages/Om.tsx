@@ -817,8 +817,20 @@ const SlateDashboard = () => {
             title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="1.5" y="2.5" width="5" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
-              <rect x="9.5" y="2.5" width="5" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
+              <rect x="1.5" y="2.5" width="13" height="11" rx="2" stroke="currentColor" strokeWidth="1.5" />
+              <line x1="6" y1="2.5" x2="6" y2="13.5" stroke="currentColor" strokeWidth="1.5" />
+              {!sidebarCollapsed && (
+                <>
+                  <line x1="8.5" y1="7" x2="11" y2="8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+                  <line x1="8.5" y1="9" x2="11" y2="8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+                </>
+              )}
+              {sidebarCollapsed && (
+                <>
+                  <line x1="11" y1="7" x2="8.5" y2="8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+                  <line x1="11" y1="9" x2="8.5" y2="8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+                </>
+              )}
             </svg>
           </button>
         </div>
