@@ -28,11 +28,21 @@ import GitHubConnectDialog from "@/components/GitHubConnectDialog";
 
 // ─── Types & Constants ───
 
+interface ActionCard {
+  type: "appos-promo" | "cloud-promo";
+  title: string;
+  description: string;
+  features: { icon: string; label: string }[];
+  ctaLabel: string;
+  dismissLabel: string;
+}
+
 interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
   timestamp: Date;
+  actionCard?: ActionCard;
 }
 
 const DEFAULT_PROMPT = "Create a Franchise Sales Management app to manage all the franchises across the globe with a rich UI and UX";
@@ -169,6 +179,9 @@ const ProjectPage = () => {
     setTimeout(() => setCopied(false), 1500);
   };
 
+  const appOsPromoShownRef = useRef(false);
+  const cloudPromoShownRef = useRef(false);
+
   const handleGenerationComplete = useCallback(() => {
     setIsGenerating((prev) => {
       if (!prev) return prev;
@@ -177,6 +190,36 @@ const ProjectPage = () => {
       return false;
     });
   }, []);
+
+  // After generation completes, promote AppOS contextually
+  useEffect(() => {
+    if (!generationDone || appOsPromoShownRef.current || source !== "build") return;
+    appOsPromoShownRef.current = true;
+
+    const timer = setTimeout(() => {
+      setMessages((prev) => [...prev, {
+        id: `appos-promo-${Date.now()}`,
+        role: "assistant",
+        content: `This looks like a great business application! A **Franchise Sales Management** app like this would really benefit from a structured backend.\n\n**AppOS** gives you a complete business backend with built-in user management, roles & permissions, workflow automation, and resource modules — so you don't have to build these from scratch.`,
+        timestamp: new Date(),
+        actionCard: {
+          type: "appos-promo",
+          title: "Enable AppOS — Business Backend",
+          description: "Set up backend resources, user management, and workflows for your app",
+          features: [
+            { icon: "users", label: "User Management" },
+            { icon: "shield", label: "Roles & Permissions" },
+            { icon: "workflow", label: "Workflows" },
+            { icon: "boxes", label: "Resource Modules" },
+          ],
+          ctaLabel: "Enable AppOS",
+          dismissLabel: "Maybe later",
+        },
+      }]);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [generationDone, source]);
 
   // Build mode: seed initial prompt
   useEffect(() => {
@@ -246,6 +289,28 @@ const ProjectPage = () => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
 
+  const handleActionCardClick = (type: "appos-promo" | "cloud-promo", action: "enable" | "dismiss") => {
+    // Remove the action card from the message
+    setMessages((prev) => prev.map((msg) =>
+      msg.actionCard?.type === type ? { ...msg, actionCard: undefined } : msg
+    ));
+
+    if (action === "dismiss") {
+      setMessages((prev) => [...prev, {
+        id: `dismiss-${type}-${Date.now()}`,
+        role: "assistant",
+        content: type === "appos-promo"
+          ? "No problem! You can always enable **AppOS** later from the AppOS tab whenever you're ready."
+          : "Sure thing! **Cloud** is available anytime you need it from the Cloud tab.",
+        timestamp: new Date(),
+      }]);
+      return;
+    }
+
+    // Trigger the enable flow
+    handleEnableService(type === "appos-promo" ? "appos" : "cloud");
+  };
+
   const handleEnableService = (service: "appos" | "cloud") => {
     const label = service === "appos" ? "AppOS" : "Cloud";
     const setEnabling = service === "appos" ? setAppOsEnabling : setCloudEnabling;
@@ -288,13 +353,39 @@ const ProjectPage = () => {
         role: "assistant",
         content: `✅ **${label} has been enabled** for your project!\n\n${
           service === "appos"
-            ? "You now have access to:\n• **Users & Profiles** – Manage application users\n• **Workflows & Automation** – Build business logic\n• **Roles & Permissions** – Fine-grained access control\n• **Query Console** – Run data queries\n• **Deployments** – Manage releases"
+            ? "You now have access to:\n• **Users & Profiles** – Manage application users\n• **Workflows & Automation** – Build business logic\n• **Roles & Permissions** – Fine-grained access control\n• **Query Console** – Run data queries"
             : "You now have access to:\n• **Authentication** – User sign-in & management\n• **Relational DB** – PostgreSQL database\n• **Object Storage** – File & media storage\n• **NoSQL DB** – Document database\n• **Functions** – Serverless backend logic\n• **Schedulers, Mail & Logs**"
         }\n\nYou can explore the **${label}** tab now.`,
         timestamp: new Date(),
       }]);
       setEnabling(false);
       setEnabled(true);
+
+      // After AppOS is enabled, contextually promote Cloud
+      if (service === "appos" && !cloudPromoShownRef.current) {
+        cloudPromoShownRef.current = true;
+        setTimeout(() => {
+          setMessages((prev) => [...prev, {
+            id: `cloud-promo-${Date.now()}`,
+            role: "assistant",
+            content: `Now that your backend structure is in place, you might also want **Cloud infrastructure**.\n\nFor example, your franchise app could use **Object Storage** for franchise logos and documents, and **Authentication** so franchise managers can sign in securely. **Cloud** gives you managed databases, file storage, auth, and serverless functions — all ready to scale.`,
+            timestamp: new Date(),
+            actionCard: {
+              type: "cloud-promo",
+              title: "Enable Cloud — Managed Infrastructure",
+              description: "Add databases, auth, file storage, and serverless functions",
+              features: [
+                { icon: "database", label: "Database" },
+                { icon: "lock", label: "Auth" },
+                { icon: "hard-drive", label: "Storage" },
+                { icon: "code", label: "Functions" },
+              ],
+              ctaLabel: "Enable Cloud",
+              dismissLabel: "Not now",
+            },
+          }]);
+        }, 3000);
+      }
     }, 3500);
   };
 
@@ -491,6 +582,21 @@ const ProjectPage = () => {
     </div>
   );
 
+  // ─── Action Card Icon Helper ───
+  const getActionCardIcon = (icon: string) => {
+    switch (icon) {
+      case "users": return <Users className="h-4 w-4" />;
+      case "shield": return <Shield className="h-4 w-4" />;
+      case "workflow": return <Boxes className="h-4 w-4" />;
+      case "boxes": return <LayoutDashboard className="h-4 w-4" />;
+      case "database": return <Server className="h-4 w-4" />;
+      case "lock": return <Lock className="h-4 w-4" />;
+      case "hard-drive": return <FolderTree className="h-4 w-4" />;
+      case "code": return <Code className="h-4 w-4" />;
+      default: return <Zap className="h-4 w-4" />;
+    }
+  };
+
   // ─── Chat Panel (build mode only) ───
   const ChatPanel = () => (
     <div className="flex flex-col h-full border-r border-border">
@@ -498,16 +604,70 @@ const ProjectPage = () => {
       <div className="flex-1 overflow-y-auto">
         <div className="px-4 py-4 space-y-4">
           {messages.map((msg) => (
-            <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[85%] rounded-xl px-4 py-2.5 text-sm leading-relaxed ${
-                msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
-              }`}>
-                {msg.content.split("\n").map((line, i) => (
-                  <p key={i} className={i > 0 ? "mt-2" : ""}>
-                    {line.split("**").map((part, j) => j % 2 === 1 ? <strong key={j}>{part}</strong> : part)}
-                  </p>
-                ))}
+            <div key={msg.id}>
+              <div className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div className={`max-w-[85%] rounded-xl px-4 py-2.5 text-sm leading-relaxed ${
+                  msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
+                }`}>
+                  {msg.content.split("\n").map((line, i) => (
+                    <p key={i} className={i > 0 ? "mt-2" : ""}>
+                      {line.split("**").map((part, j) => j % 2 === 1 ? <strong key={j}>{part}</strong> : part)}
+                    </p>
+                  ))}
+                </div>
               </div>
+
+              {/* Action Card */}
+              {msg.actionCard && (
+                <div className="flex justify-start mt-3">
+                  <div className="max-w-[90%] w-full">
+                    <div className="rounded-xl border border-primary/20 bg-primary/[0.04] overflow-hidden">
+                      {/* Card header */}
+                      <div className="px-4 pt-4 pb-3">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
+                            {msg.actionCard.type === "appos-promo"
+                              ? <Server className="h-3.5 w-3.5 text-primary" />
+                              : <Cloud className="h-3.5 w-3.5 text-primary" />
+                            }
+                          </div>
+                          <span className="text-sm font-semibold text-foreground">{msg.actionCard.title}</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground ml-9">{msg.actionCard.description}</p>
+                      </div>
+
+                      {/* Feature tiles */}
+                      <div className="px-4 pb-3">
+                        <div className="grid grid-cols-2 gap-2">
+                          {msg.actionCard.features.map((feat) => (
+                            <div key={feat.label} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-border/60">
+                              <span className="text-muted-foreground/70">{getActionCardIcon(feat.icon)}</span>
+                              <span className="text-xs font-medium text-foreground">{feat.label}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Action buttons */}
+                      <div className="px-4 pb-4 flex items-center gap-2">
+                        <button
+                          onClick={() => handleActionCardClick(msg.actionCard!.type, "enable")}
+                          className="h-9 px-5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-sm"
+                        >
+                          <Zap className="h-3.5 w-3.5" />
+                          {msg.actionCard.ctaLabel}
+                        </button>
+                        <button
+                          onClick={() => handleActionCardClick(msg.actionCard!.type, "dismiss")}
+                          className="h-9 px-4 rounded-lg border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                        >
+                          {msg.actionCard.dismissLabel}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
           {isGenerating && (
