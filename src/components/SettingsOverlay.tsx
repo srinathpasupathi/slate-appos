@@ -18,12 +18,12 @@ import CloudSettings from "@/components/settings/CloudSettings";
 
 const projectMenuItems = [
   { id: "general", label: "General", icon: Settings },
-  { id: "appos", label: "AppOS", icon: Database },
-  { id: "cloud", label: "Cloud", icon: Cloud },
   { id: "domains", label: "Domains & Hosting", icon: Globe },
   { id: "knowledge", label: "Knowledge", icon: BookOpen },
   { id: "connectors", label: "Connectors", icon: Plug },
   { id: "developer", label: "Developer Settings", icon: Code2 },
+  { id: "appos", label: "AppOS", icon: Database },
+  { id: "cloud", label: "Cloud", icon: Cloud },
 ];
 
 const orgMenuItems = [
