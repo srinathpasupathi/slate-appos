@@ -743,7 +743,7 @@ const SlateDashboard = () => {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [plusMenuOpen, setPlusMenuOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
-  const [sidebarHovered, setSidebarHovered] = useState(false);
+  const [_sidebarHovered, setSidebarHovered] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [mainTab, setMainTab] = useState<'build' | 'platform'>('build');
   const [layoutMode, setLayoutMode] = useState<'option1' | 'option2' | 'option3'>('option1');
@@ -804,101 +804,95 @@ const SlateDashboard = () => {
   };
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
-      {/* Sidebar */}
-      <aside
-        className={`hidden lg:flex flex-col border-r border-border bg-card flex-shrink-0 transition-all duration-200 ${sidebarCollapsed ? 'w-[52px]' : 'w-[240px]'}`}
-        onMouseEnter={() => setSidebarHovered(true)}
-        onMouseLeave={() => setSidebarHovered(false)}
-      >
-        {/* Toggle + Logo */}
-        <div className="flex items-center justify-between px-3 py-4 relative min-h-[52px]">
-          {/* Expanded: logo + text (always rendered, hidden when collapsed) */}
-          <div className={`flex items-center gap-2 ml-1 ${sidebarCollapsed ? 'hidden' : ''}`}>
-            <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
-            <span className="text-lg font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Om</span>
-          </div>
-
-          {/* Collapsed: logo/expand toggle swap */}
-          <div className={`relative h-7 w-7 flex items-center justify-center ${sidebarCollapsed ? 'mx-auto' : 'hidden'}`}>
-            <img
-              src={slateLogo}
-              alt="Slate"
-              className={`h-5 w-auto absolute inset-0 m-auto transition-opacity duration-150 ${sidebarHovered ? 'opacity-0' : 'opacity-100'}`}
-            />
-            <button
-              onClick={() => setSidebarCollapsed(false)}
-              className={`p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-opacity duration-150 absolute inset-0 m-auto flex items-center justify-center ${sidebarHovered ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-              title="Expand sidebar"
-            >
-              <PanelLeftOpen className="h-4 w-4" />
-            </button>
-          </div>
-
-          {/* Collapse button (expanded state) */}
+    <div className="flex flex-col h-screen bg-background overflow-hidden">
+      {/* Top horizontal bar */}
+      <header className="flex items-center justify-between px-4 h-12 bg-card border-b border-border flex-shrink-0 z-10">
+        {/* Left: Logo + Om + collapse/expand */}
+        <div className="flex items-center gap-2.5">
+          <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
+          <span className="text-base font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Om</span>
           <button
-            onClick={() => setSidebarCollapsed(true)}
-            className={`p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors ${sidebarCollapsed ? 'hidden' : ''}`}
-            title="Collapse sidebar"
+            onClick={() => setSidebarCollapsed(prev => !prev)}
+            className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors ml-1"
+            title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            <PanelLeftClose className="h-4 w-4" />
+            {sidebarCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
           </button>
         </div>
 
-        {/* Nav links */}
-        <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto overflow-x-hidden">
-          <SidebarLink icon={Home} label="Home" active collapsed={sidebarCollapsed} onClick={() => {
-            setIdeFlowActive(false);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }} />
-          <SidebarLink icon={Grid3X3} label="Projects" collapsed={sidebarCollapsed} />
-          <SidebarLink icon={Layers} label="Templates" collapsed={sidebarCollapsed} />
-          <SidebarLink icon={Search} label="Search" collapsed={sidebarCollapsed} />
-          <SidebarLink
-            icon={Clock}
-            label="Recent"
-            collapsed={sidebarCollapsed}
-            onClick={() => {
-              if (sidebarCollapsed) setSidebarCollapsed(false);
-            }}
-          />
-          {!sidebarCollapsed && (
-            <div className="pl-8 space-y-0.5">
-              {recentProjects.map((p) => (
-                <button key={p.name} onClick={() => navigate(`/om/project?source=${p.source}&name=${encodeURIComponent(p.name)}`)} className="block w-full text-left px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
-                  {p.name}
-                </button>
-              ))}
-            </div>
-          )}
-        </nav>
+        {/* Center: Slate & AppOS tabs */}
+        <div className="flex items-center gap-1">
+          {(['Slate', 'AppOS'] as const).map(tab => (
+            <button
+              key={tab}
+              onClick={() => setMainTab(tab === 'Slate' ? 'build' : 'platform')}
+              className={`px-5 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                (tab === 'Slate' && mainTab === 'build') || (tab === 'AppOS' && mainTab === 'platform')
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
 
-      </aside>
+        {/* Right: notifications, settings, profile */}
+        <div className="flex items-center gap-2">
+          <button className="p-2 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground">
+            <Bell className="h-4 w-4" />
+          </button>
+          <button
+            onClick={() => setSettingsOpen(true)}
+            className="p-2 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground"
+          >
+            <Settings className="h-4 w-4" />
+          </button>
+          <ProfilePopover variant="topbar" />
+        </div>
+      </header>
 
-      {/* Main content */}
-      <main className="flex-1 flex flex-col overflow-y-auto">
-        {/* Hero gradient area - fills available space */}
-        <div className="relative flex-1 flex flex-col min-h-[75vh]">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-100/60 via-indigo-50/40 to-blue-50/30 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
+      {/* Below top bar: sidebar + main content */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <aside
+          className={`hidden lg:flex flex-col border-r border-border bg-card flex-shrink-0 transition-all duration-200 ${sidebarCollapsed ? 'w-[52px]' : 'w-[240px]'}`}
+        >
+          {/* Nav links */}
+          <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto overflow-x-hidden">
+            <SidebarLink icon={Home} label="Home" active collapsed={sidebarCollapsed} onClick={() => {
+              setIdeFlowActive(false);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }} />
+            <SidebarLink icon={Grid3X3} label="Projects" collapsed={sidebarCollapsed} />
+            <SidebarLink icon={Layers} label="Templates" collapsed={sidebarCollapsed} />
+            <SidebarLink icon={Search} label="Search" collapsed={sidebarCollapsed} />
+            <SidebarLink
+              icon={Clock}
+              label="Recent"
+              collapsed={sidebarCollapsed}
+              onClick={() => {
+                if (sidebarCollapsed) setSidebarCollapsed(false);
+              }}
+            />
+            {!sidebarCollapsed && (
+              <div className="pl-8 space-y-0.5">
+                {recentProjects.map((p) => (
+                  <button key={p.name} onClick={() => navigate(`/om/project?source=${p.source}&name=${encodeURIComponent(p.name)}`)} className="block w-full text-left px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
+                    {p.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </nav>
+        </aside>
 
-          {/* Top bar with tabs + icons */}
-          <div className="relative flex items-center justify-between px-6 py-3">
-            {/* Spacer for top bar */}
-            <div className="flex-1" />
-            <div className="flex-1 flex items-center justify-end gap-3">
-              <button className="p-2 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground">
-                <Bell className="h-4.5 w-4.5" />
-              </button>
-              <button
-                onClick={() => setSettingsOpen(true)}
-                className="p-2 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground"
-              >
-                <Settings className="h-4.5 w-4.5" />
-              </button>
-              <ProfilePopover variant="topbar" />
-            </div>
-          </div>
+        {/* Main content */}
+        <main className="flex-1 flex flex-col overflow-y-auto">
+          {/* Hero gradient area - fills available space */}
+          <div className="relative flex-1 flex flex-col min-h-[75vh]">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-100/60 via-indigo-50/40 to-blue-50/30 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
 
           <div className={`relative flex-1 flex flex-col items-center px-6 lg:px-16 pb-24 ${layoutMode !== 'option1' ? 'justify-center' : ''}`}>
             {/* Preload IDE logos so they're cached across all layout modes */}
@@ -1309,7 +1303,8 @@ const SlateDashboard = () => {
           </Select>
         </div>
         
-      </main>
+        </main>
+      </div>
 
       {/* Settings overlay */}
       <SettingsOverlay open={settingsOpen} onClose={() => setSettingsOpen(false)} />
