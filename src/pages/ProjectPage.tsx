@@ -140,9 +140,9 @@ const ProjectPage = () => {
     ? ["preview", "code", "appos", "cloud"]
     : githubConnected
       ? ["preview", "code", "appos", "cloud"]
-      : ["appos", "cloud", "preview"];
+      : ["preview", "appos", "cloud"];
 
-  const [activeTab, setActiveTab] = useState<TopTab>(availableTabs[0]);
+  const [activeTab, setActiveTab] = useState<TopTab>(source === "build" ? "preview" : "appos");
 
   // Chat state (only used in build mode)
   const [input, setInput] = useState("");
