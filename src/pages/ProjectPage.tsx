@@ -116,7 +116,7 @@ const ProjectPage = () => {
   // Determine available tabs
   const availableTabs: TopTab[] = source === "build"
     ? ["preview", "code", "appos", "cloud"]
-    : ["appos", "cloud"];
+    : ["preview", "appos", "cloud"];
 
   const [activeTab, setActiveTab] = useState<TopTab>(availableTabs[0]);
 
@@ -144,7 +144,7 @@ const ProjectPage = () => {
 
   // Cloud state
   const [cloudSection, setCloudSection] = useState("authentication");
-  const [cloudEnabled, setCloudEnabled] = useState(source === "platform");
+  const [cloudEnabled, setCloudEnabled] = useState(false);
   const [cloudEnabling, setCloudEnabling] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -244,6 +244,18 @@ const ProjectPage = () => {
     const setEnabling = service === "appos" ? setAppOsEnabling : setCloudEnabling;
     const setEnabled = service === "appos" ? setAppOsEnabled : setCloudEnabled;
 
+    setEnabling(true);
+
+    // In platform mode (no chat), enable directly after a brief delay
+    if (source === "platform") {
+      setTimeout(() => {
+        setEnabling(false);
+        setEnabled(true);
+      }, 1500);
+      return;
+    }
+
+    // Build mode: simulate chat conversation
     const userMsg: Message = {
       id: `enable-${service}-user-${Date.now()}`,
       role: "user",
@@ -251,7 +263,6 @@ const ProjectPage = () => {
       timestamp: new Date(),
     };
     setMessages((prev) => [...prev, userMsg]);
-    setEnabling(true);
     if (chatPanelCollapsed) setChatPanelCollapsed(false);
 
     setTimeout(() => {
@@ -533,7 +544,7 @@ const ProjectPage = () => {
   // ─── Preview Content ───
   const PreviewContent = () => (
     <div className="flex-1 overflow-hidden">
-      {generationDone ? (
+      {source === "platform" || generationDone ? (
         <GeneratedPreview />
       ) : isGenerating ? (
         <PreviewLoading progress={Math.min(Math.round(generationProgress), 95)} />
