@@ -33,7 +33,7 @@ const ServicePromoView = ({ type, enabling, onEnable }: PromoViewProps) => {
 
           {/* Description */}
           <p className="text-sm text-muted-foreground leading-relaxed max-w-md mx-auto mb-7">
-            Backend for business apps with built-in modules, users, workflows, and permissions.
+            Backend for apps that use <strong>Zoho SSO</strong> — ideal for internal business tools with built-in modules, users, workflows, and permissions.
           </p>
 
           {/* Feature tiles */}
