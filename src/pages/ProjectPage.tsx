@@ -106,6 +106,7 @@ const ProjectPage = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const hasSeededBuildRef = useRef(false);
   const forceCompleteTimerRef = useRef<number | null>(null);
+  const [leftPanelWidth, setLeftPanelWidth] = useState(35); // percentage
 
   const appUrl = `${projectName.toLowerCase().replace(/\s+/g, "-")}.onslate.com`;
 
@@ -291,11 +292,26 @@ const ProjectPage = () => {
   );
 
   const TopHeader = () => (
-    <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-card shrink-0">
+    <div className="relative flex items-center justify-between px-4 py-2.5 border-b border-border bg-card shrink-0">
       <div className="flex items-center gap-3">
         <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
         {AppNameDropdown()}
       </div>
+
+      {/* Tabs positioned to align with right panel edge */}
+      {showChatPanel && (
+        <div
+          className="absolute top-0 bottom-0 flex items-center"
+          style={{ left: `calc(${leftPanelWidth}% + 8px)` }}
+        >
+          {TabPills()}
+        </div>
+      )}
+      {!showChatPanel && (
+        <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 flex items-center">
+          {TabPills()}
+        </div>
+      )}
 
       {/* Right actions */}
       <div className="flex items-center gap-2">
@@ -576,16 +592,13 @@ const ProjectPage = () => {
 
       <div className="flex-1 overflow-hidden">
         {showChatPanel ? (
-          <ResizablePanelGroup direction="horizontal">
+          <ResizablePanelGroup direction="horizontal" onLayout={(sizes) => setLeftPanelWidth(sizes[0])}>
             <ResizablePanel defaultSize={35} minSize={25} maxSize={55}>
               {ChatPanel()}
             </ResizablePanel>
             <ResizableHandle withHandle />
             <ResizablePanel defaultSize={65} minSize={40}>
               <div className="flex flex-col h-full">
-                <div className="flex items-center px-3 py-2 border-b border-border bg-card shrink-0">
-                  {TabPills()}
-                </div>
                 {renderTabContent()}
                 {(activeTab === "preview" || activeTab === "code") && (
                   <div className="shrink-0 border-t border-border bg-card">
@@ -600,9 +613,6 @@ const ProjectPage = () => {
           </ResizablePanelGroup>
         ) : (
           <div className="flex flex-col h-full">
-            <div className="flex items-center px-3 py-2 border-b border-border bg-card shrink-0">
-              {TabPills()}
-            </div>
             {renderTabContent()}
           </div>
         )}
