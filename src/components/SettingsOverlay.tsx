@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   X, Settings, Globe, BookOpen, Plug, GitBranch,
-  Users, CreditCard, ShieldCheck, ChevronRight, Code2, Brain,
+  Users, CreditCard, ShieldCheck, ChevronRight, Code2, Brain, Database, Cloud,
 } from "lucide-react";
 import GeneralSettings from "@/components/settings/GeneralSettings";
 import DomainsSettings from "@/components/settings/DomainsSettings";
@@ -13,9 +13,13 @@ import TeamSettings from "@/components/settings/TeamSettings";
 import BillingSettings from "@/components/settings/BillingSettings";
 import PrivacySettings from "@/components/settings/PrivacySettings";
 import AIProvidersSettings from "@/components/settings/AIProvidersSettings";
+import AppOSSettings from "@/components/settings/AppOSSettings";
+import CloudSettings from "@/components/settings/CloudSettings";
 
 const projectMenuItems = [
   { id: "general", label: "General", icon: Settings },
+  { id: "appos", label: "AppOS", icon: Database },
+  { id: "cloud", label: "Cloud", icon: Cloud },
   { id: "domains", label: "Domains & Hosting", icon: Globe },
   { id: "knowledge", label: "Knowledge", icon: BookOpen },
   { id: "connectors", label: "Connectors", icon: Plug },
@@ -148,6 +152,10 @@ function renderContent(section: string) {
       return <KnowledgeSettings />;
     case "connectors":
       return <ConnectorsSettings />;
+    case "appos":
+      return <AppOSSettings />;
+    case "cloud":
+      return <CloudSettings />;
     case "developer":
       return <DeveloperSettings />;
     case "team":
@@ -172,6 +180,8 @@ function renderContent(section: string) {
 function getDescription(section: string): string {
   const descriptions: Record<string, string> = {
     general: "Manage your project's basic configuration and preferences.",
+    appos: "Manage AppOS backend services for your application.",
+    cloud: "Manage Cloud backend services for your application.",
     domains: "Configure custom domains and hosting for your application.",
     knowledge: "Add custom knowledge and guidelines to improve your app.",
     connectors: "Connect external services and data sources.",
