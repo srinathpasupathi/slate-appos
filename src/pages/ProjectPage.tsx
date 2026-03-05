@@ -382,7 +382,7 @@ const ProjectPage = () => {
           <PopoverTrigger asChild>
             <button className="flex items-center gap-2 h-8 px-3 rounded-full bg-muted text-sm font-medium text-foreground hover:bg-muted/80 transition-colors">
               <span className="h-5 w-5 rounded-full bg-green-700 text-[10px] font-bold text-white flex items-center justify-center">S</span>
-              Share
+              Invite
             </button>
           </PopoverTrigger>
           <PopoverContent align="end" className="w-[380px] bg-card border-border p-0">
