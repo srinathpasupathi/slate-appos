@@ -922,7 +922,7 @@ const OverviewTab = ({ projectName, appUrl, copied, onCopy }: { projectName: str
       {/* App Name card */}
       <div className="rounded-xl border border-border bg-card p-5">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">App Name</p>
-        <span className="text-base font-semibold text-foreground">{projectName}</span>
+        <span className="text-base font-normal text-foreground">{projectName}</span>
       </div>
 
       {/* App URL – Primary */}
