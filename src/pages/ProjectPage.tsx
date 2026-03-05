@@ -21,6 +21,7 @@ import GeneratedPreview from "@/components/slate/GeneratedPreview";
 import SettingsOverlay from "@/components/SettingsOverlay";
 import RelationalDBView from "@/components/cloud/RelationalDBView";
 import ObjectStorageView from "@/components/cloud/ObjectStorageView";
+import NoSQLDBView from "@/components/cloud/NoSQLDBView";
 
 // ─── Types & Constants ───
 
@@ -591,6 +592,9 @@ const ProjectPage = () => {
       if (cloudSection === "object-storage") {
         return <ObjectStorageView />;
       }
+      if (cloudSection === "nosql-db") {
+        return <NoSQLDBView />;
+      }
       const sectionItem = CLOUD_NAV.find(n => n.id === cloudSection);
       const title = sectionItem?.label || "Cloud";
       return (
@@ -616,14 +620,7 @@ const ProjectPage = () => {
             <ObjectStorageView />
           )}
           {cloudSection === "nosql-db" && (
-            <div className="grid gap-4">
-              <InfoCard label="Status">
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-muted-foreground/40" />
-                  <span className="text-sm text-muted-foreground">Not configured</span>
-                </div>
-              </InfoCard>
-            </div>
+            <NoSQLDBView />
           )}
           {cloudSection === "functions" && (
             <div className="grid gap-4">
@@ -693,7 +690,7 @@ const ProjectPage = () => {
           </div>
         </aside>
         <main className="flex-1 overflow-y-auto">
-          {(cloudSection === "relational-db" || cloudSection === "object-storage") ? (
+          {(cloudSection === "relational-db" || cloudSection === "object-storage" || cloudSection === "nosql-db") ? (
             renderCloudSection()
           ) : (
             <div className="px-6 py-6">
