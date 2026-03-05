@@ -126,9 +126,10 @@ const CLOUD_NAV = [
 const ProjectPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const source = searchParams.get("source") || "build"; // "build" | "platform"
+  const source = searchParams.get("source") || "build"; // "build" | "platform" | "cloud"
   const initialPrompt = searchParams.get("prompt") || DEFAULT_PROMPT;
   const projectName = searchParams.get("name") || "Franchise Sales App";
+  const initialTab = searchParams.get("tab") as TopTab | null;
 
   // GitHub connect state (platform mode)
   const [githubConnected, setGithubConnected] = useState(false);
@@ -136,7 +137,7 @@ const ProjectPage = () => {
 
   
 
-  const [activeTab, setActiveTab] = useState<TopTab>(source === "build" ? "preview" : "appos");
+  const [activeTab, setActiveTab] = useState<TopTab>(initialTab || (source === "build" ? "preview" : "appos"));
 
   // Chat state (only used in build mode)
   const [input, setInput] = useState("");
@@ -158,12 +159,12 @@ const ProjectPage = () => {
   const [appOsSection, setAppOsSection] = useState("overview");
   const [selectedUser, setSelectedUser] = useState<AppUser | null>(null);
   const [copied, setCopied] = useState(false);
-  const [appOsEnabled, setAppOsEnabled] = useState(source === "platform");
+  const [appOsEnabled, setAppOsEnabled] = useState(source === "platform" || initialTab === "appos");
   const [appOsEnabling, setAppOsEnabling] = useState(false);
 
   // Cloud state
   const [cloudSection, setCloudSection] = useState("authentication");
-  const [cloudEnabled, setCloudEnabled] = useState(false);
+  const [cloudEnabled, setCloudEnabled] = useState(initialTab === "cloud" || source === "cloud");
   const [cloudEnabling, setCloudEnabling] = useState(false);
 
   // Auto-approve state — when true, resource creation proceeds without asking

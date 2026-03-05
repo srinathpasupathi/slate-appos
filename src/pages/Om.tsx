@@ -745,14 +745,14 @@ const cloudProjects = [
   { name: "franchise-sales-cloud", url: "franchise-sales.catalystcloud.in", status: "Active", createdAt: "Feb 12, 2026" },
 ];
 
-const BackendProjectsListing = ({ type, onCreateNew }: { type: 'platform' | 'cloud'; onCreateNew: () => void }) => {
+const BackendProjectsListing = ({ type, onCreateNew, onCardClick }: { type: 'platform' | 'cloud'; onCreateNew: () => void; onCardClick: (name: string) => void }) => {
   const isAppOS = type === 'platform';
   const items = isAppOS ? appOsBackends : cloudProjects;
   const label = isAppOS ? 'Backend' : 'Project';
   const pluralLabel = isAppOS ? 'Backends' : 'Projects';
 
   return (
-    <div className="w-full max-w-3xl mx-auto space-y-6">
+    <div className="w-full space-y-6 self-start pt-8">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-foreground">{isAppOS ? 'AppOS' : 'Cloud'} {pluralLabel}</h2>
@@ -769,35 +769,38 @@ const BackendProjectsListing = ({ type, onCreateNew }: { type: 'platform' | 'clo
         </button>
       </div>
 
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {items.map((item) => (
-          <div key={item.name} className="rounded-xl border border-border bg-card p-5 hover:border-primary/30 transition-colors">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  {isAppOS ? <Server className="h-5 w-5 text-primary" /> : <Database className="h-5 w-5 text-primary" />}
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-foreground">{item.name}</p>
-                  <div className="flex items-center gap-3 mt-1">
-                    <span className="text-xs text-muted-foreground">{item.url}</span>
-                    <span className="text-xs text-muted-foreground">·</span>
-                    <span className="text-xs text-muted-foreground">{item.createdAt}</span>
-                  </div>
-                </div>
+          <button
+            key={item.name}
+            onClick={() => onCardClick(item.name)}
+            className="group rounded-xl border border-border bg-card p-5 hover:border-primary/30 hover:shadow-md transition-all text-left"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                {isAppOS ? <Server className="h-5 w-5 text-primary" /> : <Database className="h-5 w-5 text-primary" />}
               </div>
-              <div className="flex items-center gap-3">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                  {item.status}
-                </span>
-                <button className="h-8 w-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
-                  <ExternalLink className="h-4 w-4" />
-                </button>
-              </div>
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-600">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                {item.status}
+              </span>
             </div>
-          </div>
+            <p className="text-sm font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">{item.name}</p>
+            <p className="text-xs text-muted-foreground truncate">{item.url}</p>
+            <p className="text-xs text-muted-foreground mt-2">Created {item.createdAt}</p>
+          </button>
         ))}
+
+        {/* Create new card */}
+        <button
+          onClick={onCreateNew}
+          className="rounded-xl border-2 border-dashed border-border hover:border-primary/40 bg-muted/20 hover:bg-muted/40 p-5 flex flex-col items-center justify-center gap-3 transition-all min-h-[160px]"
+        >
+          <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center">
+            <Plus className="h-5 w-5 text-muted-foreground" />
+          </div>
+          <p className="text-sm font-medium text-muted-foreground">Create {label}</p>
+        </button>
       </div>
     </div>
   );
@@ -1002,21 +1005,25 @@ const SlateDashboard = () => {
         {/* Main content */}
         <main className="flex-1 flex flex-col overflow-y-auto">
           {/* Hero gradient area - fills available space */}
-          <div className="relative flex-1 flex flex-col min-h-[75vh]">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-100/60 via-indigo-50/40 to-blue-50/30 pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
+          <div className={`relative flex-1 flex flex-col ${mainTab === 'build' ? 'min-h-[75vh]' : 'min-h-0'}`}>
+            {mainTab === 'build' && (
+              <>
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-100/60 via-indigo-50/40 to-blue-50/30 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
+              </>
+            )}
 
-          <div className={`relative flex-1 flex flex-col items-center justify-center px-6 lg:px-16 pb-24`}>
+          <div className={`relative flex-1 flex flex-col ${mainTab === 'build' ? 'items-center justify-center' : ''} px-6 lg:px-16 pb-24`}>
             {/* Preload IDE logos so they're cached across all layout modes */}
             <div className="hidden">
               {ideOptions.map(ide => ide.logo && <img key={ide.key} src={ide.logo} alt="" />)}
             </div>
             {layoutMode === 'option1' ? (
               /* === OPTION 1: Original tabbed layout === */
-              <div className="w-full flex flex-col items-center flex-1 justify-center">
+              <div className={`w-full flex flex-col flex-1 ${mainTab === 'build' ? 'items-center justify-center' : ''}`}>
 
-                {/* Content area - starts from same position regardless of tab */}
-                <div className="w-full flex flex-col items-center">
+                {/* Content area */}
+                <div className={`w-full flex flex-col ${mainTab === 'build' ? 'items-center' : ''}`}>
                   {mainTab === 'build' ? (
                     <>
                       <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -1029,6 +1036,7 @@ const SlateDashboard = () => {
                     <BackendProjectsListing
                       type={mainTab}
                       onCreateNew={() => setShowIdeSelector(mainTab)}
+                      onCardClick={(name) => navigate(`/om/project?source=${mainTab}&name=${encodeURIComponent(name)}&tab=${mainTab === 'platform' ? 'appos' : 'cloud'}`)}
                     />
                   )}
                 </div>
