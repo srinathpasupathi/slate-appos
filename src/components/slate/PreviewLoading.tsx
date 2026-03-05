@@ -25,7 +25,7 @@ const PreviewLoading = ({ progress }: { progress: number }) => {
         <div>
           <h3 className="text-base font-semibold text-foreground mb-1">Generating your app...</h3>
           <p className="text-sm text-muted-foreground max-w-sm">
-            Slate is building your application. The preview will appear here once ready.
+            Om is building your application. The preview will appear here once ready.
           </p>
         </div>
         <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
