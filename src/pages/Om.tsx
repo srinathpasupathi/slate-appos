@@ -809,6 +809,13 @@ const SlateDashboard = () => {
       <header className="flex items-center justify-between px-4 h-12 bg-card border-b border-border flex-shrink-0 z-10">
         {/* Left: Logo + Om + collapse/expand */}
         <div className="flex items-center gap-2.5">
+          <button
+            onClick={() => setSidebarCollapsed(prev => !prev)}
+            className="p-1.5 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground"
+            title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {sidebarCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
+          </button>
           <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
           <span className="text-base font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Om</span>
         </div>
@@ -882,17 +889,6 @@ const SlateDashboard = () => {
               </div>
             )}
           </nav>
-          {/* Collapse/expand toggle at bottom */}
-          <div className="px-2 py-2 border-t border-border">
-            <button
-              onClick={() => setSidebarCollapsed(prev => !prev)}
-              className={`flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-3'} w-full px-3 py-2 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors`}
-              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {sidebarCollapsed ? <PanelLeftOpen className="h-4 w-4 shrink-0" /> : <PanelLeftClose className="h-4 w-4 shrink-0" />}
-              {!sidebarCollapsed && <span>Collapse</span>}
-            </button>
-          </div>
         </aside>
 
         {/* Main content */}
