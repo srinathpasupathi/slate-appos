@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import SettingsOverlay from "@/components/SettingsOverlay";
 
-const recentProjects = [
+const defaultRecentProjects = [
   { name: "CRM Analytics Dashboard", source: "build" },
   { name: "Invoice Manager Pro", source: "build" },
   { name: "Employee Portal", source: "platform" },
@@ -205,7 +205,7 @@ const ideOptions = [
 
 const FULLSCREEN_PHASES = new Set(['ready', 'building', 'deploy-ready', 'deploying', 'live']);
 
-const PlatformIDESelector = ({ onPhaseChange }: { onPhaseChange?: (phase: string) => void }) => {
+const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject }: { onPhaseChange?: (phase: string) => void; onCreateUntitled?: () => void; onRenameProject?: (newName: string) => void }) => {
   const navigate = useNavigate();
   const [selectedIDE, setSelectedIDE] = useState<string | null>(null);
   const [connectionPhase, setConnectionPhase] = useState<'idle' | 'copied' | 'waiting' | 'connected' | 'ready' | 'building' | 'deploy-ready' | 'deploying' | 'live'>('idle');
@@ -240,12 +240,14 @@ const PlatformIDESelector = ({ onPhaseChange }: { onPhaseChange?: (phase: string
   };
 
   const handleInstallClick = () => {
+    onCreateUntitled?.();
     startConnectionFlow();
   };
 
   const handleCopyAndConnect = (text: string, e: React.MouseEvent) => {
     e.stopPropagation();
     navigator.clipboard.writeText(text);
+    onCreateUntitled?.();
     setConnectionPhase('copied');
     setTimeout(() => startConnectionFlow(), 1500);
   };
@@ -279,7 +281,10 @@ const PlatformIDESelector = ({ onPhaseChange }: { onPhaseChange?: (phase: string
     setTimeout(() => setDeployStep(2), 2200);
     setTimeout(() => {
       setDeployStep(3);
-      setTimeout(() => setConnectionPhase('live'), 1500);
+      setTimeout(() => {
+        setConnectionPhase('live');
+        onRenameProject?.(appName);
+      }, 1500);
     }, 4000);
   };
 
@@ -730,7 +735,22 @@ const SlateDashboard = () => {
   const [mainTab, setMainTab] = useState<'build' | 'platform'>('build');
   const [layoutMode, setLayoutMode] = useState<'option1' | 'option2' | 'option3'>('option1');
   const [ideFlowActive, setIdeFlowActive] = useState(false);
+  const [recentProjects, setRecentProjects] = useState(defaultRecentProjects);
   const navigate = useNavigate();
+
+  const handleCreateUntitled = () => {
+    setRecentProjects(prev => {
+      const hasUntitled = prev.some(p => p.name === 'Untitled');
+      if (hasUntitled) return prev;
+      return [{ name: 'Untitled', source: 'platform' }, ...prev];
+    });
+  };
+
+  const handleRenameProject = (newName: string) => {
+    setRecentProjects(prev =>
+      prev.map(p => p.name === 'Untitled' ? { ...p, name: newName } : p)
+    );
+  };
 
   const connectedConnectors = [
     { name: "Catalyst by Zoho", icon: "⚡" },
@@ -904,7 +924,7 @@ const SlateDashboard = () => {
                       </h1>
                     </>
                   ) : (
-                    <PlatformIDESelector />
+                    <PlatformIDESelector onCreateUntitled={handleCreateUntitled} onRenameProject={handleRenameProject} />
                   )}
                 </div>
 
@@ -1144,7 +1164,7 @@ const SlateDashboard = () => {
 
                 {/* Second section: IDE selector — fullscreen centered when flow is active */}
                 <div id="ide-section" className={`w-full max-w-3xl mx-auto px-4 ${ideFlowActive ? 'min-h-[calc(100vh-64px)] flex flex-col items-center justify-center' : 'py-20'}`}>
-                  <PlatformIDESelector onPhaseChange={(phase) => setIdeFlowActive(FULLSCREEN_PHASES.has(phase))} />
+                  <PlatformIDESelector onPhaseChange={(phase) => setIdeFlowActive(FULLSCREEN_PHASES.has(phase))} onCreateUntitled={handleCreateUntitled} onRenameProject={handleRenameProject} />
                 </div>
               </div>
             ) : (
@@ -1255,7 +1275,7 @@ const SlateDashboard = () => {
 
                 {/* IDE selector section */}
                 <div id="ide-section-opt3" className={`w-full max-w-3xl mx-auto px-4 ${ideFlowActive ? 'min-h-[calc(100vh-64px)] flex flex-col items-center justify-center' : 'py-20'}`}>
-                  <PlatformIDESelector onPhaseChange={(phase) => setIdeFlowActive(FULLSCREEN_PHASES.has(phase))} />
+                  <PlatformIDESelector onPhaseChange={(phase) => setIdeFlowActive(FULLSCREEN_PHASES.has(phase))} onCreateUntitled={handleCreateUntitled} onRenameProject={handleRenameProject} />
                 </div>
               </div>
             )}
