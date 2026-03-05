@@ -309,29 +309,28 @@ const ProjectPage = () => {
         )}
       </div>
 
-      {/* Collapse button + tabs: animate position based on panel state */}
+      {/* Tabs always centered */}
       {source === "build" && (
+        <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 flex items-center">
+          {TabPills()}
+        </div>
+      )}
+      {/* Collapse button animates at panel edge */}
+      {source === "build" && !chatPanelCollapsed && (
         <div
-          className="absolute top-0 bottom-0 flex items-center gap-1"
+          className="absolute top-0 bottom-0 flex items-center"
           style={{
-            left: chatPanelCollapsed ? '50%' : `calc(${leftPanelWidth}% - 28px)`,
-            transform: chatPanelCollapsed ? 'translateX(-50%)' : 'none',
-            transition: 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            left: `calc(${leftPanelWidth}% - 28px)`,
+            transition: 'left 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
-          {!chatPanelCollapsed && (
-            <>
-              <button
-                onClick={() => setChatPanelCollapsed(true)}
-                className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                title="Hide chat panel"
-              >
-                <PanelLeftClose className="h-4 w-4" />
-              </button>
-              <div className="w-px h-4 bg-border mx-0.5" />
-            </>
-          )}
-          {TabPills()}
+          <button
+            onClick={() => setChatPanelCollapsed(true)}
+            className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            title="Hide chat panel"
+          >
+            <PanelLeftClose className="h-4 w-4" />
+          </button>
         </div>
       )}
       {source !== "build" && (
