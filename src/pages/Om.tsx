@@ -840,6 +840,7 @@ const SlateDashboard = () => {
   const [appOsSection, setAppOsSection] = useState("overview");
   const [cloudSection, setCloudSection] = useState("authentication");
   const [hideCards, setHideCards] = useState(true);
+  const [projectListTab, setProjectListTab] = useState<'all' | 'templates'>('all');
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
 
@@ -1249,6 +1250,53 @@ const SlateDashboard = () => {
                           </div>
                         </div>
                       </div>
+                    </div>
+                    {/* All Projects / Templates tabs */}
+                    <div className="max-w-4xl w-full mx-auto mt-16">
+                      <div className="flex items-center gap-1 border-b border-border mb-4">
+                        {(['all', 'templates'] as const).map(tab => (
+                          <button
+                            key={tab}
+                            onClick={() => setProjectListTab(tab)}
+                            className={`px-4 py-2 text-sm font-medium transition-colors relative ${
+                              projectListTab === tab
+                                ? 'text-foreground'
+                                : 'text-muted-foreground hover:text-foreground'
+                            }`}
+                          >
+                            {tab === 'all' ? 'All Projects' : 'Templates'}
+                            {projectListTab === tab && (
+                              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+
+                      {projectListTab === 'all' ? (
+                        <div className="grid gap-3">
+                          {projectCards.map((project) => (
+                            <button
+                              key={project.title}
+                              onClick={() => navigate(`/om/project?source=build&name=${encodeURIComponent(project.title)}`)}
+                              className="flex items-center gap-4 px-4 py-3.5 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-left group"
+                            >
+                              <div className={`h-9 w-9 rounded-lg bg-gradient-to-br ${project.color} flex items-center justify-center shrink-0`}>
+                                <Layers className="h-4 w-4 text-primary" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{project.title}</p>
+                                <p className="text-xs text-muted-foreground truncate">{project.description}</p>
+                              </div>
+                              <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </button>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="rounded-xl border border-dashed border-border bg-muted/20 py-12 flex flex-col items-center justify-center gap-2">
+                          <Layers className="h-6 w-6 text-muted-foreground/50" />
+                          <p className="text-sm text-muted-foreground">Templates coming soon</p>
+                        </div>
+                      )}
                     </div>
                   </>
                 )}
