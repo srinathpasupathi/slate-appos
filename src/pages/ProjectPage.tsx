@@ -91,7 +91,7 @@ const APPOS_NAV = [
   { id: "resources", label: "Resources", icon: Boxes },
   { id: "query-console", label: "Query Console", icon: DatabaseZap },
   { id: "configuration", label: "Configuration", icon: Wrench },
-  { id: "deployments", label: "Deployments", icon: Rocket },
+  
 ];
 
 const CLOUD_NAV = [
