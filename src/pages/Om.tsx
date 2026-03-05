@@ -754,8 +754,8 @@ const cloudProjects = [
 const BackendProjectsListing = ({ type, onCreateNew, onCardClick }: { type: 'platform' | 'cloud'; onCreateNew: () => void; onCardClick: (name: string) => void }) => {
   const isAppOS = type === 'platform';
   const items = isAppOS ? appOsBackends : cloudProjects;
-  const label = isAppOS ? 'Backend' : 'Project';
-  const pluralLabel = isAppOS ? 'Backends' : 'Projects';
+  const label = isAppOS ? 'Project' : 'Project';
+  const pluralLabel = isAppOS ? 'Projects' : 'Projects';
 
   return (
     <div className="w-full space-y-6 self-start pt-8">
@@ -994,7 +994,7 @@ const SlateDashboard = () => {
               </>
             ) : mainTab === 'platform' ? (
               <>
-                <SidebarLink icon={Server} label="Backends" collapsed={sidebarCollapsed} />
+                <SidebarLink icon={Server} label="Projects" collapsed={sidebarCollapsed} />
                 <SidebarLink icon={Search} label="Search" collapsed={sidebarCollapsed} />
                 <SidebarLink
                   icon={Clock}
