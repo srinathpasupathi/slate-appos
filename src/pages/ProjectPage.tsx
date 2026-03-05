@@ -571,7 +571,7 @@ const ProjectPage = () => {
           {appOsSection === "users" && (
             <UsersTab users={APP_USERS} />
           )}
-          {appOsSection === "resources" && <PlaceholderSection title="Resources" description="Manage application resources, assets, and dependencies." />}
+          {appOsSection === "resources" && <ResourcesTab />}
           {appOsSection === "query-console" && <PlaceholderSection title="Query Console" description="Run queries against your application data." />}
           {appOsSection === "configuration" && <SettingsTab projectName={projectName} appUrl={appUrl} />}
           {appOsSection === "deployments" && <DeploymentsTab />}
@@ -929,6 +929,119 @@ const UsersTab = ({ users }: { users: AppUser[] }) => {
           )}
         </DialogContent>
       </Dialog>
+    </div>
+  );
+};
+
+const RESOURCE_MODULES = [
+  { name: "Orders", entities: 3, description: "Handling the orders", createdOn: "01 Jan 2026, 10:30 am", createdBy: "admin@franchise.com" },
+  { name: "Products", entities: 5, description: "Product list", createdOn: "01 Jan 2026, 10:30 am", createdBy: "admin@franchise.com" },
+  { name: "Customers", entities: 2, description: "All Users of app", createdOn: "01 Jan 2026, 10:30 am", createdBy: "admin@franchise.com" },
+  { name: "Franchises", entities: 8, description: "Franchise locations", createdOn: "15 Jan 2026, 2:00 pm", createdBy: "admin@franchise.com" },
+  { name: "Invoices", entities: 4, description: "Billing and invoices", createdOn: "20 Jan 2026, 9:15 am", createdBy: "admin@franchise.com" },
+];
+
+type ResourceSubNav = "module" | "workflow" | "blueprint";
+
+const RESOURCE_SUB_NAV: { id: ResourceSubNav; label: string }[] = [
+  { id: "module", label: "Module" },
+  { id: "workflow", label: "Workflow" },
+  { id: "blueprint", label: "Blueprint" },
+];
+
+const ResourcesTab = () => {
+  const [subNav, setSubNav] = useState<ResourceSubNav>("module");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredModules = RESOURCE_MODULES.filter((m) =>
+    m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    m.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <div className="flex gap-0 h-full">
+      {/* Sub-sidebar */}
+      <div className="w-48 shrink-0 border-r border-border pr-4">
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Data Entity</h3>
+        <div className="relative mb-3">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search Here"
+            className="w-full h-8 pl-8 pr-3 rounded-md border border-border bg-background text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+          />
+        </div>
+        <nav className="space-y-0.5">
+          {RESOURCE_SUB_NAV.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setSubNav(item.id)}
+              className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                subNav === item.id
+                  ? "bg-primary/10 text-primary font-medium"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Main content */}
+      <div className="flex-1 pl-6 space-y-4">
+        {subNav === "module" && (
+          <>
+            <div>
+              <h2 className="text-xl font-semibold tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>Module</h2>
+              <p className="text-sm text-muted-foreground mt-0.5">Business Data Entity</p>
+            </div>
+            <div className="relative w-72">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Search Here"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-9 pl-8 pr-3 rounded-md border border-border bg-background text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+              />
+            </div>
+            <div className="rounded-lg border border-border bg-card overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left px-4 py-2.5 text-[11px] text-primary uppercase tracking-wider font-medium">Module Name</th>
+                    <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Entities</th>
+                    <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Description</th>
+                    <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Created On</th>
+                    <th className="text-left px-4 py-2.5 text-[11px] text-primary uppercase tracking-wider font-medium">Created By</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredModules.map((m) => (
+                    <tr key={m.name} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
+                      <td className="px-4 py-3 font-medium">{m.name}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{m.entities}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{m.description}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{m.createdOn}</td>
+                      <td className="px-4 py-3 text-muted-foreground flex items-center gap-2">
+                        <span className="h-6 w-6 rounded-full bg-primary/15 text-primary text-[10px] font-bold flex items-center justify-center uppercase">{m.createdBy[0]}</span>
+                        {m.createdBy}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+        {subNav === "workflow" && (
+          <PlaceholderSection title="Workflow" description="Define and manage automated workflows for your application." />
+        )}
+        {subNav === "blueprint" && (
+          <PlaceholderSection title="Blueprint" description="Design data blueprints and schema templates." />
+        )}
+      </div>
     </div>
   );
 };
