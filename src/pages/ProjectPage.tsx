@@ -247,7 +247,7 @@ const ProjectPage = () => {
     setMessages([userMsg, firstAssistant]);
     setGenerationDone(false);
     setIsGenerating(true);
-    setActiveTab("code");
+    setActiveTab("preview");
 
     const timers = ASSISTANT_STEPS.map((step, i) =>
       setTimeout(() => {
