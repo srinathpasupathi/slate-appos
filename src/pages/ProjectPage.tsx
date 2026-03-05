@@ -546,7 +546,10 @@ const ProjectPage = () => {
     <div className="flex flex-1 overflow-hidden h-full">
       {/* Sidebar nav */}
       <aside className="w-48 border-r border-border bg-card flex flex-col shrink-0">
-        <nav className="flex-1 p-2 space-y-0.5">
+        <div className="px-4 pt-4 pb-2">
+          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">AppOS Components</h3>
+        </div>
+        <nav className="flex-1 p-2 pt-1 space-y-0.5">
           {APPOS_NAV.map((item) => (
             <button
               key={item.id}
@@ -657,7 +660,10 @@ const ProjectPage = () => {
     return (
       <div className="flex flex-1 overflow-hidden h-full">
         <aside className="w-48 border-r border-border bg-card flex flex-col shrink-0">
-          <nav className="flex-1 p-2 space-y-0.5">
+          <div className="px-4 pt-4 pb-2">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Cloud Components</h3>
+          </div>
+          <nav className="flex-1 p-2 pt-1 space-y-0.5">
             {CLOUD_NAV.map((item) => (
               <button
                 key={item.id}
