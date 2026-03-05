@@ -800,6 +800,26 @@ const ProjectPage = () => {
     setGithubConnected(true);
     setGenerationDone(true);
     setActiveTab("preview");
+
+    // Seed chat with welcome messages after repo pull
+    const now = new Date();
+    setMessages([
+      {
+        id: `gh-welcome-1-${Date.now()}`,
+        role: "assistant",
+        content: `✅ **Repository "${repoName}" has been successfully pulled!**\n\nYour codebase is now loaded and ready for development.`,
+        timestamp: now,
+      },
+    ]);
+
+    setTimeout(() => {
+      setMessages((prev) => [...prev, {
+        id: `gh-welcome-2-${Date.now()}`,
+        role: "assistant",
+        content: `You can now start prompting to iterate on your app — describe any changes, new features, or fixes and I'll implement them for you.\n\n🔄 **All changes will be auto-synced to GitHub** in the background, so your repository stays up to date without any manual steps.\n\nWhat would you like to work on first?`,
+        timestamp: new Date(),
+      }]);
+    }, 1500);
   };
 
   return (
