@@ -210,6 +210,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject 
   const [selectedIDE, setSelectedIDE] = useState<string | null>(null);
   const [connectionPhase, setConnectionPhase] = useState<'idle' | 'copied' | 'waiting' | 'connected' | 'ready' | 'building' | 'deploy-ready' | 'deploying' | 'live'>('idle');
   const [copiedPrompt, setCopiedPrompt] = useState<string | null>(null);
+  const [expandedCard, setExpandedCard] = useState<string | null>(null);
   const [showNudge, setShowNudge] = useState(false);
   const [buildStep, setBuildStep] = useState(0);
   const [deployStep, setDeployStep] = useState(0);
@@ -533,37 +534,49 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject 
         {/* Prompt example cards */}
         <div className="flex flex-col gap-2.5 w-full">
           {[
-            { title: "Real Estate CRM", subtitle: "Complete property sales system", prompt: "Build a Real Estate CRM with property listings, lead tracking, and deal pipeline" },
-            { title: "Franchise Sales App", subtitle: "Manage franchise pipeline and approvals", prompt: "Build a Franchise Sales App to manage franchise pipeline and approvals" },
-            { title: "Cloud API Backend", subtitle: "Database, storage, and REST APIs", prompt: "Generate a Cloud API Backend with database, storage, and REST APIs" },
+            { title: "Build a Real Estate CRM using the Om platform.", prompt: "Build a Real Estate CRM using the Om platform.\nUse Om MCP to create modules for Properties, Leads, and Deals.\nAdd workflows for lead assignment and follow-ups." },
+            { title: "Build a Franchise Sales Management app using the Om platform.", prompt: "Build a Franchise Sales Management app using the Om platform. Use Om MCP to create modules for Leads, Franchise Opportunities, and Approvals with workflow-based review." },
+            { title: "Create a backend API service using the Om platform.", prompt: "Create a backend API service using the Om platform. Use Om MCP to provision a database, storage, and REST APIs for a scalable cloud backend." },
           ].map((card) => {
             const isCopied = copiedPrompt === card.prompt;
+            const isExpanded = expandedCard === card.title;
             return (
               <div
                 key={card.title}
-                role="button"
-                tabIndex={0}
-                onClick={() => handleCopyPrompt(card.prompt, card.title)}
-                onKeyDown={(e) => e.key === 'Enter' && handleCopyPrompt(card.prompt, card.title)}
-                className="group flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-border bg-card hover:border-foreground/20 hover:bg-muted/50 hover:shadow-md transition-colors duration-200 cursor-pointer text-left w-full select-none"
+                className="rounded-xl border border-border bg-card hover:border-foreground/20 hover:shadow-md transition-all duration-200 w-full select-none overflow-hidden"
               >
-                <div className="flex flex-col gap-0.5 min-w-0">
-                  <span className="text-sm font-semibold text-foreground">{card.title}</span>
-                  <span className="text-xs text-muted-foreground">{card.subtitle}</span>
-                </div>
-                <span
-                  className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors duration-150 ${
-                    isCopied
-                      ? 'text-green-500 border-green-500/20 bg-green-500/5'
-                      : 'text-foreground/60 border-transparent group-hover:border-border group-hover:bg-muted/60 group-hover:text-foreground'
-                  }`}
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setExpandedCard(isExpanded ? null : card.title)}
+                  onKeyDown={(e) => e.key === 'Enter' && setExpandedCard(isExpanded ? null : card.title)}
+                  className="group flex items-center justify-between gap-4 px-5 py-4 cursor-pointer text-left w-full"
                 >
-                  {isCopied ? (
-                    <><Check className="h-3 w-3" /> Copied</>
-                  ) : (
-                    <><Copy className="h-3 w-3" /> Copy Prompt</>
-                  )}
-                </span>
+                  <div className="flex items-center gap-3 min-w-0">
+                    <ChevronDown className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
+                    <span className="text-sm font-medium text-foreground">{card.title}</span>
+                  </div>
+                  <span
+                    role="button"
+                    onClick={(e) => { e.stopPropagation(); handleCopyPrompt(card.prompt, card.title); }}
+                    className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors duration-150 ${
+                      isCopied
+                        ? 'text-green-500 border-green-500/20 bg-green-500/5'
+                        : 'text-foreground/60 border-transparent group-hover:border-border group-hover:bg-muted/60 group-hover:text-foreground'
+                    }`}
+                  >
+                    {isCopied ? (
+                      <><Check className="h-3 w-3" /> Copied</>
+                    ) : (
+                      <><Copy className="h-3 w-3" /> Copy</>
+                    )}
+                  </span>
+                </div>
+                {isExpanded && (
+                  <div className="px-5 pb-4 pl-12 animate-in fade-in slide-in-from-top-1 duration-200">
+                    <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-line">{card.prompt}</p>
+                  </div>
+                )}
               </div>
             );
           })}
