@@ -15,12 +15,13 @@ const TASKS: Task[] = [
   { label: "Running final checks", duration: 1000 },
 ];
 
-const GenerationProgress = ({ onComplete }: { onComplete: () => void }) => {
+const GenerationProgress = ({ onComplete, onProgress }: { onComplete: () => void; onProgress?: (percent: number) => void }) => {
   const [currentTask, setCurrentTask] = useState(0);
   const [completedTasks, setCompletedTasks] = useState<number[]>([]);
 
   useEffect(() => {
     if (currentTask >= TASKS.length) {
+      onProgress?.(100);
       onComplete();
       return;
     }
@@ -31,10 +32,14 @@ const GenerationProgress = ({ onComplete }: { onComplete: () => void }) => {
     }, TASKS[currentTask].duration);
 
     return () => clearTimeout(timer);
-  }, [currentTask, onComplete]);
+  }, [currentTask, onComplete, onProgress]);
 
   const totalDone = completedTasks.length;
-  const progress = Math.round((totalDone / TASKS.length) * 100);
+  const progress = Math.round(((totalDone + (currentTask < TASKS.length ? 0.5 : 0)) / TASKS.length) * 100);
+
+  useEffect(() => {
+    onProgress?.(progress);
+  }, [progress, onProgress]);
 
   return (
     <div className="space-y-3 py-2">
