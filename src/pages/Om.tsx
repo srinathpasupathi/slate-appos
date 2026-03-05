@@ -921,22 +921,23 @@ const SlateDashboard = () => {
           </button>
         </div>
 
-        {/* Center: Slate, AppOS & Cloud tabs */}
-        <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/60 p-1">
+        {/* Center: Product tabs */}
+        <div className="inline-flex items-center gap-1 border border-border rounded-lg p-1 bg-card/80 backdrop-blur-sm">
           {([
-            { key: 'build' as const, label: 'Prompt' },
-            { key: 'platform' as const, label: 'AppOS' },
-            { key: 'cloud' as const, label: 'Cloud' },
+            { key: 'build' as const, label: 'Prompt', icon: Send },
+            { key: 'platform' as const, label: 'AppOS', icon: Boxes },
+            { key: 'cloud' as const, label: 'Cloud', icon: Database },
           ]).map(tab => (
             <button
               key={tab.key}
               onClick={() => { setMainTab(tab.key); setShowIdeSelector(null); setSelectedBackend(null); }}
-              className={`px-5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+              className={`relative flex items-center gap-1.5 px-4 py-1.5 rounded-md text-sm font-semibold transition-all duration-200 ${
                 mainTab === tab.key
-                  ? 'bg-background text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-primary text-primary-foreground shadow-md shadow-primary/25'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
               }`}
             >
+              <tab.icon className="h-3.5 w-3.5" />
               {tab.label}
             </button>
           ))}
