@@ -19,6 +19,7 @@ import StreamingCode from "@/components/slate/StreamingCode";
 import PreviewLoading from "@/components/slate/PreviewLoading";
 import GeneratedPreview from "@/components/slate/GeneratedPreview";
 import SettingsOverlay from "@/components/SettingsOverlay";
+import RelationalDBView from "@/components/cloud/RelationalDBView";
 
 // ─── Types & Constants ───
 
@@ -583,6 +584,9 @@ const ProjectPage = () => {
   // ─── Cloud Content ───
   const CloudContent = () => {
     const renderCloudSection = () => {
+      if (cloudSection === "relational-db") {
+        return <RelationalDBView />;
+      }
       const sectionItem = CLOUD_NAV.find(n => n.id === cloudSection);
       const title = sectionItem?.label || "Cloud";
       return (
@@ -601,24 +605,6 @@ const ProjectPage = () => {
               </InfoCard>
               <InfoCard label="Sessions">
                 <span className="text-sm text-foreground">1,248 sessions (30d)</span>
-              </InfoCard>
-            </div>
-          )}
-          {cloudSection === "relational-db" && (
-            <div className="grid gap-4">
-              <InfoCard label="Engine">
-                <Badge variant="secondary" className="text-xs font-medium">PostgreSQL 15</Badge>
-              </InfoCard>
-              <InfoCard label="Storage Used">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-foreground">2.4 GB / 8 GB</span>
-                  <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden max-w-[120px]">
-                    <div className="h-full rounded-full bg-primary transition-all" style={{ width: "30%" }} />
-                  </div>
-                </div>
-              </InfoCard>
-              <InfoCard label="Tables">
-                <span className="text-sm text-foreground">18 tables</span>
               </InfoCard>
             </div>
           )}
@@ -715,9 +701,13 @@ const ProjectPage = () => {
           </div>
         </aside>
         <main className="flex-1 overflow-y-auto">
-          <div className="px-6 py-6">
-            {renderCloudSection()}
-          </div>
+          {cloudSection === "relational-db" ? (
+            renderCloudSection()
+          ) : (
+            <div className="px-6 py-6">
+              {renderCloudSection()}
+            </div>
+          )}
         </main>
       </div>
     );
