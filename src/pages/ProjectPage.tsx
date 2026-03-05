@@ -787,39 +787,102 @@ const PlaceholderSection = ({ title, description }: { title: string; description
 
 // ─── AppOS Sub-tabs ───
 
-const OverviewTab = ({ projectName, appUrl, copied, onCopy }: { projectName: string; appUrl: string; copied: boolean; onCopy: (t: string) => void }) => (
-  <div className="space-y-6">
-    <div>
-      <h2 className="text-xl font-semibold tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>{projectName}</h2>
-      <p className="text-sm text-muted-foreground mt-1">Project overview and quick details.</p>
-    </div>
-    <div className="grid gap-4">
-      <InfoCard label="App URL">
+const API_CALLS_7D = [
+  { day: "Mon", calls: 1240 },
+  { day: "Tue", calls: 1580 },
+  { day: "Wed", calls: 2100 },
+  { day: "Thu", calls: 1890 },
+  { day: "Fri", calls: 2340 },
+  { day: "Sat", calls: 980 },
+  { day: "Sun", calls: 760 },
+];
+
+const OverviewTab = ({ projectName, appUrl, copied, onCopy }: { projectName: string; appUrl: string; copied: boolean; onCopy: (t: string) => void }) => {
+  const maxCalls = Math.max(...API_CALLS_7D.map(d => d.calls));
+  const totalCalls = API_CALLS_7D.reduce((s, d) => s + d.calls, 0);
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-xl font-semibold tracking-tight">{projectName}</h2>
+        <p className="text-sm text-muted-foreground mt-1">Project overview and quick details.</p>
+      </div>
+
+      {/* App URL – Primary */}
+      <div className="rounded-xl border border-border bg-card p-5">
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Application URL</p>
         <div className="flex items-center gap-3">
-          <span className="text-sm font-mono text-foreground">{appUrl}</span>
-          <button onClick={() => onCopy(appUrl)} className="text-muted-foreground hover:text-foreground transition-colors">
-            {copied ? <Check className="h-3.5 w-3.5 text-green-600" /> : <Copy className="h-3.5 w-3.5" />}
+          <div className="flex-1 flex items-center gap-2 rounded-lg bg-muted/40 px-4 py-2.5">
+            <Globe className="h-4 w-4 text-primary shrink-0" />
+            <span className="text-sm font-mono text-foreground truncate">{appUrl}</span>
+          </div>
+          <button
+            onClick={() => onCopy(appUrl)}
+            className="h-9 w-9 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          >
+            {copied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4" />}
           </button>
-          <a href={`https://${appUrl}`} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+          <a
+            href={`https://${appUrl}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium flex items-center gap-2 hover:bg-primary/90 transition-colors"
+          >
             <ExternalLink className="h-3.5 w-3.5" />
+            Visit
           </a>
         </div>
-      </InfoCard>
-      <InfoCard label="Deployment Status">
-        <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-green-500" />
-          <span className="text-sm text-foreground">Live · v1.4.2</span>
+      </div>
+
+      {/* Secondary info row */}
+      <div className="grid grid-cols-3 gap-4">
+        <div className="rounded-xl border border-border bg-card p-4">
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Deployment Status</p>
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
+            </span>
+            <span className="text-sm font-medium text-foreground">Live</span>
+            <span className="text-xs text-muted-foreground">· v1.4.2</span>
+          </div>
         </div>
-      </InfoCard>
-      <InfoCard label="Backend Type">
-        <Badge variant="secondary" className="text-xs font-medium">AppOS · Cloud</Badge>
-      </InfoCard>
-      <InfoCard label="Created">
-        <span className="text-sm text-foreground">Jan 12, 2026</span>
-      </InfoCard>
+        <div className="rounded-xl border border-border bg-card p-4">
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Created</p>
+          <p className="text-sm font-medium text-foreground">Jan 12, 2026</p>
+        </div>
+        <div className="rounded-xl border border-border bg-card p-4">
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Total API Calls (7d)</p>
+          <p className="text-2xl font-bold text-foreground">{totalCalls.toLocaleString()}</p>
+        </div>
+      </div>
+
+      {/* API Calls Chart */}
+      <div className="rounded-xl border border-border bg-card p-5">
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-4">API Calls · Last 7 Days</p>
+        <div className="flex items-end gap-3 h-40">
+          {API_CALLS_7D.map(d => (
+            <div key={d.day} className="flex-1 flex flex-col items-center gap-2">
+              <span className="text-[10px] text-muted-foreground font-medium">{d.calls.toLocaleString()}</span>
+              <div className="w-full relative">
+                <div
+                  className="w-full rounded-t-md bg-primary/20 transition-all"
+                  style={{ height: `${(d.calls / maxCalls) * 120}px` }}
+                >
+                  <div
+                    className="absolute bottom-0 left-0 right-0 rounded-t-md bg-primary transition-all"
+                    style={{ height: `${(d.calls / maxCalls) * 120}px` }}
+                  />
+                </div>
+              </div>
+              <span className="text-[11px] text-muted-foreground">{d.day}</span>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const UsersTab = ({ users }: { users: AppUser[] }) => {
   const [detailUser, setDetailUser] = useState<AppUser | null>(null);
