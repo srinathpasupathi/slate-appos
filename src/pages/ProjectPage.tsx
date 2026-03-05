@@ -297,22 +297,38 @@ const ProjectPage = () => {
       <div className="flex items-center gap-3">
         <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
         {AppNameDropdown()}
+        {/* When collapsed, show expand button inline next to app name */}
+        {source === "build" && (activeTab === "preview" || activeTab === "code") && chatPanelCollapsed && (
+          <button
+            onClick={() => setChatPanelCollapsed(false)}
+            className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors ml-1"
+            title="Show chat panel"
+          >
+            <PanelLeft className="h-4 w-4" />
+          </button>
+        )}
       </div>
 
-      {/* Collapse/expand toggle + Tabs positioned to align with right panel edge */}
-      {source === "build" && (activeTab === "preview" || activeTab === "code") && (
+      {/* When expanded, position collapse button + tabs at the right panel edge */}
+      {source === "build" && (activeTab === "preview" || activeTab === "code") && !chatPanelCollapsed && (
         <div
           className="absolute top-0 bottom-0 flex items-center gap-1"
-          style={{ left: chatPanelCollapsed ? '16px' : `calc(${leftPanelWidth}% - 28px)` }}
+          style={{ left: `calc(${leftPanelWidth}% - 28px)` }}
         >
           <button
-            onClick={() => setChatPanelCollapsed(!chatPanelCollapsed)}
+            onClick={() => setChatPanelCollapsed(true)}
             className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            title={chatPanelCollapsed ? "Show chat panel" : "Hide chat panel"}
+            title="Hide chat panel"
           >
-            {chatPanelCollapsed ? <PanelLeft className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
+            <PanelLeftClose className="h-4 w-4" />
           </button>
           <div className="w-px h-4 bg-border mx-0.5" />
+          {TabPills()}
+        </div>
+      )}
+      {/* When collapsed or non-build tabs, center the tab pills */}
+      {source === "build" && (activeTab === "preview" || activeTab === "code") && chatPanelCollapsed && (
+        <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 flex items-center">
           {TabPills()}
         </div>
       )}
