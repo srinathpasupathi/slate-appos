@@ -116,7 +116,7 @@ const ProjectPage = () => {
   // Determine available tabs
   const availableTabs: TopTab[] = source === "build"
     ? ["preview", "code", "appos", "cloud"]
-    : ["preview", "appos", "cloud"];
+    : ["appos", "cloud", "preview"];
 
   const [activeTab, setActiveTab] = useState<TopTab>(availableTabs[0]);
 
