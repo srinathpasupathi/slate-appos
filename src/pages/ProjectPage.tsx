@@ -546,7 +546,7 @@ const ProjectPage = () => {
 
       {/* Main content */}
       <main className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto px-8 py-8">
+        <div className="px-6 py-6">
           {appOsSection === "overview" && <OverviewTab projectName={projectName} appUrl={appUrl} copied={copied} onCopy={handleCopy} />}
           {appOsSection === "users" && (
             selectedTenant
@@ -697,7 +697,7 @@ const ProjectPage = () => {
           </div>
         </aside>
         <main className="flex-1 overflow-y-auto">
-          <div className="max-w-3xl mx-auto px-8 py-8">
+          <div className="px-6 py-6">
             {renderCloudSection()}
           </div>
         </main>
