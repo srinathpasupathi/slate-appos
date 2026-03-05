@@ -6,7 +6,7 @@ import {
   Home, Settings, Sun, Moon, HelpCircle, Zap, Lock, Search, AlertCircle,
   ChevronLeft, Copy, Check, ArrowLeft, Users, Rocket, LayoutDashboard, Trash2,
   RotateCcw, Server, Cloud, PanelLeftClose, PanelLeft, Boxes, DatabaseZap, Wrench,
-  MoreHorizontal, X,
+  MoreHorizontal, X, Shield,
 } from "lucide-react";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -941,12 +941,70 @@ const RESOURCE_MODULES = [
   { name: "Invoices", entities: 4, description: "Billing and invoices", createdOn: "20 Jan 2026, 9:15 am", createdBy: "admin@franchise.com" },
 ];
 
-type ResourceSubNav = "module" | "workflow" | "blueprint";
+type ResourceSubNav = "module" | "workflow" | "roles";
 
 const RESOURCE_SUB_NAV: { id: ResourceSubNav; label: string }[] = [
-  { id: "module", label: "Module" },
+  { id: "module", label: "Modules & Fields" },
   { id: "workflow", label: "Workflow" },
-  { id: "blueprint", label: "Blueprint" },
+  { id: "roles", label: "Roles & Permissions" },
+];
+
+interface WorkflowEntry {
+  name: string;
+  type: string;
+  moduleName: string;
+  createdOn: string;
+  trigger: string;
+  target: string;
+  configuration: string;
+}
+
+const SAMPLE_WORKFLOWS: WorkflowEntry[] = [
+  { name: "New Lead Assignment", type: "Automation", moduleName: "Leads", createdOn: "10 Jan 2026, 10:00 am", trigger: "On Record Create", target: "Assign Owner Field", configuration: "Round-robin assignment among sales reps based on region" },
+  { name: "Invoice Overdue Alert", type: "Scheduled", moduleName: "Invoices", createdOn: "15 Jan 2026, 3:30 pm", trigger: "Daily at 9:00 AM", target: "Send Email Notification", configuration: "Email sent to billing team when invoice is overdue by 7+ days" },
+  { name: "Deal Stage Update", type: "Automation", moduleName: "Deals", createdOn: "20 Jan 2026, 11:45 am", trigger: "On Field Update (Stage)", target: "Update Probability Field", configuration: "Auto-update win probability based on deal stage mapping" },
+  { name: "Customer Onboarding", type: "Blueprint", moduleName: "Contacts", createdOn: "25 Jan 2026, 9:00 am", trigger: "On Record Create (Customer Type)", target: "Create Tasks", configuration: "Generate 5 onboarding tasks assigned to CSM with due dates" },
+  { name: "Inventory Restock", type: "Scheduled", moduleName: "Products", createdOn: "01 Feb 2026, 8:00 am", trigger: "Weekly on Monday", target: "Create Purchase Order", configuration: "Auto-create PO when stock falls below minimum threshold" },
+];
+
+interface RoleEntry {
+  name: string;
+  description: string;
+  users: number;
+  permissions: { module: string; create: boolean; read: boolean; update: boolean; delete: boolean }[];
+}
+
+const SAMPLE_ROLES: RoleEntry[] = [
+  { name: "Super Admin", description: "Full system access with all permissions", users: 2, permissions: [
+    { module: "Leads", create: true, read: true, update: true, delete: true },
+    { module: "Deals", create: true, read: true, update: true, delete: true },
+    { module: "Contacts", create: true, read: true, update: true, delete: true },
+    { module: "Invoices", create: true, read: true, update: true, delete: true },
+  ]},
+  { name: "Sales Manager", description: "Manage sales pipeline and team performance", users: 5, permissions: [
+    { module: "Leads", create: true, read: true, update: true, delete: false },
+    { module: "Deals", create: true, read: true, update: true, delete: false },
+    { module: "Contacts", create: true, read: true, update: true, delete: false },
+    { module: "Invoices", create: false, read: true, update: false, delete: false },
+  ]},
+  { name: "Sales Rep", description: "Create and manage own leads and deals", users: 12, permissions: [
+    { module: "Leads", create: true, read: true, update: true, delete: false },
+    { module: "Deals", create: true, read: true, update: true, delete: false },
+    { module: "Contacts", create: true, read: true, update: false, delete: false },
+    { module: "Invoices", create: false, read: true, update: false, delete: false },
+  ]},
+  { name: "Finance", description: "Manage invoices and billing operations", users: 3, permissions: [
+    { module: "Leads", create: false, read: true, update: false, delete: false },
+    { module: "Deals", create: false, read: true, update: false, delete: false },
+    { module: "Contacts", create: false, read: true, update: false, delete: false },
+    { module: "Invoices", create: true, read: true, update: true, delete: true },
+  ]},
+  { name: "Viewer", description: "Read-only access across all modules", users: 8, permissions: [
+    { module: "Leads", create: false, read: true, update: false, delete: false },
+    { module: "Deals", create: false, read: true, update: false, delete: false },
+    { module: "Contacts", create: false, read: true, update: false, delete: false },
+    { module: "Invoices", create: false, read: true, update: false, delete: false },
+  ]},
 ];
 
 const SAMPLE_DATA: Record<string, { columns: string[]; rows: string[][] }> = {
@@ -1123,7 +1181,7 @@ const ResourcesTab = () => {
         {subNav === "module" && (
           <>
             <div>
-              <h2 className="text-xl font-semibold tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>Module</h2>
+              <h2 className="text-xl font-semibold tracking-tight">Modules & Fields</h2>
               <p className="text-sm text-muted-foreground mt-0.5">Business Data Entity</p>
             </div>
             <div className="relative w-72">
@@ -1165,14 +1223,172 @@ const ResourcesTab = () => {
             </div>
           </>
         )}
-        {subNav === "workflow" && (
-          <PlaceholderSection title="Workflow" description="Define and manage automated workflows for your application." />
-        )}
-        {subNav === "blueprint" && (
-          <PlaceholderSection title="Blueprint" description="Design data blueprints and schema templates." />
-        )}
+        {subNav === "workflow" && <WorkflowSection />}
+        {subNav === "roles" && <RolesSection />}
       </div>
     </div>
+  );
+};
+
+const WorkflowSection = () => {
+  const [selectedWorkflow, setSelectedWorkflow] = useState<WorkflowEntry | null>(null);
+
+  return (
+    <>
+      <div>
+        <h2 className="text-xl font-semibold tracking-tight">Workflow</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">Define and manage automated workflows for your application.</p>
+      </div>
+      <div className="rounded-lg border border-border bg-card overflow-hidden">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="text-left px-4 py-2.5 text-[11px] text-primary uppercase tracking-wider font-medium">Workflow Name</th>
+              <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Type</th>
+              <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Module Name</th>
+              <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Created On</th>
+            </tr>
+          </thead>
+          <tbody>
+            {SAMPLE_WORKFLOWS.map((w) => (
+              <tr
+                key={w.name}
+                onClick={() => setSelectedWorkflow(w)}
+                className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors cursor-pointer"
+              >
+                <td className="px-4 py-3 font-medium text-primary">{w.name}</td>
+                <td className="px-4 py-3 text-muted-foreground">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-accent text-accent-foreground">{w.type}</span>
+                </td>
+                <td className="px-4 py-3 text-muted-foreground">{w.moduleName}</td>
+                <td className="px-4 py-3 text-muted-foreground">{w.createdOn}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <Dialog open={!!selectedWorkflow} onOpenChange={() => setSelectedWorkflow(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{selectedWorkflow?.name}</DialogTitle>
+            <DialogDescription>Workflow details and configuration</DialogDescription>
+          </DialogHeader>
+          {selectedWorkflow && (
+            <div className="space-y-4 pt-2">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium mb-1">Type</p>
+                  <p className="text-sm font-medium">{selectedWorkflow.type}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium mb-1">Module</p>
+                  <p className="text-sm font-medium">{selectedWorkflow.moduleName}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium mb-1">Created On</p>
+                  <p className="text-sm font-medium">{selectedWorkflow.createdOn}</p>
+                </div>
+              </div>
+              <div className="border-t border-border pt-4 space-y-3">
+                <div>
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium mb-1">Trigger</p>
+                  <p className="text-sm bg-muted/50 rounded-md px-3 py-2">{selectedWorkflow.trigger}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium mb-1">Target</p>
+                  <p className="text-sm bg-muted/50 rounded-md px-3 py-2">{selectedWorkflow.target}</p>
+                </div>
+                <div>
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium mb-1">Configuration</p>
+                  <p className="text-sm bg-muted/50 rounded-md px-3 py-2">{selectedWorkflow.configuration}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+const RolesSection = () => {
+  const [selectedRole, setSelectedRole] = useState<RoleEntry | null>(null);
+
+  if (selectedRole) {
+    return (
+      <>
+        <div className="flex items-center gap-2 mb-4">
+          <button onClick={() => setSelectedRole(null)} className="text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight">{selectedRole.name}</h2>
+            <p className="text-sm text-muted-foreground mt-0.5">{selectedRole.description}</p>
+          </div>
+        </div>
+        <div className="rounded-lg border border-border bg-card overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left px-4 py-2.5 text-[11px] text-primary uppercase tracking-wider font-medium">Module</th>
+                <th className="text-center px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Create</th>
+                <th className="text-center px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Read</th>
+                <th className="text-center px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Update</th>
+                <th className="text-center px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedRole.permissions.map((p) => (
+                <tr key={p.module} className="border-b border-border last:border-0">
+                  <td className="px-4 py-3 font-medium">{p.module}</td>
+                  <td className="px-4 py-3 text-center">{p.create ? <Check className="h-4 w-4 text-green-500 mx-auto" /> : <X className="h-4 w-4 text-destructive/50 mx-auto" />}</td>
+                  <td className="px-4 py-3 text-center">{p.read ? <Check className="h-4 w-4 text-green-500 mx-auto" /> : <X className="h-4 w-4 text-destructive/50 mx-auto" />}</td>
+                  <td className="px-4 py-3 text-center">{p.update ? <Check className="h-4 w-4 text-green-500 mx-auto" /> : <X className="h-4 w-4 text-destructive/50 mx-auto" />}</td>
+                  <td className="px-4 py-3 text-center">{p.delete ? <Check className="h-4 w-4 text-green-500 mx-auto" /> : <X className="h-4 w-4 text-destructive/50 mx-auto" />}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div>
+        <h2 className="text-xl font-semibold tracking-tight">Roles & Permissions</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">Manage user roles and their access permissions.</p>
+      </div>
+      <div className="rounded-lg border border-border bg-card overflow-hidden">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="text-left px-4 py-2.5 text-[11px] text-primary uppercase tracking-wider font-medium">Role Name</th>
+              <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Description</th>
+              <th className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium">Users</th>
+            </tr>
+          </thead>
+          <tbody>
+            {SAMPLE_ROLES.map((r) => (
+              <tr
+                key={r.name}
+                onClick={() => setSelectedRole(r)}
+                className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors cursor-pointer"
+              >
+                <td className="px-4 py-3 font-medium text-primary flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-primary/70" />
+                  {r.name}
+                </td>
+                <td className="px-4 py-3 text-muted-foreground">{r.description}</td>
+                <td className="px-4 py-3 text-muted-foreground">{r.users}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 };
 
