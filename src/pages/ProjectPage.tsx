@@ -265,33 +265,10 @@ const ProjectPage = () => {
     return () => timers.forEach(clearTimeout);
   }, [source, initialPrompt]);
 
-  // Progress ticker
-  useEffect(() => {
-    if (!isGenerating) return;
-    setGenerationProgress(0);
-    const interval = setInterval(() => {
-      setGenerationProgress((prev) => {
-        if (prev >= 100) { clearInterval(interval); return 100; }
-        // Slow down as we approach 90, then jump to 100 near the end
-        if (prev >= 90) return prev + 0.5;
-        return prev + Math.random() * 8;
-      });
-    }, 800);
-
-    forceCompleteTimerRef.current = window.setTimeout(() => {
-      // Ramp to 100% first, then complete
-      setGenerationProgress(100);
-      setTimeout(() => handleGenerationComplete(), 600);
-    }, 14000);
-
-    return () => {
-      clearInterval(interval);
-      if (forceCompleteTimerRef.current) {
-        clearTimeout(forceCompleteTimerRef.current);
-        forceCompleteTimerRef.current = null;
-      }
-    };
-  }, [isGenerating, handleGenerationComplete]);
+  // Progress is now driven by GenerationProgress onProgress callback
+  const handleGenerationProgress = useCallback((percent: number) => {
+    setGenerationProgress(percent);
+  }, []);
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
@@ -908,7 +885,7 @@ const ProjectPage = () => {
             {isGenerating && (
               <div className="flex justify-start">
                 <div className="max-w-[85%] rounded-xl px-4 py-2.5 bg-muted text-foreground">
-                  <GenerationProgress onComplete={handleGenerationComplete} />
+                  <GenerationProgress onComplete={handleGenerationComplete} onProgress={handleGenerationProgress} />
                 </div>
               </div>
             )}
