@@ -13,6 +13,7 @@ import RelationalDBView from "@/components/cloud/RelationalDBView";
 import ObjectStorageView from "@/components/cloud/ObjectStorageView";
 import NoSQLDBView from "@/components/cloud/NoSQLDBView";
 import AuthenticationView from "@/components/cloud/AuthenticationView";
+import { OverviewTab, UsersTab, ResourcesTab, QueryConsoleTab, ConfigurationTab, DeploymentsTab, APP_USERS } from "@/components/appos/AppOSTabs";
 
 const defaultRecentProjects = [
   { name: "CRM Analytics Dashboard", source: "build" },
@@ -839,7 +840,14 @@ const SlateDashboard = () => {
   const [appOsSection, setAppOsSection] = useState("overview");
   const [cloudSection, setCloudSection] = useState("authentication");
   const [hideCards, setHideCards] = useState(false);
+  const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
   const handleCreateUntitled = () => {
     setRecentProjects(prev => {
@@ -1073,37 +1081,12 @@ const SlateDashboard = () => {
               <div className="flex-1 overflow-y-auto">
                 {mainTab === 'platform' ? (
                   <div className="px-6 py-6">
-                    {appOsSection === "overview" && (
-                      <div className="space-y-6">
-                        <div>
-                          <h2 className="text-xl font-semibold tracking-tight">Overview</h2>
-                          <p className="text-sm text-muted-foreground mt-1">Backend overview for {selectedBackend}</p>
-                        </div>
-                        <div className="grid grid-cols-3 gap-4">
-                          <div className="rounded-xl border border-border bg-card p-4">
-                            <p className="text-xs text-muted-foreground font-medium">Status</p>
-                            <p className="text-lg font-semibold text-foreground mt-1">Active</p>
-                          </div>
-                          <div className="rounded-xl border border-border bg-card p-4">
-                            <p className="text-xs text-muted-foreground font-medium">Users</p>
-                            <p className="text-lg font-semibold text-foreground mt-1">24</p>
-                          </div>
-                          <div className="rounded-xl border border-border bg-card p-4">
-                            <p className="text-xs text-muted-foreground font-medium">Resources</p>
-                            <p className="text-lg font-semibold text-foreground mt-1">8 modules</p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    {appOsSection !== "overview" && (
-                      <div className="space-y-4">
-                        <h2 className="text-xl font-semibold tracking-tight">{APPOS_NAV.find(n => n.id === appOsSection)?.label}</h2>
-                        <p className="text-sm text-muted-foreground">Manage {APPOS_NAV.find(n => n.id === appOsSection)?.label.toLowerCase()} for {selectedBackend}.</p>
-                        <div className="rounded-xl border border-dashed border-border bg-muted/20 h-60 flex items-center justify-center">
-                          <p className="text-sm text-muted-foreground">{APPOS_NAV.find(n => n.id === appOsSection)?.label} content</p>
-                        </div>
-                      </div>
-                    )}
+                    {appOsSection === "overview" && <OverviewTab projectName={selectedBackend || ''} appUrl={`${(selectedBackend || '').toLowerCase().replace(/\s+/g, '-')}.us.omcloud.ai`} copied={copied} onCopy={handleCopy} />}
+                    {appOsSection === "users" && <UsersTab users={APP_USERS} />}
+                    {appOsSection === "resources" && <ResourcesTab />}
+                    {appOsSection === "query-console" && <QueryConsoleTab />}
+                    {appOsSection === "configuration" && <ConfigurationTab />}
+                    {appOsSection === "deployments" && <DeploymentsTab />}
                   </div>
                 ) : (
                   <>
