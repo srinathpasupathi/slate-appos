@@ -1137,17 +1137,17 @@ const SlateDashboard = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-blue-100/60 via-indigo-50/40 to-blue-50/30 pointer-events-none" />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
 
-          <div className={`relative flex-1 flex flex-col ${mainTab === 'build' ? 'items-center justify-center' : ''} px-6 lg:px-16 pb-24`}>
+          <div className={`relative flex-1 flex flex-col ${mainTab === 'build' || showIdeSelector === mainTab ? 'items-center justify-center' : ''} px-6 lg:px-16 pb-24`}>
             {/* Preload IDE logos so they're cached across all layout modes */}
             <div className="hidden">
               {ideOptions.map(ide => ide.logo && <img key={ide.key} src={ide.logo} alt="" />)}
             </div>
             {layoutMode === 'option1' ? (
               /* === OPTION 1: Original tabbed layout === */
-              <div className={`w-full flex flex-col flex-1 ${mainTab === 'build' ? 'items-center justify-center' : ''}`}>
+              <div className={`w-full flex flex-col flex-1 ${mainTab === 'build' || showIdeSelector === mainTab ? 'items-center justify-center' : ''}`}>
 
                 {/* Content area */}
-                <div className={`w-full flex flex-col ${mainTab === 'build' ? 'items-center' : ''}`}>
+                <div className={`w-full flex flex-col ${mainTab === 'build' || showIdeSelector === mainTab ? 'items-center' : ''}`}>
                   {mainTab === 'build' ? (
                     <>
                       <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
