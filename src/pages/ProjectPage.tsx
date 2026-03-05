@@ -572,7 +572,7 @@ const ProjectPage = () => {
             <UsersTab users={APP_USERS} />
           )}
           {appOsSection === "resources" && <ResourcesTab />}
-          {appOsSection === "query-console" && <PlaceholderSection title="Query Console" description="Run queries against your application data." />}
+          {appOsSection === "query-console" && <QueryConsoleTab />}
           {appOsSection === "configuration" && <SettingsTab projectName={projectName} appUrl={appUrl} />}
           {appOsSection === "deployments" && <DeploymentsTab />}
         </div>
@@ -948,6 +948,136 @@ const RESOURCE_SUB_NAV: { id: ResourceSubNav; label: string }[] = [
   { id: "workflow", label: "Workflow" },
   { id: "blueprint", label: "Blueprint" },
 ];
+
+const SAMPLE_DATA: Record<string, { columns: string[]; rows: string[][] }> = {
+  "SELECT * FROM orders": {
+    columns: ["Order ID", "Customer", "Amount", "Status", "Date"],
+    rows: [
+      ["ORD-001", "Acme Corp", "$12,500", "Completed", "2026-01-15"],
+      ["ORD-002", "Globex Inc", "$8,200", "Pending", "2026-02-03"],
+      ["ORD-003", "Initech", "$15,750", "Completed", "2026-02-10"],
+      ["ORD-004", "Umbrella Ltd", "$4,300", "Cancelled", "2026-02-18"],
+    ],
+  },
+  "SELECT * FROM products": {
+    columns: ["Product ID", "Name", "Price", "Category", "Stock"],
+    rows: [
+      ["PRD-001", "Widget Pro", "$299", "Hardware", "142"],
+      ["PRD-002", "DataSync", "$49/mo", "Software", "∞"],
+      ["PRD-003", "SmartHub", "$599", "Hardware", "38"],
+    ],
+  },
+  "SELECT * FROM customers": {
+    columns: ["Customer ID", "Name", "Email", "Plan", "Since"],
+    rows: [
+      ["CST-001", "Acme Corp", "admin@acme.com", "Enterprise", "2025-06-01"],
+      ["CST-002", "Globex Inc", "info@globex.com", "Pro", "2025-09-15"],
+      ["CST-003", "Initech", "hello@initech.com", "Starter", "2026-01-10"],
+    ],
+  },
+};
+
+const QueryConsoleTab = () => {
+  const [query, setQuery] = useState("SELECT * FROM orders");
+  const [result, setResult] = useState<{ columns: string[]; rows: string[][] } | null>(null);
+  const [isRunning, setIsRunning] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [executionTime, setExecutionTime] = useState<number | null>(null);
+
+  const handleRun = () => {
+    setIsRunning(true);
+    setError(null);
+    setResult(null);
+    const trimmed = query.trim().replace(/;$/, "").trim();
+    setTimeout(() => {
+      const match = Object.entries(SAMPLE_DATA).find(([key]) => key.toLowerCase() === trimmed.toLowerCase());
+      if (match) {
+        setResult(match[1]);
+        setExecutionTime(Math.floor(Math.random() * 80) + 12);
+      } else {
+        setError("No results found. Try: SELECT * FROM orders, SELECT * FROM products, or SELECT * FROM customers");
+      }
+      setIsRunning(false);
+    }, 600);
+  };
+
+  return (
+    <div className="space-y-4 h-full flex flex-col">
+      <div>
+        <h2 className="text-xl font-semibold tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>Query Console</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">Run queries against your application data.</p>
+      </div>
+
+      {/* Editor area */}
+      <div className="rounded-lg border border-border bg-card overflow-hidden flex flex-col">
+        <div className="flex items-center justify-between px-3 py-2 border-b border-border bg-muted/30">
+          <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">Editor</span>
+          <button
+            onClick={handleRun}
+            disabled={isRunning || !query.trim()}
+            className="h-7 px-3 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-1.5"
+          >
+            {isRunning ? (
+              <RotateCcw className="h-3 w-3 animate-spin" />
+            ) : (
+              <Zap className="h-3 w-3" />
+            )}
+            {isRunning ? "Running…" : "Execute"}
+          </button>
+        </div>
+        <textarea
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") handleRun(); }}
+          spellCheck={false}
+          className="w-full min-h-[120px] p-4 bg-background text-sm font-mono resize-y focus:outline-none placeholder:text-muted-foreground"
+          placeholder="Enter your query here… (⌘+Enter to execute)"
+        />
+      </div>
+
+      {/* Results area */}
+      {error && (
+        <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive flex items-start gap-2">
+          <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+          {error}
+        </div>
+      )}
+
+      {result && (
+        <div className="rounded-lg border border-border bg-card overflow-hidden flex-1 flex flex-col">
+          <div className="flex items-center justify-between px-3 py-2 border-b border-border bg-muted/30">
+            <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
+              Results — {result.rows.length} row{result.rows.length !== 1 ? "s" : ""}
+            </span>
+            {executionTime && (
+              <span className="text-[11px] text-muted-foreground">{executionTime}ms</span>
+            )}
+          </div>
+          <div className="overflow-auto flex-1">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border">
+                  {result.columns.map((col) => (
+                    <th key={col} className="text-left px-4 py-2.5 text-[11px] text-muted-foreground uppercase tracking-wider font-medium whitespace-nowrap">{col}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {result.rows.map((row, i) => (
+                  <tr key={i} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
+                    {row.map((cell, j) => (
+                      <td key={j} className="px-4 py-2.5 whitespace-nowrap font-mono text-[12px]">{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ResourcesTab = () => {
   const [subNav, setSubNav] = useState<ResourceSubNav>("module");
