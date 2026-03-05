@@ -271,13 +271,17 @@ const ProjectPage = () => {
     setGenerationProgress(0);
     const interval = setInterval(() => {
       setGenerationProgress((prev) => {
-        if (prev >= 95) { clearInterval(interval); return prev; }
-        return prev + Math.random() * 12;
+        if (prev >= 100) { clearInterval(interval); return 100; }
+        // Slow down as we approach 90, then jump to 100 near the end
+        if (prev >= 90) return prev + 0.5;
+        return prev + Math.random() * 8;
       });
     }, 800);
 
     forceCompleteTimerRef.current = window.setTimeout(() => {
-      handleGenerationComplete();
+      // Ramp to 100% first, then complete
+      setGenerationProgress(100);
+      setTimeout(() => handleGenerationComplete(), 600);
     }, 14000);
 
     return () => {
