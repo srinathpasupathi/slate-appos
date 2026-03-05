@@ -66,6 +66,17 @@ const APPOS_NAV = [
   { id: "settings", label: "Configuration", icon: Settings },
 ];
 
+const CLOUD_NAV = [
+  { id: "authentication", label: "Authentication", icon: Lock },
+  { id: "relational-db", label: "Relational Database", icon: Server },
+  { id: "object-storage", label: "Object Storage", icon: FolderTree },
+  { id: "nosql-db", label: "NoSQL Database", icon: LayoutDashboard },
+  { id: "functions", label: "Functions", icon: Zap },
+  { id: "schedulers", label: "Schedulers", icon: RotateCcw },
+  { id: "mail", label: "Mail", icon: Send },
+  { id: "logs", label: "Logs", icon: Terminal },
+];
+
 // ─── Main Component ───
 
 const ProjectPage = () => {
@@ -101,6 +112,9 @@ const ProjectPage = () => {
   const [appOsSection, setAppOsSection] = useState("overview");
   const [selectedTenant, setSelectedTenant] = useState<typeof TENANTS[number] | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Cloud state
+  const [cloudSection, setCloudSection] = useState("authentication");
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -545,59 +559,147 @@ const ProjectPage = () => {
   );
 
   // ─── Cloud Content ───
-  const CloudContent = () => (
-    <div className="flex-1 overflow-y-auto">
-      <div className="max-w-3xl mx-auto px-8 py-8 space-y-6">
-        <div>
-          <h2 className="text-xl font-semibold tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>Cloud</h2>
-          <p className="text-sm text-muted-foreground mt-1">Backend infrastructure and cloud services for your application.</p>
+  const CloudContent = () => {
+    const renderCloudSection = () => {
+      const sectionItem = CLOUD_NAV.find(n => n.id === cloudSection);
+      const title = sectionItem?.label || "Cloud";
+      return (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>{title}</h2>
+            <p className="text-sm text-muted-foreground mt-1">Manage {title.toLowerCase()} for your application.</p>
+          </div>
+          {cloudSection === "authentication" && (
+            <div className="grid gap-4">
+              <InfoCard label="Provider">
+                <Badge variant="secondary" className="text-xs font-medium">Email + OAuth</Badge>
+              </InfoCard>
+              <InfoCard label="Active Users">
+                <span className="text-sm text-foreground">156 active users</span>
+              </InfoCard>
+              <InfoCard label="Sessions">
+                <span className="text-sm text-foreground">1,248 sessions (30d)</span>
+              </InfoCard>
+            </div>
+          )}
+          {cloudSection === "relational-db" && (
+            <div className="grid gap-4">
+              <InfoCard label="Engine">
+                <Badge variant="secondary" className="text-xs font-medium">PostgreSQL 15</Badge>
+              </InfoCard>
+              <InfoCard label="Storage Used">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-foreground">2.4 GB / 8 GB</span>
+                  <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden max-w-[120px]">
+                    <div className="h-full rounded-full bg-primary transition-all" style={{ width: "30%" }} />
+                  </div>
+                </div>
+              </InfoCard>
+              <InfoCard label="Tables">
+                <span className="text-sm text-foreground">18 tables</span>
+              </InfoCard>
+            </div>
+          )}
+          {cloudSection === "object-storage" && (
+            <div className="grid gap-4">
+              <InfoCard label="Buckets">
+                <span className="text-sm text-foreground">3 buckets</span>
+              </InfoCard>
+              <InfoCard label="Storage Used">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-foreground">1.8 GB / 5 GB</span>
+                  <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden max-w-[120px]">
+                    <div className="h-full rounded-full bg-primary transition-all" style={{ width: "36%" }} />
+                  </div>
+                </div>
+              </InfoCard>
+            </div>
+          )}
+          {cloudSection === "nosql-db" && (
+            <div className="grid gap-4">
+              <InfoCard label="Status">
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-muted-foreground/40" />
+                  <span className="text-sm text-muted-foreground">Not configured</span>
+                </div>
+              </InfoCard>
+            </div>
+          )}
+          {cloudSection === "functions" && (
+            <div className="grid gap-4">
+              <InfoCard label="Deployed Functions">
+                <span className="text-sm text-foreground">3 deployed</span>
+              </InfoCard>
+              <InfoCard label="Invocations">
+                <span className="text-sm text-foreground">12.4k invocations today</span>
+              </InfoCard>
+            </div>
+          )}
+          {cloudSection === "schedulers" && (
+            <div className="grid gap-4">
+              <InfoCard label="Active Jobs">
+                <span className="text-sm text-foreground">2 scheduled jobs</span>
+              </InfoCard>
+            </div>
+          )}
+          {cloudSection === "mail" && (
+            <div className="grid gap-4">
+              <InfoCard label="Emails Sent">
+                <span className="text-sm text-foreground">342 emails (30d)</span>
+              </InfoCard>
+              <InfoCard label="Provider">
+                <Badge variant="secondary" className="text-xs font-medium">SMTP</Badge>
+              </InfoCard>
+            </div>
+          )}
+          {cloudSection === "logs" && (
+            <div className="grid gap-4">
+              <InfoCard label="Log Entries">
+                <span className="text-sm text-foreground">48.2k entries (24h)</span>
+              </InfoCard>
+              <InfoCard label="Errors">
+                <span className="text-sm text-foreground text-destructive">12 errors (24h)</span>
+              </InfoCard>
+            </div>
+          )}
         </div>
+      );
+    };
 
-        <div className="grid gap-4">
-          <InfoCard label="Backend Status">
+    return (
+      <div className="flex flex-1 overflow-hidden h-full">
+        <aside className="w-48 border-r border-border bg-card flex flex-col shrink-0">
+          <nav className="flex-1 p-2 space-y-0.5">
+            {CLOUD_NAV.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setCloudSection(item.id)}
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors ${
+                  cloudSection === item.id
+                    ? "bg-primary/10 text-primary font-medium"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                }`}
+              >
+                <item.icon className="h-4 w-4" />
+                {item.label}
+              </button>
+            ))}
+          </nav>
+          <div className="p-3 border-t border-border">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-green-500" />
-              <span className="text-sm text-foreground">Active · AppOS Cloud</span>
+              <span className="text-[11px] text-muted-foreground">Cloud Active</span>
             </div>
-          </InfoCard>
-
-          <InfoCard label="Region">
-            <span className="text-sm text-foreground">US East (Virginia)</span>
-          </InfoCard>
-
-          <InfoCard label="Database">
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="text-xs font-medium">PostgreSQL 15</Badge>
-              <span className="text-sm text-muted-foreground">· 2.4 GB used</span>
-            </div>
-          </InfoCard>
-
-          <InfoCard label="Storage">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-foreground">1.8 GB / 5 GB</span>
-              <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden max-w-[120px]">
-                <div className="h-full rounded-full bg-primary transition-all" style={{ width: "36%" }} />
-              </div>
-            </div>
-          </InfoCard>
-
-          <InfoCard label="Edge Functions">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-foreground">3 deployed</span>
-              <span className="text-xs text-muted-foreground">· 12.4k invocations today</span>
-            </div>
-          </InfoCard>
-
-          <InfoCard label="Authentication">
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="text-xs font-medium">Email + OAuth</Badge>
-              <span className="text-sm text-muted-foreground">· 156 active users</span>
-            </div>
-          </InfoCard>
-        </div>
+          </div>
+        </aside>
+        <main className="flex-1 overflow-y-auto">
+          <div className="max-w-3xl mx-auto px-8 py-8">
+            {renderCloudSection()}
+          </div>
+        </main>
       </div>
-    </div>
-  );
+    );
+  };
 
   // ─── Tab Content Renderer ───
   const renderTabContent = () => {
