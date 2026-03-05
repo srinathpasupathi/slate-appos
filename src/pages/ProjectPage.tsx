@@ -915,8 +915,14 @@ const OverviewTab = ({ projectName, appUrl, copied, onCopy }: { projectName: str
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold tracking-tight">{projectName}</h2>
+        <h2 className="text-xl font-semibold tracking-tight">Overview</h2>
         <p className="text-sm text-muted-foreground mt-1">Project overview and quick details.</p>
+      </div>
+
+      {/* App Name card */}
+      <div className="rounded-xl border border-border bg-card p-5">
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">App Name</p>
+        <span className="text-base font-semibold text-foreground">{projectName}</span>
       </div>
 
       {/* App URL – Primary */}
