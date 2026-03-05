@@ -838,6 +838,7 @@ const SlateDashboard = () => {
   const [selectedBackend, setSelectedBackend] = useState<string | null>(null);
   const [appOsSection, setAppOsSection] = useState("overview");
   const [cloudSection, setCloudSection] = useState("authentication");
+  const [hideCards, setHideCards] = useState(false);
   const navigate = useNavigate();
 
   const handleCreateUntitled = () => {
@@ -1137,24 +1138,24 @@ const SlateDashboard = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-blue-100/60 via-indigo-50/40 to-blue-50/30 pointer-events-none" />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
 
-          <div className={`relative flex-1 flex flex-col ${mainTab === 'build' || showIdeSelector === mainTab ? 'items-center justify-center' : ''} px-6 lg:px-16 pb-24`}>
+          <div className={`relative flex-1 flex flex-col ${mainTab === 'build' || showIdeSelector === mainTab || hideCards ? 'items-center justify-center' : ''} px-6 lg:px-16 pb-24`}>
             {/* Preload IDE logos so they're cached across all layout modes */}
             <div className="hidden">
               {ideOptions.map(ide => ide.logo && <img key={ide.key} src={ide.logo} alt="" />)}
             </div>
             {layoutMode === 'option1' ? (
               /* === OPTION 1: Original tabbed layout === */
-              <div className={`w-full flex flex-col flex-1 ${mainTab === 'build' || showIdeSelector === mainTab ? 'items-center justify-center' : ''}`}>
+              <div className={`w-full flex flex-col flex-1 ${mainTab === 'build' || showIdeSelector === mainTab || hideCards ? 'items-center justify-center' : ''}`}>
 
                 {/* Content area */}
-                <div className={`w-full flex flex-col ${mainTab === 'build' || showIdeSelector === mainTab ? 'items-center' : ''}`}>
+                <div className={`w-full flex flex-col ${mainTab === 'build' || showIdeSelector === mainTab || hideCards ? 'items-center' : ''}`}>
                   {mainTab === 'build' ? (
                     <>
                       <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                         What should we build, Srinath?
                       </h1>
                     </>
-                  ) : showIdeSelector === mainTab ? (
+                  ) : showIdeSelector === mainTab || hideCards ? (
                     <PlatformIDESelector onCreateUntitled={handleCreateUntitled} onRenameProject={handleRenameProject} title={mainTab === 'platform' ? 'Connect AppOS to your AI IDE' : 'Connect Om Cloud to your AI IDE'} />
                   ) : (
                     <BackendProjectsListing
@@ -1525,6 +1526,35 @@ const SlateDashboard = () => {
 
       {/* Settings overlay */}
       <SettingsOverlay open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+
+      {/* Hide/Show cards dropdown for AppOS/Cloud */}
+      {(mainTab === 'platform' || mainTab === 'cloud') && !selectedBackend && (
+        <div className="fixed bottom-5 right-5 z-40">
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="h-9 px-4 rounded-lg border border-border bg-card shadow-md text-sm font-medium text-foreground hover:bg-muted transition-colors flex items-center gap-2">
+                <Settings className="h-3.5 w-3.5 text-muted-foreground" />
+                View
+                <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent align="end" side="top" className="w-44 p-1">
+              <button
+                onClick={() => setHideCards(true)}
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors ${hideCards ? 'bg-primary/10 text-primary font-medium' : 'text-foreground hover:bg-muted'}`}
+              >
+                Hide {mainTab === 'platform' ? 'Backends' : 'Projects'}
+              </button>
+              <button
+                onClick={() => { setHideCards(false); setShowIdeSelector(null); }}
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors ${!hideCards ? 'bg-primary/10 text-primary font-medium' : 'text-foreground hover:bg-muted'}`}
+              >
+                Show {mainTab === 'platform' ? 'Backends' : 'Projects'}
+              </button>
+            </PopoverContent>
+          </Popover>
+        </div>
+      )}
     </div>
   );
 };
