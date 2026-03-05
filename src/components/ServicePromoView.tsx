@@ -33,7 +33,7 @@ const ServicePromoView = ({ type, enabling, onEnable }: PromoViewProps) => {
 
           {/* Description */}
           <p className="text-sm text-muted-foreground leading-relaxed max-w-md mx-auto mb-7">
-            A ready-to-use backend for building business applications with built-in modules, user management, workflows, and permissions.
+            Backend for business apps with built-in modules, users, workflows, and permissions.
           </p>
 
           {/* Feature chips */}
