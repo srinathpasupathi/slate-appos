@@ -503,7 +503,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject 
               <ExternalLink className="h-3.5 w-3.5" />
             </a>
             <button
-              onClick={() => navigate(`/project?source=platform&name=${encodeURIComponent(appName)}`)}
+              onClick={() => navigate(`/om/project?source=platform&name=${encodeURIComponent(appName)}`)}
               className="flex-1 flex items-center justify-center gap-2 h-10 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted/50 transition-colors"
             >
               View Project
@@ -865,7 +865,7 @@ const SlateDashboard = () => {
           {!sidebarCollapsed && (
             <div className="pl-8 space-y-0.5">
               {recentProjects.map((p) => (
-                <button key={p.name} onClick={() => navigate(`/project?source=${p.source}&name=${encodeURIComponent(p.name)}`)} className="block w-full text-left px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
+                <button key={p.name} onClick={() => navigate(`/om/project?source=${p.source}&name=${encodeURIComponent(p.name)}`)} className="block w-full text-left px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
                   {p.name}
                 </button>
               ))}
@@ -1031,7 +1031,7 @@ const SlateDashboard = () => {
                             <button
                               onClick={() => {
                                 if (prompt.trim()) {
-                                  navigate(`/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
+                                  navigate(`/om/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
                                 }
                               }}
                               className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
@@ -1145,7 +1145,7 @@ const SlateDashboard = () => {
                             <button
                               onClick={() => {
                                 if (prompt.trim()) {
-                                  navigate(`/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
+                                  navigate(`/om/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
                                 }
                               }}
                               className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
@@ -1248,7 +1248,7 @@ const SlateDashboard = () => {
                             <button
                               onClick={() => {
                                 if (prompt.trim()) {
-                                  navigate(`/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
+                                  navigate(`/om/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
                                 }
                               }}
                               className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
