@@ -150,6 +150,7 @@ const ProjectPage = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationDone, setGenerationDone] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
+  const [previewReloading, setPreviewReloading] = useState(false);
 
   // Shared state
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -432,9 +433,14 @@ const ProjectPage = () => {
           setMessages((prev) => [...prev, {
             id: `fully-functional-${Date.now()}`,
             role: "assistant",
-            content: `🚀 **Your app is now fully functional!** The frontend UI and the entire backend — data persistence, user authentication, file storage, and business logic — are all wired up and ready to go.\n\nGo ahead, take it for a spin! You can interact with the app in the **Preview** tab, or explore what was set up in the **AppOS** and **Cloud** tabs.`,
+            content: `🚀 **Your app is now fully functional!** The frontend UI and the entire backend — data persistence, user authentication, file storage, and business logic — are all wired up and ready to go.\n\nReloading preview with backend connected...`,
             timestamp: new Date(),
           }]);
+
+          // Trigger preview reload effect
+          setActiveTab("preview");
+          setPreviewReloading(true);
+          setTimeout(() => setPreviewReloading(false), 2000);
         }, 1500);
       }
 
@@ -942,6 +948,11 @@ const ProjectPage = () => {
     <div className="flex-1 overflow-hidden">
       {source === "platform" ? (
         <GeneratedPreview appName={projectName} />
+      ) : generationDone && previewReloading ? (
+        <div className="h-full bg-background flex flex-col items-center justify-center gap-4">
+          <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+          <p className="text-sm text-muted-foreground">Reconnecting with backend...</p>
+        </div>
       ) : generationDone ? (
         <GeneratedPreview />
       ) : isGenerating ? (
