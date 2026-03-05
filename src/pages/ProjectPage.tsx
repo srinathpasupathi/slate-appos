@@ -58,7 +58,6 @@ const ASSISTANT_STEPS: { delay: number; summary: string; content: string }[] = [
   { delay: 2000, summary: "Setting up project structure", content: "React + TypeScript stack with Tailwind CSS and clean component architecture." },
   { delay: 5000, summary: "Building core components", content: "FranchiseTable, SalesOverview KPIs, GlobalMap, and FranchiseDetail drawer." },
   { delay: 8000, summary: "Creating dashboard layout", content: "Sidebar navigation, top metrics bar, responsive grid with 24 franchise locations across 12 countries." },
-  { delay: 10500, summary: "", content: "✅ **Your app is ready!** Check the **Preview** tab to see it live." },
 ];
 
 type TopTab = "preview" | "code" | "appos" | "cloud";
@@ -174,6 +173,7 @@ const ProjectPage = () => {
 
   // Auto-approve state — when true, resource creation proceeds without asking
   const [autoApproveResources, setAutoApproveResources] = useState(false);
+  const [backendPromptShown, setBackendPromptShown] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -197,10 +197,19 @@ const ProjectPage = () => {
     setIsGenerating((prev) => {
       if (!prev) return prev;
       setGenerationDone(true);
-      setActiveTab("preview");
+      setGenerationProgress(85);
       return false;
     });
   }, []);
+
+  // After generation completes, smoothly increase progress while waiting for backend prompt
+  useEffect(() => {
+    if (!generationDone || backendPromptShown) return;
+    const interval = setInterval(() => {
+      setGenerationProgress((prev) => Math.min(prev + 2, 98));
+    }, 300);
+    return () => clearInterval(interval);
+  }, [generationDone, backendPromptShown]);
 
   // After generation completes, ask user what kind of backend they need
   useEffect(() => {
@@ -212,6 +221,7 @@ const ProjectPage = () => {
     const isLikelyInternal = /\b(internal|employee|team|crm|erp|hrm|business|franchise|inventory|operations|management|admin panel|dashboard)\b/.test(lowerPrompt);
 
     const timer = setTimeout(() => {
+      setBackendPromptShown(true);
       setMessages((prev) => [...prev, {
         id: `backend-choice-${Date.now()}`,
         role: "assistant",
@@ -929,15 +939,15 @@ const ProjectPage = () => {
     <div className="flex-1 overflow-hidden">
       {source === "platform" ? (
         <GeneratedPreview appName={projectName} />
-      ) : generationDone && previewReloading ? (
+      ) : backendPromptShown && previewReloading ? (
         <div className="h-full bg-background flex flex-col items-center justify-center gap-4">
           <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
           <p className="text-sm text-muted-foreground">Reconnecting with backend...</p>
         </div>
-      ) : generationDone ? (
+      ) : backendPromptShown ? (
         <GeneratedPreview />
-      ) : isGenerating ? (
-        <PreviewLoading progress={Math.min(Math.round(generationProgress), 95)} />
+      ) : (isGenerating || generationDone) ? (
+        <PreviewLoading progress={generationDone ? Math.min(Math.round(generationProgress), 95) : Math.min(Math.round(generationProgress), 95)} />
       ) : (
         <div className="h-full bg-background flex items-center justify-center">
           <div className="text-center space-y-4 px-8">
