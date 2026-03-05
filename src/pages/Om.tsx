@@ -745,7 +745,7 @@ const SlateDashboard = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [_sidebarHovered, setSidebarHovered] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [mainTab, setMainTab] = useState<'build' | 'platform'>('build');
+  const [mainTab, setMainTab] = useState<'build' | 'platform' | 'cloud'>('build');
   const [layoutMode, setLayoutMode] = useState<'option1' | 'option2' | 'option3'>('option1');
   const [ideFlowActive, setIdeFlowActive] = useState(false);
   const [recentProjects, setRecentProjects] = useState(defaultRecentProjects);
@@ -813,19 +813,23 @@ const SlateDashboard = () => {
           <span className="text-base font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Om</span>
         </div>
 
-        {/* Center: Slate & AppOS tabs */}
-        <div className="flex items-center gap-1">
-          {(['Slate', 'AppOS'] as const).map(tab => (
+        {/* Center: Slate, AppOS & Cloud tabs */}
+        <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/60 p-1">
+          {([
+            { key: 'build' as const, label: 'Slate' },
+            { key: 'platform' as const, label: 'AppOS' },
+            { key: 'cloud' as const, label: 'Cloud' },
+          ]).map(tab => (
             <button
-              key={tab}
-              onClick={() => setMainTab(tab === 'Slate' ? 'build' : 'platform')}
-              className={`px-5 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                (tab === 'Slate' && mainTab === 'build') || (tab === 'AppOS' && mainTab === 'platform')
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+              key={tab.key}
+              onClick={() => setMainTab(tab.key)}
+              className={`px-5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                mainTab === tab.key
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              {tab}
+              {tab.label}
             </button>
           ))}
         </div>
