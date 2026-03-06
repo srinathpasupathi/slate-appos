@@ -221,6 +221,17 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
 
         {/* Right content */}
         <div className="flex-1 flex flex-col overflow-y-auto">
+          {variant === 'om' && (
+            <div className="px-8 py-3 border-b border-border bg-muted/20 flex items-center gap-3">
+              <span className="text-sm font-medium text-muted-foreground">Change Project</span>
+              <select className="h-8 px-3 rounded-lg border border-border bg-card text-sm font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 transition-colors cursor-pointer">
+                <option>franchise-sales-mgmt</option>
+                <option>CRM Analytics Dashboard</option>
+                <option>Invoice Manager Pro</option>
+                <option>E-commerce Platform</option>
+              </select>
+            </div>
+          )}
           <div className="px-8 py-6 border-b border-border">
             <div className="flex items-center justify-between">
               <div>
