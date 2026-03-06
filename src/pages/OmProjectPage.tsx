@@ -269,7 +269,7 @@ const ProjectPage = () => {
           setMessages((prev) => [...prev, { id: (Date.now() + 1).toString(), role: "assistant", content: "**AppOS** is already enabled for this app.", timestamp: new Date() }]);
         }, 800);
       } else {
-        handleEnableService("appos");
+        handleEnableService("appos", true);
       }
       return;
     }
@@ -279,7 +279,7 @@ const ProjectPage = () => {
           setMessages((prev) => [...prev, { id: (Date.now() + 1).toString(), role: "assistant", content: "**Cloud** is already enabled for this app.", timestamp: new Date() }]);
         }, 800);
       } else {
-        handleEnableService("cloud");
+        handleEnableService("cloud", true);
       }
       return;
     }
@@ -447,7 +447,7 @@ const ProjectPage = () => {
     }, totalDelay);
   };
 
-  const handleEnableService = (service: "appos" | "cloud") => {
+  const handleEnableService = (service: "appos" | "cloud", skipUserMessage = false) => {
     const label = service === "appos" ? "AppOS" : "Cloud";
     const setEnabling = service === "appos" ? setAppOsEnabling : setCloudEnabling;
     const setEnabled = service === "appos" ? setAppOsEnabled : setCloudEnabled;
@@ -462,12 +462,14 @@ const ProjectPage = () => {
     }
 
     // Build mode: simulate chat conversation
-    setMessages((prev) => [...prev, {
-      id: `enable-${service}-user-${Date.now()}`,
-      role: "user",
-      content: `Enable ${label}`,
-      timestamp: new Date(),
-    }]);
+    if (!skipUserMessage) {
+      setMessages((prev) => [...prev, {
+        id: `enable-${service}-user-${Date.now()}`,
+        role: "user",
+        content: `Enable ${label}`,
+        timestamp: new Date(),
+      }]);
+    }
     if (chatPanelCollapsed) setChatPanelCollapsed(false);
 
     setTimeout(() => {
