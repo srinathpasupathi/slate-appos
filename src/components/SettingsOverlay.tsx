@@ -71,6 +71,7 @@ interface SettingsOverlayProps {
 const SettingsOverlay = ({ open, onClose, initialTab, initialOmContext, appOsEnabled = false, onAppOsToggle, cloudEnabled = false, onCloudToggle, appName, variant = 'default' }: SettingsOverlayProps) => {
   const [activeSection, setActiveSection] = useState(initialTab || "general");
   const [omContext, setOmContext] = useState<OmContext>(initialOmContext || 'prompt');
+  const [selectedProject, setSelectedProject] = useState('franchise-sales-mgmt');
 
   useEffect(() => {
     if (initialOmContext) setOmContext(initialOmContext);
@@ -96,6 +97,7 @@ const SettingsOverlay = ({ open, onClose, initialTab, initialOmContext, appOsEna
   const handleOmContextChange = (ctx: OmContext) => {
     setOmContext(ctx);
     setActiveSection('general');
+    setSelectedProject(ctx === 'appos' || ctx === 'cloud' ? 'Default Project' : 'franchise-sales-mgmt');
   };
 
   const omContextOptions: { key: OmContext; label: string; icon: typeof Zap; description: string }[] = [
@@ -229,19 +231,23 @@ const SettingsOverlay = ({ open, onClose, initialTab, initialOmContext, appOsEna
           {variant === 'om' && (
             <div className="px-8 py-3 border-b border-border bg-muted/20 flex items-center gap-3">
               <span className="text-sm font-medium text-muted-foreground">Project</span>
-              <select className="h-8 px-3 rounded-lg border border-border bg-card text-sm font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 transition-colors cursor-pointer">
+              <select
+                value={selectedProject}
+                onChange={(e) => setSelectedProject(e.target.value)}
+                className="h-8 px-3 rounded-lg border border-border bg-card text-sm font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 transition-colors cursor-pointer"
+              >
                 {omContext === 'appos' || omContext === 'cloud' ? (
                   <>
-                    <option>Default Project</option>
-                    <option>HR Management Backend</option>
-                    <option>Sales Pipeline API</option>
+                    <option value="Default Project">Default Project</option>
+                    <option value="HR Management Backend">HR Management Backend</option>
+                    <option value="Sales Pipeline API">Sales Pipeline API</option>
                   </>
                 ) : (
                   <>
-                    <option>franchise-sales-mgmt</option>
-                    <option>CRM Analytics Dashboard</option>
-                    <option>Invoice Manager Pro</option>
-                    <option>E-commerce Platform</option>
+                    <option value="franchise-sales-mgmt">franchise-sales-mgmt</option>
+                    <option value="CRM Analytics Dashboard">CRM Analytics Dashboard</option>
+                    <option value="Invoice Manager Pro">Invoice Manager Pro</option>
+                    <option value="E-commerce Platform">E-commerce Platform</option>
                   </>
                 )}
               </select>
@@ -260,7 +266,7 @@ const SettingsOverlay = ({ open, onClose, initialTab, initialOmContext, appOsEna
             </div>
           </div>
           <div className="flex-1 px-8 py-6">
-            {renderContent(activeSection, { appOsEnabled, onAppOsToggle, cloudEnabled, onCloudToggle, appName, variant })}
+            {renderContent(activeSection, { appOsEnabled, onAppOsToggle, cloudEnabled, onCloudToggle, appName, variant, selectedProject })}
           </div>
         </div>
       </div>
@@ -268,10 +274,10 @@ const SettingsOverlay = ({ open, onClose, initialTab, initialOmContext, appOsEna
   );
 };
 
-function renderContent(section: string, opts: { appOsEnabled: boolean; onAppOsToggle?: (v: boolean) => void; cloudEnabled: boolean; onCloudToggle?: (v: boolean) => void; appName?: string; variant: string }) {
+function renderContent(section: string, opts: { appOsEnabled: boolean; onAppOsToggle?: (v: boolean) => void; cloudEnabled: boolean; onCloudToggle?: (v: boolean) => void; appName?: string; variant: string; selectedProject?: string }) {
   switch (section) {
     case "general":
-      return <GeneralSettings />;
+      return <GeneralSettings selectedProject={opts.variant === 'om' ? opts.selectedProject : undefined} />;
     case "domains":
       return <DomainsSettings />;
     case "knowledge":
