@@ -918,15 +918,15 @@ const SlateDashboard = () => {
           <span className="text-base font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Om</span>
           <button
             onClick={() => {
-              if (sidebarHidden) {
+              if (sidebarHidden || sidebarCollapsed) {
                 setSidebarHidden(false);
-                setSidebarCollapsed(true);
+                setSidebarCollapsed(false);
               } else {
-                setSidebarCollapsed(prev => !prev);
+                setSidebarCollapsed(true);
               }
             }}
             className="p-1 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground"
-            title={sidebarHidden ? "Show sidebar" : sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={sidebarHidden || sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="1.5" y="2.5" width="13" height="11" rx="2" stroke="currentColor" strokeWidth="1.5" />
