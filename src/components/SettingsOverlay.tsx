@@ -84,12 +84,7 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
 
   const handleOmContextChange = (ctx: OmContext) => {
     setOmContext(ctx);
-    // Set the first menu item of the new context as active
-    switch (ctx) {
-      case 'prompt': setActiveSection('general'); break;
-      case 'appos': setActiveSection('appos'); break;
-      case 'cloud': setActiveSection('cloud'); break;
-    }
+    setActiveSection('general');
   };
 
   const omContextLabels: Record<OmContext, string> = {
