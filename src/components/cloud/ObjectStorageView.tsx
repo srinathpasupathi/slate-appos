@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Copy, Check, Image, Upload, FolderPlus, Info, MoreHorizontal, HelpCircle, ExternalLink, ChevronDown, ChevronUp, Shield } from "lucide-react";
+import { ArrowLeft, Copy, Check, Image, Upload, FolderPlus, Info, MoreHorizontal, HelpCircle, ExternalLink, ChevronDown, ChevronUp, Shield, Plus } from "lucide-react";
 
 interface Bucket {
   name: string;
@@ -34,7 +34,11 @@ const PERMISSION_JSON = `{
 
 type SubTab = "objects" | "permissions" | "configurations";
 
-const ObjectStorageView = () => {
+interface ObjectStorageViewProps {
+  showCreate?: boolean;
+}
+
+const ObjectStorageView = ({ showCreate = false }: ObjectStorageViewProps) => {
   const [selectedBucket, setSelectedBucket] = useState<string | null>(null);
   const [activeSubTab, setActiveSubTab] = useState<SubTab>("objects");
   const [copied, setCopied] = useState(false);
@@ -54,8 +58,18 @@ const ObjectStorageView = () => {
     return (
       <div className="p-6">
         <div className="mb-6">
-          <h2 className="text-xl font-semibold text-foreground">Object Storage</h2>
-          <p className="text-sm text-muted-foreground mt-1">Manage your storage buckets and objects.</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold text-foreground">Object Storage</h2>
+              <p className="text-sm text-muted-foreground mt-1">Manage your storage buckets and objects.</p>
+            </div>
+            {showCreate && (
+              <button className="h-8 px-3 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors inline-flex items-center gap-1.5">
+                <Plus className="h-3.5 w-3.5" />
+                Create Bucket
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="overflow-x-auto">

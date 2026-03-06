@@ -1211,25 +1211,33 @@ const SlateDashboard = () => {
                         <h2 className="text-xl font-semibold tracking-tight text-foreground">Relational Database</h2>
                         <p className="text-sm text-muted-foreground mt-1">Manage tables, schemas, and data for {selectedBackend}.</p>
                       </div>
-                      <RelationalDBView />
+                      <RelationalDBView showCreate />
                     </div>
                   )}
-                  {cloudSection === "object-storage" && <ObjectStorageView />}
+                  {cloudSection === "object-storage" && <ObjectStorageView showCreate />}
                   {cloudSection === "nosql-db" && (
                     <div className="flex flex-col h-full">
                       <div className="px-6 pt-6 pb-4 border-b border-border">
                         <h2 className="text-xl font-semibold tracking-tight text-foreground">NoSQL Database</h2>
                         <p className="text-sm text-muted-foreground mt-1">Manage NoSQL tables and data for {selectedBackend}.</p>
                       </div>
-                      <NoSQLDBView />
+                      <NoSQLDBView showCreate />
                     </div>
                   )}
                 </>
               ) : (
                 <div className="px-6 py-6 space-y-6">
-                  <div>
-                    <h2 className="text-xl font-semibold tracking-tight">{CLOUD_NAV.find(n => n.id === cloudSection)?.label}</h2>
-                    <p className="text-sm text-muted-foreground mt-1">Manage {CLOUD_NAV.find(n => n.id === cloudSection)?.label.toLowerCase()} for {selectedBackend}.</p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-xl font-semibold tracking-tight">{CLOUD_NAV.find(n => n.id === cloudSection)?.label}</h2>
+                      <p className="text-sm text-muted-foreground mt-1">Manage {CLOUD_NAV.find(n => n.id === cloudSection)?.label.toLowerCase()} for {selectedBackend}.</p>
+                    </div>
+                    {(cloudSection === "functions" || cloudSection === "schedulers") && (
+                      <button className="h-8 px-3 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors inline-flex items-center gap-1.5">
+                        <Plus className="h-3.5 w-3.5" />
+                        Create {cloudSection === "functions" ? "Function" : "Scheduler"}
+                      </button>
+                    )}
                   </div>
                   <div className="rounded-xl border border-dashed border-border bg-muted/20 h-60 flex items-center justify-center">
                     <p className="text-sm text-muted-foreground">{CLOUD_NAV.find(n => n.id === cloudSection)?.label} content</p>
