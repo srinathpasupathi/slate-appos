@@ -1040,15 +1040,61 @@ const SlateDashboard = () => {
               {/* Service sidebar */}
               <aside className="w-48 border-r border-border bg-card flex flex-col shrink-0">
                 <div className="px-4 pt-4 pb-3 border-b border-border">
-                  <button
-                    onClick={() => setSelectedBackend(null)}
-                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-3"
-                  >
-                    <ArrowLeft className="h-3.5 w-3.5" />
-                    Back
-                  </button>
-                  <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{mainTab === 'platform' ? 'AppOS' : 'Cloud'}</h3>
-                  <p className="text-xs text-foreground font-medium mt-1 truncate">{selectedBackend}</p>
+                  {mainTab === 'cloud' ? (
+                    <>
+                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Project</p>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <button className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg border border-border bg-muted/40 hover:bg-muted transition-colors group">
+                            <div className="h-6 w-6 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+                              <Database className="h-3.5 w-3.5 text-primary" />
+                            </div>
+                            <span className="text-xs font-medium text-foreground truncate flex-1 text-left">{selectedBackend}</span>
+                            <ChevronDown className="h-3 w-3 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent align="start" side="bottom" className="w-52 p-1.5">
+                          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-2 py-1.5">Switch Project</p>
+                          {cloudProjects.map((proj) => (
+                            <button
+                              key={proj.name}
+                              onClick={() => setSelectedBackend(proj.name)}
+                              className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm transition-colors ${
+                                selectedBackend === proj.name
+                                  ? "bg-primary/10 text-primary font-medium"
+                                  : "text-foreground hover:bg-muted"
+                              }`}
+                            >
+                              <div className="h-5 w-5 rounded bg-primary/10 flex items-center justify-center shrink-0">
+                                <Database className="h-3 w-3 text-primary" />
+                              </div>
+                              <span className="truncate text-left flex-1">{proj.name}</span>
+                              {selectedBackend === proj.name && <Check className="h-3 w-3 text-primary shrink-0" />}
+                            </button>
+                          ))}
+                          <div className="h-px bg-border my-1" />
+                          <button className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                            <div className="h-5 w-5 rounded bg-muted flex items-center justify-center shrink-0">
+                              <Plus className="h-3 w-3" />
+                            </div>
+                            <span>Create New Project</span>
+                          </button>
+                        </PopoverContent>
+                      </Popover>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => setSelectedBackend(null)}
+                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-3"
+                      >
+                        <ArrowLeft className="h-3.5 w-3.5" />
+                        Back
+                      </button>
+                      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">AppOS</h3>
+                      <p className="text-xs text-foreground font-medium mt-1 truncate">{selectedBackend}</p>
+                    </>
+                  )}
                 </div>
                 <nav className="flex-1 p-2 pt-1 space-y-0.5">
                   {(mainTab === 'platform' ? APPOS_NAV : CLOUD_NAV).map((item) => (
