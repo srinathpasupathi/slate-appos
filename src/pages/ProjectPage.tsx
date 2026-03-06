@@ -1247,7 +1247,7 @@ const ProjectPage = () => {
         </div>
       </div>
 
-      <SettingsOverlay open={settingsOpen} onClose={() => { setSettingsOpen(false); setSettingsInitialTab(undefined); }} initialTab={settingsInitialTab} />
+      <SettingsOverlay open={settingsOpen} onClose={() => { setSettingsOpen(false); setSettingsInitialTab(undefined); }} initialTab={settingsInitialTab} variant="slate" />
       <GitHubConnectDialog open={githubDialogOpen} onOpenChange={setGithubDialogOpen} onConnected={handleGithubConnected} />
     </div>
   );
