@@ -1306,7 +1306,7 @@ const SlateDashboard = () => {
                           defaultValue="proposal1"
                           onChange={(e) => {
                             if (e.target.value === 'proposal2') {
-                              window.location.href = '/proposal2';
+                              window.location.href = '/platform';
                             }
                           }}
                           className="px-3 py-1.5 rounded-lg border border-border bg-card text-sm font-medium text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
