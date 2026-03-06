@@ -1047,7 +1047,7 @@ const SlateDashboard = () => {
                         <PopoverTrigger asChild>
                           <button className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg border border-border bg-muted/40 hover:bg-muted transition-colors group">
                             <div className="h-6 w-6 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
-                              <Database className="h-3.5 w-3.5 text-primary" />
+                              <span className="text-xs font-bold text-primary">{selectedBackend?.charAt(0).toUpperCase()}</span>
                             </div>
                             <span className="text-xs font-medium text-foreground truncate flex-1 text-left">{selectedBackend}</span>
                             <ChevronDown className="h-3 w-3 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
@@ -1066,7 +1066,7 @@ const SlateDashboard = () => {
                               }`}
                             >
                               <div className="h-5 w-5 rounded bg-primary/10 flex items-center justify-center shrink-0">
-                                <Database className="h-3 w-3 text-primary" />
+                                <span className="text-[10px] font-bold text-primary">{proj.name.charAt(0).toUpperCase()}</span>
                               </div>
                               <span className="truncate text-left flex-1">{proj.name}</span>
                               {selectedBackend === proj.name && <Check className="h-3 w-3 text-primary shrink-0" />}
