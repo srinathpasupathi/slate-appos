@@ -575,7 +575,7 @@ const ProjectPage = () => {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-[280px] p-0 bg-card border-border">
-        <button onClick={() => navigate("/")} className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors">
+        <button onClick={() => navigate("/platform")} className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors">
           <Home className="h-4 w-4 text-muted-foreground" /> Go back to Home
         </button>
         <DropdownMenuSeparator className="bg-border" />
