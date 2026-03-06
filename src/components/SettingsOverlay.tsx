@@ -172,7 +172,7 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
 
           <nav className="flex-1 px-3 pb-6 overflow-y-auto">
             <p className="px-3 mb-2 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-              App Settings
+              Project Settings
             </p>
             <div className="space-y-0.5 mb-6">
               {currentProjectMenuItems.map((item) => (
