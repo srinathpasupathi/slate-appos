@@ -743,6 +743,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
 };
 
 const appOsBackends = [
+  { name: "Default Project", url: "default-project.us.omcloud.ai", status: "Active", createdAt: "Jan 01, 2026" },
   { name: "franchise-sales-mgmt", url: "franchise-sales.us.omcloud.ai", status: "Active", createdAt: "Feb 10, 2026" },
   { name: "crm-analytics-dashboard", url: "crm-analytics.us.omcloud.ai", status: "Active", createdAt: "Jan 18, 2026" },
 ];
@@ -934,7 +935,7 @@ const SlateDashboard = () => {
           ]).map(tab => (
             <button
               key={tab.key}
-              onClick={() => { setMainTab(tab.key); setShowIdeSelector(null); setSelectedBackend(tab.key === 'cloud' ? 'Default Project' : null); }}
+              onClick={() => { setMainTab(tab.key); setShowIdeSelector(null); setSelectedBackend((tab.key === 'cloud' || tab.key === 'platform') ? 'Default Project' : null); }}
               className={`relative flex items-center gap-1.5 px-5 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                 mainTab === tab.key
                   ? 'bg-primary/15 text-primary shadow-sm'
@@ -970,7 +971,7 @@ const SlateDashboard = () => {
         >
           {/* Nav links */}
           <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto overflow-x-hidden">
-            {mainTab !== 'cloud' && (
+            {mainTab !== 'cloud' && mainTab !== 'platform' && (
               <SidebarLink icon={Home} label="Home" active collapsed={sidebarCollapsed} onClick={() => {
                 setIdeFlowActive(false);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1001,30 +1002,64 @@ const SlateDashboard = () => {
               </>
             ) : mainTab === 'platform' ? (
               <>
-                <SidebarLink icon={Server} label="Projects" collapsed={sidebarCollapsed} />
-                <SidebarLink icon={Search} label="Search" collapsed={sidebarCollapsed} />
-                <SidebarLink
-                  icon={Clock}
-                  label="Recent"
-                  collapsed={sidebarCollapsed}
-                  onClick={() => {
-                    if (sidebarCollapsed) setSidebarCollapsed(false);
-                  }}
-                />
-                {!sidebarCollapsed && (
-                  <div className="pl-8 space-y-0.5">
-                    {[
-                      { name: "HR Management Backend", source: "platform" },
-                      { name: "Sales Pipeline API", source: "platform" },
-                      { name: "Inventory Tracker", source: "platform" },
-                      { name: "Support Desk Engine", source: "platform" },
-                    ].map((p) => (
-                      <button key={p.name} onClick={() => navigate(`/om/project?source=${p.source}&name=${encodeURIComponent(p.name)}`)} className="block w-full text-left px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
-                        {p.name}
+                {/* Project switcher */}
+                <div className="px-2 pt-2 pb-1">
+                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-2 mb-1.5">Project</p>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg border border-border bg-muted/40 hover:bg-muted transition-colors group">
+                        <div className="h-6 w-6 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+                          <span className="text-xs font-bold text-primary">{selectedBackend?.charAt(0).toUpperCase()}</span>
+                        </div>
+                        {!sidebarCollapsed && (
+                          <>
+                            <span className="text-xs font-medium text-foreground truncate flex-1 text-left">{selectedBackend}</span>
+                            <ChevronDown className="h-3 w-3 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
+                          </>
+                        )}
                       </button>
-                    ))}
-                  </div>
-                )}
+                    </PopoverTrigger>
+                    <PopoverContent align="start" side="bottom" className="w-52 p-1.5">
+                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-2 py-1.5">Switch Project</p>
+                      {appOsBackends.map((proj) => (
+                        <button
+                          key={proj.name}
+                          onClick={() => setSelectedBackend(proj.name)}
+                          className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm transition-colors ${
+                            selectedBackend === proj.name
+                              ? "bg-primary/10 text-primary font-medium"
+                              : "text-foreground hover:bg-muted"
+                          }`}
+                        >
+                          <div className="h-5 w-5 rounded bg-primary/10 flex items-center justify-center shrink-0">
+                            <span className="text-[10px] font-bold text-primary">{proj.name.charAt(0).toUpperCase()}</span>
+                          </div>
+                          <span className="truncate text-left flex-1">{proj.name}</span>
+                          {selectedBackend === proj.name && <Check className="h-3 w-3 text-primary shrink-0" />}
+                        </button>
+                      ))}
+                      <div className="h-px bg-border my-1" />
+                      <button className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                        <div className="h-5 w-5 rounded bg-muted flex items-center justify-center shrink-0">
+                          <Plus className="h-3 w-3" />
+                        </div>
+                        <span>Create New Project</span>
+                      </button>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <div className="h-px bg-border mx-2 my-1" />
+                {/* AppOS nav items */}
+                {APPOS_NAV.map((item) => (
+                  <SidebarLink
+                    key={item.id}
+                    icon={item.icon}
+                    label={item.label}
+                    active={appOsSection === item.id}
+                    collapsed={sidebarCollapsed}
+                    onClick={() => setAppOsSection(item.id)}
+                  />
+                ))}
               </>
             ) : mainTab === 'cloud' ? (
               <>
@@ -1095,52 +1130,15 @@ const SlateDashboard = () => {
         <main className="flex-1 flex flex-col overflow-hidden">
           {/* Detail view when a backend/project is selected */}
           {selectedBackend && mainTab === 'platform' ? (
-            <div className="flex flex-1 overflow-hidden h-full bg-background">
-              {/* AppOS Service sidebar */}
-              <aside className="w-48 border-r border-border bg-card flex flex-col shrink-0">
-                <div className="px-4 pt-4 pb-3 border-b border-border">
-                  <button
-                    onClick={() => setSelectedBackend(null)}
-                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-3"
-                  >
-                    <ArrowLeft className="h-3.5 w-3.5" />
-                    Back
-                  </button>
-                  <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">AppOS</h3>
-                  <p className="text-xs text-foreground font-medium mt-1 truncate">{selectedBackend}</p>
-                </div>
-                <nav className="flex-1 p-2 pt-1 space-y-0.5">
-                  {APPOS_NAV.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => setAppOsSection(item.id)}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors ${
-                        appOsSection === item.id
-                          ? "bg-primary/10 text-primary font-medium"
-                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                      }`}
-                    >
-                      <item.icon className="h-4 w-4" />
-                      {item.label}
-                    </button>
-                  ))}
-                </nav>
-                <div className="p-3 border-t border-border">
-                  <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider font-medium">Project ID</p>
-                  <p className="text-[11px] text-muted-foreground mt-0.5 font-mono">prj_01HQ…7x</p>
-                </div>
-              </aside>
-
-              {/* AppOS Detail content */}
-              <div className="flex-1 overflow-y-auto flex flex-col">
-                <div className="px-6 py-6">
-                  {appOsSection === "overview" && <OverviewTab projectName={selectedBackend || ''} appUrl={`${(selectedBackend || '').toLowerCase().replace(/\s+/g, '-')}.us.omcloud.ai`} copied={copied} onCopy={handleCopy} />}
-                  {appOsSection === "users" && <UsersTab users={APP_USERS} />}
-                  {appOsSection === "resources" && <ResourcesTab />}
-                  {appOsSection === "query-console" && <QueryConsoleTab />}
-                  {appOsSection === "configuration" && <ConfigurationTab />}
-                  {appOsSection === "deployments" && <DeploymentsTab />}
-                </div>
+            /* AppOS content — no separate sidebar, uses main sidebar */
+            <div className="flex-1 overflow-y-auto flex flex-col">
+              <div className="px-6 py-6">
+                {appOsSection === "overview" && <OverviewTab projectName={selectedBackend || ''} appUrl={`${(selectedBackend || '').toLowerCase().replace(/\s+/g, '-')}.us.omcloud.ai`} copied={copied} onCopy={handleCopy} />}
+                {appOsSection === "users" && <UsersTab users={APP_USERS} />}
+                {appOsSection === "resources" && <ResourcesTab />}
+                {appOsSection === "query-console" && <QueryConsoleTab />}
+                {appOsSection === "configuration" && <ConfigurationTab />}
+                {appOsSection === "deployments" && <DeploymentsTab />}
               </div>
             </div>
           ) : selectedBackend && mainTab === 'cloud' ? (
