@@ -59,6 +59,7 @@ interface SettingsOverlayProps {
   open: boolean;
   onClose: () => void;
   initialTab?: string;
+  initialOmContext?: OmContext;
   appOsEnabled?: boolean;
   onAppOsToggle?: (enabled: boolean) => void;
   cloudEnabled?: boolean;
@@ -67,9 +68,13 @@ interface SettingsOverlayProps {
   variant?: 'default' | 'om' | 'om-project' | 'slate';
 }
 
-const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAppOsToggle, cloudEnabled = false, onCloudToggle, appName, variant = 'default' }: SettingsOverlayProps) => {
+const SettingsOverlay = ({ open, onClose, initialTab, initialOmContext, appOsEnabled = false, onAppOsToggle, cloudEnabled = false, onCloudToggle, appName, variant = 'default' }: SettingsOverlayProps) => {
   const [activeSection, setActiveSection] = useState(initialTab || "general");
-  const [omContext, setOmContext] = useState<OmContext>('prompt');
+  const [omContext, setOmContext] = useState<OmContext>(initialOmContext || 'prompt');
+
+  useEffect(() => {
+    if (initialOmContext) setOmContext(initialOmContext);
+  }, [initialOmContext]);
 
   const getMenuItemsForContext = () => {
     if (variant === 'slate') return projectMenuItems.filter(item => item.id !== 'appos' && item.id !== 'cloud');
