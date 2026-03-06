@@ -1142,49 +1142,7 @@ const SlateDashboard = () => {
                 ) : (
                   <>
                     {cloudSection === "home" ? (
-                      <div className="px-6 py-6 space-y-6">
-                        <div>
-                          <h2 className="text-xl font-semibold tracking-tight text-foreground">{selectedBackend}</h2>
-                          <p className="text-sm text-muted-foreground mt-1">Cloud project overview and quick access to services.</p>
-                        </div>
-                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-                          {CLOUD_NAV.filter(n => n.id !== 'home').map((item) => (
-                            <button
-                              key={item.id}
-                              onClick={() => setCloudSection(item.id)}
-                              className="group rounded-xl border border-border bg-card p-5 hover:border-primary/30 hover:shadow-md transition-all text-left"
-                            >
-                              <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
-                                <item.icon className="h-4.5 w-4.5 text-primary" />
-                              </div>
-                              <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{item.label}</p>
-                              <p className="text-xs text-muted-foreground mt-1">Manage {item.label.toLowerCase()}</p>
-                            </button>
-                          ))}
-                        </div>
-                        <div className="rounded-xl border border-border bg-card p-5">
-                          <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2">
-                              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                              <span className="text-sm font-medium text-foreground">Project Active</span>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-3 gap-4 mt-4">
-                            <div>
-                              <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Region</p>
-                              <p className="text-sm text-foreground mt-0.5">US East</p>
-                            </div>
-                            <div>
-                              <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Created</p>
-                              <p className="text-sm text-foreground mt-0.5">{cloudProjects.find(p => p.name === selectedBackend)?.createdAt || '—'}</p>
-                            </div>
-                            <div>
-                              <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">URL</p>
-                              <p className="text-sm text-foreground mt-0.5 truncate">{cloudProjects.find(p => p.name === selectedBackend)?.url || '—'}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      <div className="flex-1" />
                     ) : (cloudSection === "authentication" || cloudSection === "relational-db" || cloudSection === "object-storage" || cloudSection === "nosql-db") ? (
                       <>
                         {cloudSection === "authentication" && <AuthenticationView />}
