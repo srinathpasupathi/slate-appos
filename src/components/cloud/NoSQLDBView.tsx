@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Table as TableIcon, MoreHorizontal } from "lucide-react";
+import { Search, Table as TableIcon, MoreHorizontal, Plus } from "lucide-react";
 
 interface NoSQLTable {
   name: string;
@@ -31,7 +31,11 @@ const TABLES: NoSQLTable[] = [
 
 type SubTab = "overview" | "indexes" | "data";
 
-const NoSQLDBView = () => {
+interface NoSQLDBViewProps {
+  showCreate?: boolean;
+}
+
+const NoSQLDBView = ({ showCreate = false }: NoSQLDBViewProps) => {
   const [selectedTable, setSelectedTable] = useState(TABLES[0].name);
   const [tableSearch, setTableSearch] = useState("");
   const [activeSubTab, setActiveSubTab] = useState<SubTab>("overview");
@@ -45,6 +49,11 @@ const NoSQLDBView = () => {
       <div className="w-64 border-r border-border flex flex-col shrink-0">
         <div className="px-4 pt-4 pb-3">
           <h3 className="text-base font-semibold text-foreground">Tables</h3>
+          {showCreate && (
+            <button className="h-7 w-7 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" title="Create Table">
+              <Plus className="h-3.5 w-3.5" />
+            </button>
+          )}
         </div>
         <div className="px-4 pb-3">
           <div className="relative">
