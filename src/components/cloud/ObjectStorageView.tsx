@@ -64,7 +64,7 @@ const ObjectStorageView = ({ showCreate = false }: ObjectStorageViewProps) => {
               <p className="text-sm text-muted-foreground mt-1">Manage your storage buckets and objects.</p>
             </div>
             {showCreate && (
-              <button className="h-8 px-3 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors inline-flex items-center gap-1.5">
+              <button className="h-8 px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors inline-flex items-center gap-1.5">
                 <Plus className="h-3.5 w-3.5" />
                 Create Bucket
               </button>
