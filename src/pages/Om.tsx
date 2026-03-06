@@ -1204,7 +1204,7 @@ const SlateDashboard = () => {
                 </div>
               ) : (cloudSection === "authentication" || cloudSection === "relational-db" || cloudSection === "object-storage" || cloudSection === "nosql-db") ? (
                 <>
-                  {cloudSection === "authentication" && <AuthenticationView />}
+                  {cloudSection === "authentication" && <AuthenticationView showCreate />}
                   {cloudSection === "relational-db" && (
                     <div className="flex flex-col h-full">
                       <div className="px-6 pt-6 pb-4 border-b border-border">
