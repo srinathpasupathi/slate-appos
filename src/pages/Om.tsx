@@ -1300,6 +1300,21 @@ const SlateDashboard = () => {
                   <>
                     {/* Full viewport prompt section - centered */}
                     <div className="min-h-[calc(100vh-200px)] flex flex-col items-center justify-center w-full">
+                      {/* Proposal switcher */}
+                      <div className="mb-4">
+                        <select
+                          defaultValue="proposal1"
+                          onChange={(e) => {
+                            if (e.target.value === 'proposal2') {
+                              window.location.href = '/proposal2';
+                            }
+                          }}
+                          className="px-3 py-1.5 rounded-lg border border-border bg-card text-sm font-medium text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                        >
+                          <option value="proposal1">Proposal 1</option>
+                          <option value="proposal2">Proposal 2</option>
+                        </select>
+                      </div>
                       <h1 className="text-center text-2xl md:text-[2rem] lg:text-4xl font-semibold text-foreground mb-8 tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                         What should we build, Srinath?
                       </h1>
