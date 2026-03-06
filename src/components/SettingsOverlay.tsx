@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   X, Settings, Globe, BookOpen, Plug, GitBranch,
-  Users, CreditCard, ShieldCheck, ChevronRight, Code2, Brain, Database, Cloud,
+  Users, CreditCard, ShieldCheck, ChevronRight, Code2, Brain, Database, Cloud, ChevronDown,
 } from "lucide-react";
 import GeneralSettings from "@/components/settings/GeneralSettings";
 import DomainsSettings from "@/components/settings/DomainsSettings";
@@ -16,6 +16,12 @@ import PrivacySettings from "@/components/settings/PrivacySettings";
 import AIProvidersSettings from "@/components/settings/AIProvidersSettings";
 import AppOSSettings from "@/components/settings/AppOSSettings";
 import CloudSettings from "@/components/settings/CloudSettings";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const projectMenuItems = [
   { id: "general", label: "General", icon: Settings },
@@ -27,12 +33,30 @@ const projectMenuItems = [
   { id: "cloud", label: "Cloud", icon: Cloud },
 ];
 
+const omPromptMenuItems = [
+  { id: "general", label: "General", icon: Settings },
+  { id: "domains", label: "Domains", icon: Globe },
+  { id: "knowledge", label: "Knowledge", icon: BookOpen },
+  { id: "connectors", label: "Connectors", icon: Plug },
+  { id: "developer", label: "Compute & Hosting", icon: Code2 },
+];
+
+const omAppOSMenuItems = [
+  { id: "appos", label: "AppOS", icon: Database },
+];
+
+const omCloudMenuItems = [
+  { id: "cloud", label: "Cloud", icon: Cloud },
+];
+
 const orgMenuItems = [
   { id: "team", label: "My Team", icon: Users },
   { id: "billing", label: "Plans & Billing", icon: CreditCard },
   { id: "privacy", label: "Privacy & Security", icon: ShieldCheck },
   { id: "ai-providers", label: "AI Providers (BYOK)", icon: Brain },
 ];
+
+type OmContext = 'prompt' | 'appos' | 'cloud';
 
 interface SettingsOverlayProps {
   open: boolean;
@@ -48,12 +72,34 @@ interface SettingsOverlayProps {
 
 const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAppOsToggle, cloudEnabled = false, onCloudToggle, appName, variant = 'default' }: SettingsOverlayProps) => {
   const [activeSection, setActiveSection] = useState(initialTab || "general");
+  const [omContext, setOmContext] = useState<OmContext>('prompt');
 
-  const currentProjectMenuItems = variant === 'om'
-    ? projectMenuItems
-        .filter(item => item.id !== 'appos' && item.id !== 'cloud')
-        .map(item => item.id === 'developer' ? { ...item, label: 'Compute & Hosting' } : item)
-    : projectMenuItems;
+  const getMenuItemsForContext = () => {
+    if (variant !== 'om') return projectMenuItems;
+    switch (omContext) {
+      case 'prompt': return omPromptMenuItems;
+      case 'appos': return omAppOSMenuItems;
+      case 'cloud': return omCloudMenuItems;
+    }
+  };
+
+  const currentProjectMenuItems = getMenuItemsForContext();
+
+  const handleOmContextChange = (ctx: OmContext) => {
+    setOmContext(ctx);
+    // Set the first menu item of the new context as active
+    switch (ctx) {
+      case 'prompt': setActiveSection('general'); break;
+      case 'appos': setActiveSection('appos'); break;
+      case 'cloud': setActiveSection('cloud'); break;
+    }
+  };
+
+  const omContextLabels: Record<OmContext, string> = {
+    prompt: 'Prompt',
+    appos: 'AppOS',
+    cloud: 'Cloud',
+  };
 
   useEffect(() => {
     if (initialTab) setActiveSection(initialTab);
@@ -79,8 +125,29 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
 
         {/* Left sidebar */}
         <div className="w-[260px] border-r border-border bg-muted/30 flex flex-col">
-          <div className="px-6 py-5">
+          <div className="px-6 py-5 flex items-center gap-3">
             <h2 className="text-lg font-semibold text-foreground">Settings</h2>
+            {variant === 'om' && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-card text-xs font-medium text-foreground hover:bg-muted transition-colors">
+                    {omContextLabels[omContext]}
+                    <ChevronDown className="h-3 w-3 text-muted-foreground" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-36">
+                  {(['prompt', 'appos', 'cloud'] as OmContext[]).map(ctx => (
+                    <DropdownMenuItem
+                      key={ctx}
+                      onClick={() => handleOmContextChange(ctx)}
+                      className={`cursor-pointer ${omContext === ctx ? 'bg-muted font-medium' : ''}`}
+                    >
+                      {omContextLabels[ctx]}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
 
           <nav className="flex-1 px-3 pb-6 overflow-y-auto">
