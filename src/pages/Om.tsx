@@ -1736,7 +1736,7 @@ const SlateDashboard = () => {
       </div>
 
       {/* Settings overlay */}
-      <SettingsOverlay open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <SettingsOverlay open={settingsOpen} onClose={() => setSettingsOpen(false)} variant="om" />
 
       {/* Hide/Show cards dropdown for Prompt tab */}
       {mainTab === 'build' && (

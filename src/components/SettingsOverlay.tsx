@@ -7,6 +7,7 @@ import GeneralSettings from "@/components/settings/GeneralSettings";
 import DomainsSettings from "@/components/settings/DomainsSettings";
 import KnowledgeSettings from "@/components/settings/KnowledgeSettings";
 import ConnectorsSettings from "@/components/settings/ConnectorsSettings";
+import OmDeveloperSettings from "@/components/settings/OmDeveloperSettings";
 
 import DeveloperSettings from "@/components/settings/DeveloperSettings";
 import TeamSettings from "@/components/settings/TeamSettings";
@@ -42,10 +43,15 @@ interface SettingsOverlayProps {
   cloudEnabled?: boolean;
   onCloudToggle?: (enabled: boolean) => void;
   appName?: string;
+  variant?: 'default' | 'om';
 }
 
-const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAppOsToggle, cloudEnabled = false, onCloudToggle, appName }: SettingsOverlayProps) => {
+const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAppOsToggle, cloudEnabled = false, onCloudToggle, appName, variant = 'default' }: SettingsOverlayProps) => {
   const [activeSection, setActiveSection] = useState(initialTab || "general");
+
+  const currentProjectMenuItems = variant === 'om'
+    ? projectMenuItems.map(item => item.id === 'developer' ? { ...item, label: 'Om Compute & Hosting' } : item)
+    : projectMenuItems;
 
   useEffect(() => {
     if (initialTab) setActiveSection(initialTab);
@@ -80,7 +86,7 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
               App Settings
             </p>
             <div className="space-y-0.5 mb-6">
-              {projectMenuItems.map((item) => (
+              {currentProjectMenuItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => setActiveSection(item.id)}
@@ -130,16 +136,16 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-xl font-semibold text-foreground capitalize">
-                  {[...projectMenuItems, ...orgMenuItems].find((i) => i.id === activeSection)?.label}
+                  {[...currentProjectMenuItems, ...orgMenuItems].find((i) => i.id === activeSection)?.label}
                 </h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {getDescription(activeSection)}
+                  {getDescription(activeSection, variant)}
                 </p>
               </div>
             </div>
           </div>
           <div className="flex-1 px-8 py-6">
-            {renderContent(activeSection, { appOsEnabled, onAppOsToggle, cloudEnabled, onCloudToggle, appName })}
+            {renderContent(activeSection, { appOsEnabled, onAppOsToggle, cloudEnabled, onCloudToggle, appName, variant })}
           </div>
         </div>
       </div>
@@ -147,7 +153,7 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
   );
 };
 
-function renderContent(section: string, opts: { appOsEnabled: boolean; onAppOsToggle?: (v: boolean) => void; cloudEnabled: boolean; onCloudToggle?: (v: boolean) => void; appName?: string }) {
+function renderContent(section: string, opts: { appOsEnabled: boolean; onAppOsToggle?: (v: boolean) => void; cloudEnabled: boolean; onCloudToggle?: (v: boolean) => void; appName?: string; variant: string }) {
   switch (section) {
     case "general":
       return <GeneralSettings />;
@@ -162,7 +168,7 @@ function renderContent(section: string, opts: { appOsEnabled: boolean; onAppOsTo
     case "cloud":
       return <CloudSettings enabled={opts.cloudEnabled} onToggle={opts.onCloudToggle || (() => {})} appName={opts.appName} />;
     case "developer":
-      return <DeveloperSettings />;
+      return opts.variant === 'om' ? <OmDeveloperSettings /> : <DeveloperSettings />;
     case "team":
       return <TeamSettings />;
     case "billing":
@@ -182,7 +188,7 @@ function renderContent(section: string, opts: { appOsEnabled: boolean; onAppOsTo
   }
 }
 
-function getDescription(section: string): string {
+function getDescription(section: string, variant: string = 'default'): string {
   const descriptions: Record<string, string> = {
     general: "Manage your project's basic configuration and preferences.",
     appos: "Manage AppOS backend services for your application.",
@@ -190,7 +196,9 @@ function getDescription(section: string): string {
     domains: "Configure custom domains and hosting for your application.",
     knowledge: "Add custom knowledge and guidelines to improve your app.",
     connectors: "Connect external services and data sources.",
-    developer: "Backend configuration, deployments, and Catalyst project details.",
+    developer: variant === 'om'
+      ? "Manage Om Compute runtimes and Om Hosting frameworks."
+      : "Backend configuration, deployments, and Catalyst project details.",
     
     team: "Invite and manage team members in your organization.",
     billing: "View and manage your subscription, plans, and payment methods.",
