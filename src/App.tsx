@@ -20,10 +20,10 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigate to="/om" replace />} />
-          <Route path="/proposal2" element={<Slate />} />
+          <Route path="/platform" element={<Slate />} />
           <Route path="/om" element={<Om />} />
           <Route path="/om/project" element={<OmProjectPage />} />
-          <Route path="/project" element={<ProjectPage />} />
+          <Route path="/platform/project" element={<ProjectPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
