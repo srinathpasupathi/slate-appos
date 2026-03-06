@@ -321,6 +321,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
   // Building screen — staged progress
   if (connectionPhase === 'building') {
     return (
+      <div className="flex-1 flex items-center justify-center w-full">
       <div ref={containerRef} className="flex flex-col items-center gap-10 w-full max-w-md animate-in fade-in duration-500">
         <div className="text-center space-y-3">
           <h2 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -362,12 +363,14 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
           })}
         </div>
       </div>
+      </div>
     );
   }
 
   // Deploy ready screen
   if (connectionPhase === 'deploy-ready') {
     return (
+      <div className="flex-1 flex items-center justify-center w-full">
       <div ref={containerRef} className="flex flex-col items-center gap-6 w-full max-w-md animate-in fade-in slide-in-from-bottom-2 duration-500">
         <div className="flex items-center gap-2.5 animate-in fade-in duration-700">
           <div className="h-5 w-5 rounded-full bg-green-500/15 flex items-center justify-center">
@@ -406,12 +409,14 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
           </button>
         </div>
       </div>
+      </div>
     );
   }
 
   // Deploying screen
   if (connectionPhase === 'deploying') {
     return (
+      <div className="flex-1 flex items-center justify-center w-full">
       <div ref={containerRef} className="flex flex-col items-center gap-8 w-full max-w-md animate-in fade-in duration-500">
         <div className="relative h-12 w-12">
           <div className="absolute inset-0 rounded-full border-2 border-muted" />
@@ -426,12 +431,14 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
           </p>
         </div>
       </div>
+      </div>
     );
   }
 
   // Live / success screen
   if (connectionPhase === 'live') {
     return (
+      <div className="flex-1 flex items-center justify-center w-full">
       <div ref={containerRef} className="flex flex-col items-center gap-8 w-full max-w-md animate-in fade-in duration-500">
         <div className="text-center space-y-3">
           <div className="mx-auto h-14 w-14 rounded-full bg-green-500/10 border-2 border-green-500/30 flex items-center justify-center mb-4">
@@ -508,6 +515,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
             <ExternalLink className="h-3.5 w-3.5" />
           </a>
         </div>
+      </div>
       </div>
     );
   }
