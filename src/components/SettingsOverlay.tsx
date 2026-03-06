@@ -197,7 +197,7 @@ function getDescription(section: string, variant: string = 'default'): string {
     knowledge: "Add custom knowledge and guidelines to improve your app.",
     connectors: "Connect external services and data sources.",
     developer: variant === 'om'
-      ? "Manage Om Compute runtimes and Om Hosting frameworks."
+      ? "Manage hosted apps and web services for your project."
       : "Backend configuration, deployments, and Catalyst project details.",
     
     team: "Invite and manage team members in your organization.",
