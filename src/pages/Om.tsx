@@ -833,6 +833,7 @@ const SlateDashboard = () => {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [plusMenuOpen, setPlusMenuOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
+  const [sidebarHidden, setSidebarHidden] = useState(false);
   const [_sidebarHovered, setSidebarHovered] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [mainTab, setMainTab] = useState<'build' | 'platform' | 'cloud'>('build');
@@ -916,9 +917,16 @@ const SlateDashboard = () => {
           <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
           <span className="text-base font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Om</span>
           <button
-            onClick={() => setSidebarCollapsed(prev => !prev)}
+            onClick={() => {
+              if (sidebarHidden) {
+                setSidebarHidden(false);
+                setSidebarCollapsed(true);
+              } else {
+                setSidebarCollapsed(prev => !prev);
+              }
+            }}
             className="p-1 rounded-md hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground"
-            title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={sidebarHidden ? "Show sidebar" : sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="1.5" y="2.5" width="13" height="11" rx="2" stroke="currentColor" strokeWidth="1.5" />
@@ -968,7 +976,7 @@ const SlateDashboard = () => {
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
         <aside
-          className={`hidden lg:flex flex-col border-r border-border bg-card flex-shrink-0 transition-all duration-200 ${sidebarCollapsed ? 'w-[52px]' : 'w-[240px]'}`}
+          className={`hidden lg:flex flex-col border-r border-border bg-card flex-shrink-0 transition-all duration-200 ${sidebarHidden ? 'w-0 overflow-hidden border-r-0' : sidebarCollapsed ? 'w-[52px]' : 'w-[240px]'}`}
         >
           {/* Nav links */}
           <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto overflow-x-hidden whitespace-nowrap">
@@ -1127,6 +1135,20 @@ const SlateDashboard = () => {
               </>
             ) : null}
           </nav>
+          {/* Hide sidebar button - only visible when collapsed */}
+          {sidebarCollapsed && !sidebarHidden && (
+            <div className="flex-shrink-0 flex justify-center pb-3">
+              <button
+                onClick={() => setSidebarHidden(true)}
+                className="w-7 h-7 rounded-full border border-border bg-card hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shadow-sm"
+                title="Hide sidebar"
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 2L3 6L7 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+          )}
         </aside>
 
         {/* Main content */}
