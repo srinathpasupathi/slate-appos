@@ -7,8 +7,6 @@ interface CloudSettingsProps {
 }
 
 const CloudSettings = ({ enabled, onToggle, appName = "My App" }: CloudSettingsProps) => {
-  const projectSlug = appName.toLowerCase().replace(/\s+/g, '-');
-
   return (
     <div className="space-y-6">
       {!enabled ? (
@@ -35,12 +33,12 @@ const CloudSettings = ({ enabled, onToggle, appName = "My App" }: CloudSettingsP
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Cloud className="h-4.5 w-4.5 text-primary" />
+                  <Cloud className="h-4 w-4 text-primary" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-foreground">{appName}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {projectSlug}.us.omcloud.ai
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Created just now · by You
                   </p>
                 </div>
               </div>
@@ -53,22 +51,6 @@ const CloudSettings = ({ enabled, onToggle, appName = "My App" }: CloudSettingsP
                 Open Project
                 <ExternalLink className="h-3 w-3" />
               </a>
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-border bg-card p-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Status</p>
-                <div className="flex items-center gap-1.5 mt-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                  <p className="text-sm text-foreground">Active</p>
-                </div>
-              </div>
-              <div>
-                <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Region</p>
-                <p className="text-sm text-foreground mt-1">US</p>
-              </div>
             </div>
           </div>
 
