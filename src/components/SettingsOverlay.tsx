@@ -50,7 +50,7 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
   const [activeSection, setActiveSection] = useState(initialTab || "general");
 
   const currentProjectMenuItems = variant === 'om'
-    ? projectMenuItems.map(item => item.id === 'developer' ? { ...item, label: 'Om Compute & Hosting' } : item)
+    ? projectMenuItems.map(item => item.id === 'developer' ? { ...item, label: 'Compute & Hosting' } : item)
     : projectMenuItems;
 
   useEffect(() => {
