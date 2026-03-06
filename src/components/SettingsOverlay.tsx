@@ -88,7 +88,7 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
   };
 
   const omContextLabels: Record<OmContext, string> = {
-    prompt: 'Prompt',
+    prompt: 'Om Builder',
     appos: 'AppOS',
     cloud: 'Cloud',
   };
