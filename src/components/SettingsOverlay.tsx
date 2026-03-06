@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   X, Settings, Globe, BookOpen, Plug, GitBranch,
-  Users, CreditCard, ShieldCheck, ChevronRight, Code2, Brain, Database, Cloud, ChevronDown,
+  Users, CreditCard, ShieldCheck, ChevronRight, Code2, Brain, Database, Cloud, ChevronDown, Zap, Boxes, DatabaseZap, Check,
 } from "lucide-react";
 import GeneralSettings from "@/components/settings/GeneralSettings";
 import DomainsSettings from "@/components/settings/DomainsSettings";
@@ -87,11 +87,11 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
     setActiveSection('general');
   };
 
-  const omContextLabels: Record<OmContext, string> = {
-    prompt: 'Om Builder',
-    appos: 'AppOS',
-    cloud: 'Cloud',
-  };
+  const omContextOptions: { key: OmContext; label: string; icon: typeof Zap; description: string }[] = [
+    { key: 'prompt', label: 'Om Builder', icon: Zap, description: 'App generation & prompts' },
+    { key: 'appos', label: 'AppOS', icon: Boxes, description: 'Backend modules & workflows' },
+    { key: 'cloud', label: 'Cloud', icon: DatabaseZap, description: 'Infrastructure & services' },
+  ];
 
   useEffect(() => {
     if (initialTab) setActiveSection(initialTab);
@@ -122,19 +122,44 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
             {variant === 'om' && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-border bg-card text-xs font-medium text-foreground hover:bg-muted transition-colors">
-                    {omContextLabels[omContext]}
+                  <button className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-card text-xs font-medium text-foreground hover:bg-muted/80 transition-all shadow-sm">
+                    {(() => {
+                      const active = omContextOptions.find(o => o.key === omContext);
+                      return active ? (
+                        <>
+                          <active.icon className="h-3.5 w-3.5 text-primary" />
+                          {active.label}
+                        </>
+                      ) : null;
+                    })()}
                     <ChevronDown className="h-3 w-3 text-muted-foreground" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-36">
-                  {(['prompt', 'appos', 'cloud'] as OmContext[]).map(ctx => (
+                <DropdownMenuContent align="start" className="w-56 p-1.5">
+                  {omContextOptions.map(opt => (
                     <DropdownMenuItem
-                      key={ctx}
-                      onClick={() => handleOmContextChange(ctx)}
-                      className={`cursor-pointer ${omContext === ctx ? 'bg-muted font-medium' : ''}`}
+                      key={opt.key}
+                      onClick={() => handleOmContextChange(opt.key)}
+                      className={`cursor-pointer flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors ${
+                        omContext === opt.key
+                          ? 'bg-primary/10 text-foreground'
+                          : 'text-muted-foreground hover:text-foreground'
+                      }`}
                     >
-                      {omContextLabels[ctx]}
+                      <div className={`h-7 w-7 rounded-md flex items-center justify-center shrink-0 ${
+                        omContext === opt.key
+                          ? 'bg-primary/15 text-primary'
+                          : 'bg-muted text-muted-foreground'
+                      }`}>
+                        <opt.icon className="h-3.5 w-3.5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-sm ${omContext === opt.key ? 'font-semibold' : 'font-medium'}`}>{opt.label}</p>
+                        <p className="text-[11px] text-muted-foreground leading-tight">{opt.description}</p>
+                      </div>
+                      {omContext === opt.key && (
+                        <Check className="h-3.5 w-3.5 text-primary shrink-0" />
+                      )}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
