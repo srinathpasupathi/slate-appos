@@ -41,12 +41,9 @@ const omPromptMenuItems = [
   { id: "developer", label: "Compute & Hosting", icon: Code2 },
 ];
 
-const omAppOSMenuItems = [
-  { id: "appos", label: "AppOS", icon: Database },
-];
-
-const omCloudMenuItems = [
-  { id: "cloud", label: "Cloud", icon: Cloud },
+const omServiceMenuItems = [
+  { id: "general", label: "General", icon: Settings },
+  { id: "developer", label: "Compute & Hosting", icon: Code2 },
 ];
 
 const orgMenuItems = [
@@ -78,8 +75,8 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
     if (variant !== 'om') return projectMenuItems;
     switch (omContext) {
       case 'prompt': return omPromptMenuItems;
-      case 'appos': return omAppOSMenuItems;
-      case 'cloud': return omCloudMenuItems;
+      case 'appos': return omServiceMenuItems;
+      case 'cloud': return omServiceMenuItems;
     }
   };
 
