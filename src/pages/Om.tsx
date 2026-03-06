@@ -833,7 +833,7 @@ const SlateDashboard = () => {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [plusMenuOpen, setPlusMenuOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
-  const [sidebarHidden, setSidebarHidden] = useState(false);
+  const [sidebarHidden, setSidebarHidden] = useState(true);
   const [_sidebarHovered, setSidebarHovered] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [mainTab, setMainTab] = useState<'build' | 'platform' | 'cloud'>('build');
@@ -944,7 +944,18 @@ const SlateDashboard = () => {
           ]).map(tab => (
             <button
               key={tab.key}
-              onClick={() => { setMainTab(tab.key); setShowIdeSelector(null); setSelectedBackend((tab.key === 'cloud' || tab.key === 'platform') ? 'Default Project' : null); }}
+              onClick={() => { 
+                setMainTab(tab.key); 
+                setShowIdeSelector(null); 
+                setSelectedBackend((tab.key === 'cloud' || tab.key === 'platform') ? 'Default Project' : null);
+                if (tab.key === 'build') {
+                  setSidebarHidden(true);
+                  setSidebarCollapsed(true);
+                } else {
+                  setSidebarHidden(false);
+                  setSidebarCollapsed(true);
+                }
+              }}
               className={`relative flex items-center gap-1.5 px-5 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                 mainTab === tab.key
                   ? 'bg-primary/15 text-primary shadow-sm'
