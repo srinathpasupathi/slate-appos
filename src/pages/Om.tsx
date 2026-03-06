@@ -1250,7 +1250,7 @@ const SlateDashboard = () => {
                             </span>
                           </div>
                         )}
-                        <div className="rounded-xl border border-input bg-card shadow-lg focus-within:ring-2 focus-within:ring-ring focus-within:border-transparent transition-all">
+                        <div className="rounded-2xl border border-border/80 bg-muted/40 shadow-[0_2px_20px_-4px_hsl(var(--primary)/0.12)] focus-within:shadow-[0_2px_24px_-4px_hsl(var(--primary)/0.22)] focus-within:border-primary/30 transition-all duration-300">
                           <textarea
                             value={prompt}
                             onChange={(e) => setPrompt(e.target.value)}
