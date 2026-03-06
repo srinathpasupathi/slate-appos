@@ -84,8 +84,9 @@ const RelationalDBView = ({ showCreate = false }: RelationalDBViewProps) => {
         <div className="px-4 pt-4 pb-3 flex items-center justify-between">
           <h3 className="text-base font-semibold text-foreground">Tables List</h3>
           {showCreate && (
-            <button className="h-7 w-7 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" title="Create Table">
+            <button className="h-8 px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors inline-flex items-center gap-1.5">
               <Plus className="h-3.5 w-3.5" />
+              + New Table
             </button>
           )}
         </div>

@@ -1232,16 +1232,37 @@ const SlateDashboard = () => {
                       <h2 className="text-xl font-semibold tracking-tight">{CLOUD_NAV.find(n => n.id === cloudSection)?.label}</h2>
                       <p className="text-sm text-muted-foreground mt-1">Manage {CLOUD_NAV.find(n => n.id === cloudSection)?.label.toLowerCase()} for {selectedBackend}.</p>
                     </div>
-                    {(cloudSection === "functions" || cloudSection === "schedulers") && (
-                      <button className="h-8 px-3 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors inline-flex items-center gap-1.5">
-                        <Plus className="h-3.5 w-3.5" />
+                  </div>
+                  {(cloudSection === "functions" || cloudSection === "schedulers") && (
+                    <div className="flex flex-col items-center justify-center flex-1 min-h-[400px] text-center">
+                      <div className="mb-6">
+                        <div className="w-24 h-24 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
+                          {cloudSection === "functions" ? (
+                            <Zap className="h-10 w-10 text-primary" />
+                          ) : (
+                            <RotateCcw className="h-10 w-10 text-primary" />
+                          )}
+                        </div>
+                      </div>
+                      <h3 className="text-lg font-semibold text-foreground mb-2">
+                        {cloudSection === "functions" ? "No functions yet" : "No schedulers yet"}
+                      </h3>
+                      <p className="text-sm text-muted-foreground max-w-md mb-6">
+                        {cloudSection === "functions"
+                          ? "Create serverless functions to run custom backend logic for your application."
+                          : "Create scheduled tasks to automate recurring operations for your application."}
+                      </p>
+                      <button className="h-9 px-5 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors inline-flex items-center gap-2">
+                        <Plus className="h-4 w-4" />
                         Create {cloudSection === "functions" ? "Function" : "Scheduler"}
                       </button>
-                    )}
-                  </div>
-                  <div className="rounded-xl border border-dashed border-border bg-muted/20 h-60 flex items-center justify-center">
-                    <p className="text-sm text-muted-foreground">{CLOUD_NAV.find(n => n.id === cloudSection)?.label} content</p>
-                  </div>
+                    </div>
+                  )}
+                  {cloudSection !== "functions" && cloudSection !== "schedulers" && (
+                    <div className="rounded-xl border border-dashed border-border bg-muted/20 h-60 flex items-center justify-center">
+                      <p className="text-sm text-muted-foreground">{CLOUD_NAV.find(n => n.id === cloudSection)?.label} content</p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
