@@ -968,10 +968,10 @@ const SlateDashboard = () => {
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
         <aside
-          className={`hidden lg:flex flex-col border-r border-border bg-card flex-shrink-0 transition-all duration-200 ${sidebarCollapsed ? 'w-0 overflow-hidden border-r-0' : 'w-[240px]'}`}
+          className={`hidden lg:flex flex-col border-r border-border bg-card flex-shrink-0 transition-all duration-200 ${sidebarCollapsed ? 'w-[52px]' : 'w-[240px]'}`}
         >
           {/* Nav links */}
-          <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto overflow-x-hidden">
+          <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto overflow-x-hidden whitespace-nowrap">
             {mainTab !== 'cloud' && mainTab !== 'platform' && (
               <SidebarLink icon={Home} label="Home" active collapsed={sidebarCollapsed} onClick={() => {
                 setIdeFlowActive(false);
@@ -992,7 +992,7 @@ const SlateDashboard = () => {
                   }}
                 />
                 {!sidebarCollapsed && (
-                  <div className="pl-8 space-y-0.5">
+                  <div className="pl-8 space-y-0.5 overflow-hidden">
                     {recentProjects.map((p) => (
                       <button key={p.name} onClick={() => navigate(`/om/project?source=${p.source}&name=${encodeURIComponent(p.name)}`)} className="block w-full text-left px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
                         {p.name}
@@ -1003,7 +1003,7 @@ const SlateDashboard = () => {
               </>
             ) : mainTab === 'platform' ? (
               <>
-                {/* Project switcher */}
+                {!sidebarCollapsed && (
                 <div className="px-2 pt-2 pb-1">
                   <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-2 mb-1.5">Project</p>
                   <Popover>
@@ -1049,7 +1049,8 @@ const SlateDashboard = () => {
                     </PopoverContent>
                   </Popover>
                 </div>
-                <div className="h-px bg-border mx-2 my-1" />
+                )}
+                {!sidebarCollapsed && <div className="h-px bg-border mx-2 my-1" />}
                 {/* AppOS nav items */}
                 {APPOS_NAV.map((item) => (
                   <SidebarLink
@@ -1064,7 +1065,7 @@ const SlateDashboard = () => {
               </>
             ) : mainTab === 'cloud' ? (
               <>
-                {/* Project switcher */}
+                {!sidebarCollapsed && (
                 <div className="px-2 pt-2 pb-1">
                   <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-2 mb-1.5">Project</p>
                   <Popover>
@@ -1110,7 +1111,8 @@ const SlateDashboard = () => {
                     </PopoverContent>
                   </Popover>
                 </div>
-                <div className="h-px bg-border mx-2 my-1" />
+                )}
+                {!sidebarCollapsed && <div className="h-px bg-border mx-2 my-1" />}
                 {/* Cloud nav items */}
                 {CLOUD_NAV.map((item) => (
                   <SidebarLink
