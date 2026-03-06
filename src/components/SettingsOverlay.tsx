@@ -64,7 +64,7 @@ interface SettingsOverlayProps {
   cloudEnabled?: boolean;
   onCloudToggle?: (enabled: boolean) => void;
   appName?: string;
-  variant?: 'default' | 'om' | 'slate';
+  variant?: 'default' | 'om' | 'om-project' | 'slate';
 }
 
 const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAppOsToggle, cloudEnabled = false, onCloudToggle, appName, variant = 'default' }: SettingsOverlayProps) => {
@@ -73,6 +73,11 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
 
   const getMenuItemsForContext = () => {
     if (variant === 'slate') return projectMenuItems.filter(item => item.id !== 'appos' && item.id !== 'cloud');
+    if (variant === 'om-project') return [
+      ...omPromptMenuItems,
+      { id: "appos", label: "AppOS", icon: Database },
+      { id: "cloud", label: "Cloud", icon: Cloud },
+    ];
     if (variant !== 'om') return projectMenuItems;
     switch (omContext) {
       case 'prompt': return omPromptMenuItems;
@@ -252,7 +257,7 @@ function renderContent(section: string, opts: { appOsEnabled: boolean; onAppOsTo
     case "cloud":
       return <CloudSettings enabled={opts.cloudEnabled} onToggle={opts.onCloudToggle || (() => {})} appName={opts.appName} />;
     case "developer":
-      return opts.variant === 'om' ? <OmDeveloperSettings /> : <DeveloperSettings />;
+      return (opts.variant === 'om' || opts.variant === 'om-project') ? <OmDeveloperSettings /> : <DeveloperSettings />;
     case "team":
       return <TeamSettings />;
     case "billing":
