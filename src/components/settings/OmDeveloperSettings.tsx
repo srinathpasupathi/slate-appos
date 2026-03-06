@@ -15,7 +15,7 @@ const OmDeveloperSettings = () => {
           <div className="h-7 w-7 rounded-md bg-primary/10 flex items-center justify-center text-primary font-bold text-xs shrink-0">
             O
           </div>
-          <h4 className="text-sm font-semibold text-foreground">Om Platform</h4>
+          <h4 className="text-sm font-semibold text-foreground">Catalyst by Zoho</h4>
           <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-600 ml-auto">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
             Connected
@@ -46,9 +46,9 @@ const OmDeveloperSettings = () => {
           </div>
         </div>
 
-        {/* Om Hosting */}
+        {/* Hosted Apps */}
         <div>
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Om Hosting</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Hosted Apps</p>
           <div className="rounded-xl border border-border overflow-hidden">
             <table className="w-full text-sm">
               <thead>
@@ -111,9 +111,9 @@ const OmDeveloperSettings = () => {
           </div>
         </div>
 
-        {/* Om Compute */}
+        {/* Web Services */}
         <div>
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Om Compute</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Web Services</p>
           <div className="rounded-xl border border-border overflow-hidden">
             <table className="w-full text-sm">
               <thead>
