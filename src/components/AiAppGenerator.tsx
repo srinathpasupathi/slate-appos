@@ -14,7 +14,7 @@ const AiAppGenerator = () => {
   const navigate = useNavigate();
 
   const handleGenerate = () => {
-    navigate("/");
+    navigate("/platform");
   };
 
   return (
