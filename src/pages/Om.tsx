@@ -498,23 +498,15 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
             </div>
           </div>
 
-          <div className="flex gap-3">
-            <a
-              href="https://real-estate.us.omcloud.ai"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 h-10 rounded-lg bg-foreground text-background text-sm font-medium hover:bg-foreground/90 transition-colors"
-            >
-              Open App
-              <ExternalLink className="h-3.5 w-3.5" />
-            </a>
-            <button
-              onClick={() => navigate(`/om/project?source=platform&name=${encodeURIComponent(appName)}`)}
-              className="flex-1 flex items-center justify-center gap-2 h-10 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted/50 transition-colors"
-            >
-              View Project
-            </button>
-          </div>
+          <a
+            href="https://real-estate.us.omcloud.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex items-center justify-center gap-2 h-10 rounded-lg bg-foreground text-background text-sm font-medium hover:bg-foreground/90 transition-colors"
+          >
+            Open App
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
         </div>
       </div>
     );
