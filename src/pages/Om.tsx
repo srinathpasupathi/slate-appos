@@ -749,6 +749,7 @@ const appOsBackends = [
 
 const cloudProjects = [
   { name: "Default Project", url: "default-project.catalystcloud.in", status: "Active", createdAt: "Feb 12, 2026" },
+  { name: "franchise-sales-cloud", url: "franchise-sales.catalystcloud.in", status: "Active", createdAt: "Feb 15, 2026" },
 ];
 
 const BackendProjectsListing = ({ type, onCreateNew, onCardClick }: { type: 'platform' | 'cloud'; onCreateNew: () => void; onCardClick: (name: string) => void }) => {
