@@ -1312,7 +1312,7 @@ const SlateDashboard = () => {
       </main>
 
       {/* Settings overlay */}
-      <SettingsOverlay open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <SettingsOverlay open={settingsOpen} onClose={() => setSettingsOpen(false)} variant="slate" />
     </div>
   );
 };

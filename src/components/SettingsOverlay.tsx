@@ -64,7 +64,7 @@ interface SettingsOverlayProps {
   cloudEnabled?: boolean;
   onCloudToggle?: (enabled: boolean) => void;
   appName?: string;
-  variant?: 'default' | 'om';
+  variant?: 'default' | 'om' | 'slate';
 }
 
 const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAppOsToggle, cloudEnabled = false, onCloudToggle, appName, variant = 'default' }: SettingsOverlayProps) => {
@@ -72,6 +72,7 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
   const [omContext, setOmContext] = useState<OmContext>('prompt');
 
   const getMenuItemsForContext = () => {
+    if (variant === 'slate') return projectMenuItems.filter(item => item.id !== 'appos' && item.id !== 'cloud');
     if (variant !== 'om') return projectMenuItems;
     switch (omContext) {
       case 'prompt': return omPromptMenuItems;
