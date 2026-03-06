@@ -911,7 +911,7 @@ const SlateDashboard = () => {
                 {/* Tabs - fixed position regardless of content */}
                 <div className="inline-flex items-center gap-1 rounded-full bg-background/90 backdrop-blur-md p-1.5 border border-border shadow-md mb-6">
                   {([
-                    { key: 'build' as const, label: 'Prompt' },
+                    { key: 'build' as const, label: 'Om Builder' },
                     { key: 'platform' as const, label: 'AI IDEs' },
                   ]).map(tab => (
                     <button
