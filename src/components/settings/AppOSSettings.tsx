@@ -3,9 +3,10 @@ import { CheckCircle2, AlertCircle, Database } from "lucide-react";
 interface AppOSSettingsProps {
   enabled: boolean;
   onToggle: (enabled: boolean) => void;
+  appName?: string;
 }
 
-const AppOSSettings = ({ enabled, onToggle }: AppOSSettingsProps) => {
+const AppOSSettings = ({ enabled, onToggle, appName = "My App" }: AppOSSettingsProps) => {
   return (
     <div className="space-y-6">
       {!enabled ? (
@@ -44,8 +45,8 @@ const AppOSSettings = ({ enabled, onToggle }: AppOSSettingsProps) => {
             <div className="flex items-center gap-3">
               <CheckCircle2 className="h-4 w-4 text-emerald-500" />
               <div>
-                <p className="text-sm font-medium text-foreground">AppOS Project Associated</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Default Project — connected and ready to use.</p>
+                <p className="text-sm font-medium text-foreground">{appName}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">AppOS project created and connected.</p>
               </div>
             </div>
           </div>
