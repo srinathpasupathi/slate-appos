@@ -228,7 +228,7 @@ const SettingsOverlay = ({ open, onClose, initialTab, initialOmContext, appOsEna
 
         {/* Right content */}
         <div className="flex-1 flex flex-col overflow-y-auto">
-          {variant === 'om' && (
+          {variant === 'om' && !['team', 'billing', 'privacy', 'ai-providers'].includes(activeSection) && (
             <div className="px-8 py-3 border-b border-border bg-muted/20 flex items-center gap-3">
               <span className="text-sm font-medium text-muted-foreground">Project</span>
               <select
