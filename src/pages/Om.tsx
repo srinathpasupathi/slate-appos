@@ -940,7 +940,7 @@ const SlateDashboard = () => {
         {/* Center: Product tabs */}
         <div className="inline-flex items-center gap-0.5 rounded-full border border-border/60 p-1 bg-card/80 backdrop-blur-sm shadow-sm">
           {([
-            { key: 'build' as const, label: 'Om Builder', icon: Zap },
+            { key: 'build' as const, label: 'Prompt', icon: Zap },
             { key: 'platform' as const, label: 'AppOS', icon: Boxes },
             { key: 'cloud' as const, label: 'Cloud', icon: DatabaseZap },
           ]).map(tab => (
