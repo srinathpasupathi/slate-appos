@@ -748,7 +748,7 @@ const appOsBackends = [
 ];
 
 const cloudProjects = [
-  { name: "franchise-sales-cloud", url: "franchise-sales.catalystcloud.in", status: "Active", createdAt: "Feb 12, 2026" },
+  { name: "Default Project", url: "default-project.catalystcloud.in", status: "Active", createdAt: "Feb 12, 2026" },
 ];
 
 const BackendProjectsListing = ({ type, onCreateNew, onCardClick }: { type: 'platform' | 'cloud'; onCreateNew: () => void; onCardClick: (name: string) => void }) => {
@@ -932,7 +932,7 @@ const SlateDashboard = () => {
           ]).map(tab => (
             <button
               key={tab.key}
-              onClick={() => { setMainTab(tab.key); setShowIdeSelector(null); setSelectedBackend(null); }}
+              onClick={() => { setMainTab(tab.key); setShowIdeSelector(null); setSelectedBackend(tab.key === 'cloud' ? 'Default Project' : null); }}
               className={`relative flex items-center gap-1.5 px-5 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                 mainTab === tab.key
                   ? 'bg-primary/15 text-primary shadow-sm'
