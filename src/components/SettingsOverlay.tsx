@@ -19,7 +19,7 @@ import CloudSettings from "@/components/settings/CloudSettings";
 
 const projectMenuItems = [
   { id: "general", label: "General", icon: Settings },
-  { id: "domains", label: "Domains & Hosting", icon: Globe },
+  { id: "domains", label: "Domains", icon: Globe },
   { id: "knowledge", label: "Knowledge", icon: BookOpen },
   { id: "connectors", label: "Connectors", icon: Plug },
   { id: "developer", label: "Developer Settings", icon: Code2 },
