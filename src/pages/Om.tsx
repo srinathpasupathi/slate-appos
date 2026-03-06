@@ -813,6 +813,7 @@ const APPOS_NAV = [
 ];
 
 const CLOUD_NAV = [
+  { id: "home", label: "Home", icon: Home },
   { id: "authentication", label: "Authentication", icon: Lock },
   { id: "relational-db", label: "Relational DB", icon: Server },
   { id: "object-storage", label: "Object Storage", icon: FolderTree },
@@ -839,7 +840,7 @@ const SlateDashboard = () => {
   const [recentProjects, setRecentProjects] = useState(defaultRecentProjects);
   const [selectedBackend, setSelectedBackend] = useState<string | null>(null);
   const [appOsSection, setAppOsSection] = useState("overview");
-  const [cloudSection, setCloudSection] = useState("authentication");
+  const [cloudSection, setCloudSection] = useState("home");
   const [hideCards, setHideCards] = useState(true);
   const [hidePromptProjects, setHidePromptProjects] = useState(true);
   const [projectListTab, setProjectListTab] = useState<'all' | 'templates'>('all');
@@ -1143,7 +1144,17 @@ const SlateDashboard = () => {
           ) : selectedBackend && mainTab === 'cloud' ? (
             /* Cloud content — no separate sidebar, uses main sidebar */
             <div className="flex-1 overflow-y-auto flex flex-col">
-              {(cloudSection === "authentication" || cloudSection === "relational-db" || cloudSection === "object-storage" || cloudSection === "nosql-db") ? (
+              {cloudSection === "home" ? (
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="w-full max-w-3xl px-6">
+                    <PlatformIDESelector
+                      onCreateUntitled={handleCreateUntitled}
+                      onRenameProject={handleRenameProject}
+                      title="Connect Om Cloud to your AI IDE"
+                    />
+                  </div>
+                </div>
+              ) : (cloudSection === "authentication" || cloudSection === "relational-db" || cloudSection === "object-storage" || cloudSection === "nosql-db") ? (
                 <>
                   {cloudSection === "authentication" && <AuthenticationView />}
                   {cloudSection === "relational-db" && (
