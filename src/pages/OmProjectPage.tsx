@@ -834,7 +834,11 @@ const ProjectPage = () => {
                 )}
 
                 {/* Action Card */}
-                {msg.actionCard && (
+                {msg.actionCard && !(
+                  (msg.actionCard.type === "appos-promo" && appOsEnabled) ||
+                  (msg.actionCard.type === "cloud-promo" && cloudEnabled) ||
+                  (msg.actionCard.type === "backend-choice" && appOsEnabled && cloudEnabled)
+                ) && (
                   <div className="flex justify-start mt-3">
                     <div className="max-w-[92%] w-full">
                       <div className="rounded-xl border border-primary/20 bg-primary/[0.04] overflow-hidden">
