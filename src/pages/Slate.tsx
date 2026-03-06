@@ -503,7 +503,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject 
               <ExternalLink className="h-3.5 w-3.5" />
             </a>
             <button
-              onClick={() => navigate(`/platform/project?source=platform&name=${encodeURIComponent(appName)}`)}
+              onClick={() => navigate(`/project?source=platform&name=${encodeURIComponent(appName)}`)}
               className="flex-1 flex items-center justify-center gap-2 h-10 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted/50 transition-colors"
             >
               View Project
@@ -865,7 +865,7 @@ const SlateDashboard = () => {
           {!sidebarCollapsed && (
             <div className="pl-8 space-y-0.5">
               {recentProjects.map((p) => (
-                <button key={p.name} onClick={() => navigate(`/platform/project?source=${p.source}&name=${encodeURIComponent(p.name)}`)} className="block w-full text-left px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
+                <button key={p.name} onClick={() => navigate(`/project?source=${p.source}&name=${encodeURIComponent(p.name)}`)} className="block w-full text-left px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
                   {p.name}
                 </button>
               ))}
@@ -908,21 +908,6 @@ const SlateDashboard = () => {
             {layoutMode === 'option1' ? (
               /* === OPTION 1: Original tabbed layout === */
               <div className="w-full flex flex-col items-center pt-[15vh]">
-                {/* Proposal switcher */}
-                <div className="mb-4">
-                  <select
-                    defaultValue="proposal2"
-                    onChange={(e) => {
-                      if (e.target.value === 'proposal1') {
-                        window.location.href = '/om';
-                      }
-                    }}
-                    className="px-3 py-1.5 rounded-lg border border-border bg-card text-sm font-medium text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-                  >
-                    <option value="proposal1">Proposal 1</option>
-                    <option value="proposal2">Proposal 2</option>
-                  </select>
-                </div>
                 {/* Tabs - fixed position regardless of content */}
                 <div className="inline-flex items-center gap-1 rounded-full bg-background/90 backdrop-blur-md p-1.5 border border-border shadow-md mb-6">
                   {([
@@ -1046,7 +1031,7 @@ const SlateDashboard = () => {
                             <button
                               onClick={() => {
                                 if (prompt.trim()) {
-                                  navigate(`/platform/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
+                                  navigate(`/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
                                 }
                               }}
                               className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
@@ -1160,7 +1145,7 @@ const SlateDashboard = () => {
                             <button
                               onClick={() => {
                                 if (prompt.trim()) {
-                                  navigate(`/platform/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
+                                  navigate(`/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
                                 }
                               }}
                               className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
@@ -1263,7 +1248,7 @@ const SlateDashboard = () => {
                             <button
                               onClick={() => {
                                 if (prompt.trim()) {
-                                  navigate(`/platform/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
+                                  navigate(`/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
                                 }
                               }}
                               className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
