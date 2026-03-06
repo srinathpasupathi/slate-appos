@@ -1142,7 +1142,15 @@ const SlateDashboard = () => {
                 ) : (
                   <>
                     {cloudSection === "home" ? (
-                      <div className="flex-1" />
+                      <div className="flex-1 flex items-center justify-center">
+                        <div className="w-full max-w-3xl px-6">
+                          <PlatformIDESelector
+                            onCreateUntitled={handleCreateUntitled}
+                            onRenameProject={handleRenameProject}
+                            title="Connect Om Cloud to your AI IDE"
+                          />
+                        </div>
+                      </div>
                     ) : (cloudSection === "authentication" || cloudSection === "relational-db" || cloudSection === "object-storage" || cloudSection === "nosql-db") ? (
                       <>
                         {cloudSection === "authentication" && <AuthenticationView />}
