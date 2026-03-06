@@ -41,9 +41,10 @@ interface SettingsOverlayProps {
   onAppOsToggle?: (enabled: boolean) => void;
   cloudEnabled?: boolean;
   onCloudToggle?: (enabled: boolean) => void;
+  appName?: string;
 }
 
-const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAppOsToggle, cloudEnabled = false, onCloudToggle }: SettingsOverlayProps) => {
+const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAppOsToggle, cloudEnabled = false, onCloudToggle, appName }: SettingsOverlayProps) => {
   const [activeSection, setActiveSection] = useState(initialTab || "general");
 
   useEffect(() => {
@@ -138,7 +139,7 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
             </div>
           </div>
           <div className="flex-1 px-8 py-6">
-            {renderContent(activeSection, { appOsEnabled, onAppOsToggle, cloudEnabled, onCloudToggle })}
+            {renderContent(activeSection, { appOsEnabled, onAppOsToggle, cloudEnabled, onCloudToggle, appName })}
           </div>
         </div>
       </div>
@@ -146,7 +147,7 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
   );
 };
 
-function renderContent(section: string, opts: { appOsEnabled: boolean; onAppOsToggle?: (v: boolean) => void; cloudEnabled: boolean; onCloudToggle?: (v: boolean) => void }) {
+function renderContent(section: string, opts: { appOsEnabled: boolean; onAppOsToggle?: (v: boolean) => void; cloudEnabled: boolean; onCloudToggle?: (v: boolean) => void; appName?: string }) {
   switch (section) {
     case "general":
       return <GeneralSettings />;
@@ -157,9 +158,9 @@ function renderContent(section: string, opts: { appOsEnabled: boolean; onAppOsTo
     case "connectors":
       return <ConnectorsSettings />;
     case "appos":
-      return <AppOSSettings enabled={opts.appOsEnabled} onToggle={opts.onAppOsToggle || (() => {})} />;
+      return <AppOSSettings enabled={opts.appOsEnabled} onToggle={opts.onAppOsToggle || (() => {})} appName={opts.appName} />;
     case "cloud":
-      return <CloudSettings enabled={opts.cloudEnabled} onToggle={opts.onCloudToggle || (() => {})} />;
+      return <CloudSettings enabled={opts.cloudEnabled} onToggle={opts.onCloudToggle || (() => {})} appName={opts.appName} />;
     case "developer":
       return <DeveloperSettings />;
     case "team":
