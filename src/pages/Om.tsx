@@ -1129,7 +1129,7 @@ const SlateDashboard = () => {
               </aside>
 
               {/* Detail content */}
-              <div className="flex-1 overflow-y-auto">
+              <div className="flex-1 overflow-y-auto flex flex-col">
                 {mainTab === 'platform' ? (
                   <div className="px-6 py-6">
                     {appOsSection === "overview" && <OverviewTab projectName={selectedBackend || ''} appUrl={`${(selectedBackend || '').toLowerCase().replace(/\s+/g, '-')}.us.omcloud.ai`} copied={copied} onCopy={handleCopy} />}
