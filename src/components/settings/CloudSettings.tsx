@@ -40,10 +40,13 @@ const CloudSettings = ({ enabled, onToggle }: CloudSettingsProps) => {
             </div>
           </div>
 
-          <div className="rounded-xl border border-dashed border-border bg-muted/20 p-5">
+          <div className="rounded-xl border border-border bg-muted/20 p-5">
             <div className="flex items-center gap-3">
-              <AlertCircle className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">No Cloud Project is associated.</p>
+              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              <div>
+                <p className="text-sm font-medium text-foreground">Cloud Project Associated</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Default Project — connected and ready to use.</p>
+              </div>
             </div>
           </div>
 
