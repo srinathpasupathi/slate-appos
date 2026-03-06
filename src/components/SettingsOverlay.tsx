@@ -122,7 +122,7 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
             {variant === 'om' && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-card text-xs font-medium text-foreground hover:bg-muted/80 transition-all shadow-sm">
+                  <button className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-card text-xs font-medium text-foreground hover:bg-muted/80 transition-all shadow-sm whitespace-nowrap">
                     {(() => {
                       const active = omContextOptions.find(o => o.key === omContext);
                       return active ? (
