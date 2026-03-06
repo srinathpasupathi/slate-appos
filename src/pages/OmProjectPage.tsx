@@ -1247,7 +1247,7 @@ const ProjectPage = () => {
         </div>
       </div>
 
-      <SettingsOverlay open={settingsOpen} onClose={() => { setSettingsOpen(false); setSettingsInitialTab(undefined); }} initialTab={settingsInitialTab} appOsEnabled={appOsEnabled} onAppOsToggle={setAppOsEnabled} cloudEnabled={cloudEnabled} onCloudToggle={setCloudEnabled} appName={projectName} variant="om" />
+      <SettingsOverlay open={settingsOpen} onClose={() => { setSettingsOpen(false); setSettingsInitialTab(undefined); }} initialTab={settingsInitialTab} appOsEnabled={appOsEnabled} onAppOsToggle={setAppOsEnabled} cloudEnabled={cloudEnabled} onCloudToggle={setCloudEnabled} appName={projectName} variant="om-project" />
       <GitHubConnectDialog open={githubDialogOpen} onOpenChange={setGithubDialogOpen} onConnected={handleGithubConnected} />
     </div>
   );
