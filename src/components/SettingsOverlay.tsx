@@ -146,17 +146,14 @@ const SettingsOverlay = ({ open, onClose, initialTab, appOsEnabled = false, onAp
                           : 'text-muted-foreground hover:text-foreground'
                       }`}
                     >
-                      <div className={`h-7 w-7 rounded-md flex items-center justify-center shrink-0 ${
+                      <div className={`h-6 w-6 rounded-md flex items-center justify-center shrink-0 ${
                         omContext === opt.key
                           ? 'bg-primary/15 text-primary'
                           : 'bg-muted text-muted-foreground'
                       }`}>
                         <opt.icon className="h-3.5 w-3.5" />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className={`text-sm ${omContext === opt.key ? 'font-semibold' : 'font-medium'}`}>{opt.label}</p>
-                        <p className="text-[11px] text-muted-foreground leading-tight">{opt.description}</p>
-                      </div>
+                      <span className={`text-sm flex-1 ${omContext === opt.key ? 'font-semibold' : 'font-medium'}`}>{opt.label}</span>
                       {omContext === opt.key && (
                         <Check className="h-3.5 w-3.5 text-primary shrink-0" />
                       )}
