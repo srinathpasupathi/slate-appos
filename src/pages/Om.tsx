@@ -1206,9 +1206,7 @@ const SlateDashboard = () => {
             </div>
           ) : (
           <>
-           <div className={`relative flex-1 flex flex-col overflow-y-auto`}>
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-100/60 via-indigo-50/40 to-blue-50/30 pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
+           <div className={`relative flex-1 flex flex-col overflow-y-auto bg-background`}>
 
           <div className={`relative flex flex-col ${mainTab !== 'build' && (showIdeSelector === mainTab || hideCards) ? 'flex-1 items-center justify-center' : ''} px-6 lg:px-16`}>
             {/* Preload IDE logos so they're cached across all layout modes */}
