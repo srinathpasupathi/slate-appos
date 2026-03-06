@@ -834,6 +834,7 @@ const SlateDashboard = () => {
   const [plusMenuOpen, setPlusMenuOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [sidebarHidden, setSidebarHidden] = useState(true);
+  const [userToggledSidebar, setUserToggledSidebar] = useState(false);
   const [_sidebarHovered, setSidebarHovered] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [mainTab, setMainTab] = useState<'build' | 'platform' | 'cloud'>('build');
@@ -918,6 +919,7 @@ const SlateDashboard = () => {
           <span className="text-base font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Om</span>
           <button
             onClick={() => {
+              setUserToggledSidebar(true);
               if (sidebarHidden || sidebarCollapsed) {
                 setSidebarHidden(false);
                 setSidebarCollapsed(false);
@@ -938,7 +940,7 @@ const SlateDashboard = () => {
         {/* Center: Product tabs */}
         <div className="inline-flex items-center gap-0.5 rounded-full border border-border/60 p-1 bg-card/80 backdrop-blur-sm shadow-sm">
           {([
-            { key: 'build' as const, label: 'Prompt', icon: Zap },
+            { key: 'build' as const, label: 'Om Builder', icon: Zap },
             { key: 'platform' as const, label: 'AppOS', icon: Boxes },
             { key: 'cloud' as const, label: 'Cloud', icon: DatabaseZap },
           ]).map(tab => (
@@ -948,12 +950,19 @@ const SlateDashboard = () => {
                 setMainTab(tab.key); 
                 setShowIdeSelector(null); 
                 setSelectedBackend((tab.key === 'cloud' || tab.key === 'platform') ? 'Default Project' : null);
-                if (tab.key === 'build') {
-                  setSidebarHidden(true);
-                  setSidebarCollapsed(true);
+                if (!userToggledSidebar) {
+                  if (tab.key === 'build') {
+                    setSidebarHidden(true);
+                    setSidebarCollapsed(true);
+                  } else {
+                    setSidebarHidden(false);
+                    setSidebarCollapsed(true);
+                  }
                 } else {
-                  setSidebarHidden(false);
-                  setSidebarCollapsed(true);
+                  // User manually toggled - keep expanded state, just unhide for non-build tabs
+                  if (sidebarHidden && tab.key !== 'build') {
+                    setSidebarHidden(false);
+                  }
                 }
               }}
               className={`relative flex items-center gap-1.5 px-5 py-1.5 rounded-full text-sm font-semibold transition-all duration-200 ${
