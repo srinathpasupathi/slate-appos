@@ -40,7 +40,7 @@ const OmDeveloperSettings = () => {
               href="#"
               className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
             >
-              Open in Om Console
+              Open in Catalyst Console
               <ExternalLink className="h-3 w-3" />
             </a>
           </div>
@@ -56,7 +56,7 @@ const OmDeveloperSettings = () => {
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">App Name</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">App URL</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">Framework</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">Environment</th>
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">Deployment</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">Status</th>
                   <th className="w-10"></th>
                 </tr>
@@ -75,11 +75,7 @@ const OmDeveloperSettings = () => {
                     </div>
                   </td>
                   <td className="px-4 py-3 font-mono text-xs text-muted-foreground">Next.js</td>
-                  <td className="px-4 py-3">
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-600">
-                      Production
-                    </span>
-                  </td>
+                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">initial - #5xe4dei</td>
                   <td className="px-4 py-3">
                     <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
@@ -121,7 +117,7 @@ const OmDeveloperSettings = () => {
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">App Name</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">App URL</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">Runtime</th>
-                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">Environment</th>
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">Memory</th>
                   <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground">Status</th>
                   <th className="w-10"></th>
                 </tr>
@@ -140,11 +136,7 @@ const OmDeveloperSettings = () => {
                     </div>
                   </td>
                   <td className="px-4 py-3 font-mono text-xs text-muted-foreground">Node.js</td>
-                  <td className="px-4 py-3">
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-600">
-                      Production
-                    </span>
-                  </td>
+                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">512 MB</td>
                   <td className="px-4 py-3">
                     <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
@@ -184,11 +176,7 @@ const OmDeveloperSettings = () => {
                     </div>
                   </td>
                   <td className="px-4 py-3 font-mono text-xs text-muted-foreground">Java</td>
-                  <td className="px-4 py-3">
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-600">
-                      Production
-                    </span>
-                  </td>
+                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">1024 MB</td>
                   <td className="px-4 py-3">
                     <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
