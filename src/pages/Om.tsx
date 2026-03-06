@@ -840,6 +840,7 @@ const SlateDashboard = () => {
   const [appOsSection, setAppOsSection] = useState("overview");
   const [cloudSection, setCloudSection] = useState("authentication");
   const [hideCards, setHideCards] = useState(true);
+  const [hidePromptProjects, setHidePromptProjects] = useState(true);
   const [projectListTab, setProjectListTab] = useState<'all' | 'templates'>('all');
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
@@ -1253,6 +1254,7 @@ const SlateDashboard = () => {
                     </div>
 
                     {/* All Projects / Templates tabs - peeks at bottom */}
+                    {!hidePromptProjects && (
                     <div className="max-w-5xl w-full mx-auto px-4 pb-16">
                       <div className="flex items-center border-b border-border mb-6">
                         <div className="flex items-center gap-1 flex-1">
@@ -1316,6 +1318,7 @@ const SlateDashboard = () => {
                         </div>
                       )}
                     </div>
+                    )}
                   </>
                 )}
               </div>
@@ -1574,6 +1577,20 @@ const SlateDashboard = () => {
 
       {/* Settings overlay */}
       <SettingsOverlay open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+
+      {/* Hide/Show cards dropdown for Prompt tab */}
+      {mainTab === 'build' && (
+        <div className="fixed bottom-5 right-5 z-40">
+          <select
+            value={hidePromptProjects ? 'hide' : 'show'}
+            onChange={(e) => setHidePromptProjects(e.target.value === 'hide')}
+            className="h-8 px-2 rounded-md border border-border bg-card text-xs text-muted-foreground cursor-pointer outline-none"
+          >
+            <option value="hide">Hide</option>
+            <option value="show">Show</option>
+          </select>
+        </div>
+      )}
 
       {/* Hide/Show cards dropdown for AppOS/Cloud */}
       {(mainTab === 'platform' || mainTab === 'cloud') && !selectedBackend && (
