@@ -806,6 +806,7 @@ const BackendProjectsListing = ({ type, onCreateNew, onCardClick }: { type: 'pla
 };
 
 const APPOS_NAV = [
+  { id: "home", label: "Home", icon: Home },
   { id: "overview", label: "Overview", icon: LayoutDashboard },
   { id: "users", label: "Users", icon: Users },
   { id: "resources", label: "Resources", icon: Boxes },
@@ -840,7 +841,7 @@ const SlateDashboard = () => {
   const [showIdeSelector, setShowIdeSelector] = useState<'platform' | 'cloud' | null>(null);
   const [recentProjects, setRecentProjects] = useState(defaultRecentProjects);
   const [selectedBackend, setSelectedBackend] = useState<string | null>(null);
-  const [appOsSection, setAppOsSection] = useState("overview");
+  const [appOsSection, setAppOsSection] = useState("home");
   const [cloudSection, setCloudSection] = useState("home");
   const [hideCards, setHideCards] = useState(true);
   const [hidePromptProjects, setHidePromptProjects] = useState(true);
@@ -1132,14 +1133,26 @@ const SlateDashboard = () => {
           {selectedBackend && mainTab === 'platform' ? (
             /* AppOS content — no separate sidebar, uses main sidebar */
             <div className="flex-1 overflow-y-auto flex flex-col">
-              <div className="px-6 py-6">
-                {appOsSection === "overview" && <OverviewTab projectName={selectedBackend || ''} appUrl={`${(selectedBackend || '').toLowerCase().replace(/\s+/g, '-')}.us.omcloud.ai`} copied={copied} onCopy={handleCopy} />}
-                {appOsSection === "users" && <UsersTab users={APP_USERS} />}
-                {appOsSection === "resources" && <ResourcesTab />}
-                {appOsSection === "query-console" && <QueryConsoleTab />}
-                {appOsSection === "configuration" && <ConfigurationTab />}
-                {appOsSection === "deployments" && <DeploymentsTab />}
-              </div>
+              {appOsSection === "home" ? (
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="w-full max-w-3xl px-6">
+                    <PlatformIDESelector
+                      onCreateUntitled={handleCreateUntitled}
+                      onRenameProject={handleRenameProject}
+                      title="Connect AppOS to your AI IDE"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="px-6 py-6">
+                  {appOsSection === "overview" && <OverviewTab projectName={selectedBackend || ''} appUrl={`${(selectedBackend || '').toLowerCase().replace(/\s+/g, '-')}.us.omcloud.ai`} copied={copied} onCopy={handleCopy} />}
+                  {appOsSection === "users" && <UsersTab users={APP_USERS} />}
+                  {appOsSection === "resources" && <ResourcesTab />}
+                  {appOsSection === "query-console" && <QueryConsoleTab />}
+                  {appOsSection === "configuration" && <ConfigurationTab />}
+                  {appOsSection === "deployments" && <DeploymentsTab />}
+                </div>
+              )}
             </div>
           ) : selectedBackend && mainTab === 'cloud' ? (
             /* Cloud content — no separate sidebar, uses main sidebar */
