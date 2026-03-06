@@ -1143,9 +1143,25 @@ const SlateDashboard = () => {
                     {(cloudSection === "authentication" || cloudSection === "relational-db" || cloudSection === "object-storage" || cloudSection === "nosql-db") ? (
                       <>
                         {cloudSection === "authentication" && <AuthenticationView />}
-                        {cloudSection === "relational-db" && <RelationalDBView />}
+                        {cloudSection === "relational-db" && (
+                          <div className="flex flex-col h-full">
+                            <div className="px-6 pt-6 pb-4 border-b border-border">
+                              <h2 className="text-xl font-semibold tracking-tight text-foreground">Relational Database</h2>
+                              <p className="text-sm text-muted-foreground mt-1">Manage tables, schemas, and data for {selectedBackend}.</p>
+                            </div>
+                            <RelationalDBView />
+                          </div>
+                        )}
                         {cloudSection === "object-storage" && <ObjectStorageView />}
-                        {cloudSection === "nosql-db" && <NoSQLDBView />}
+                        {cloudSection === "nosql-db" && (
+                          <div className="flex flex-col h-full">
+                            <div className="px-6 pt-6 pb-4 border-b border-border">
+                              <h2 className="text-xl font-semibold tracking-tight text-foreground">NoSQL Database</h2>
+                              <p className="text-sm text-muted-foreground mt-1">Manage NoSQL tables and data for {selectedBackend}.</p>
+                            </div>
+                            <NoSQLDBView />
+                          </div>
+                        )}
                       </>
                     ) : (
                       <div className="px-6 py-6 space-y-6">
