@@ -970,10 +970,12 @@ const SlateDashboard = () => {
         >
           {/* Nav links */}
           <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto overflow-x-hidden">
-            <SidebarLink icon={Home} label="Home" active collapsed={sidebarCollapsed} onClick={() => {
-              setIdeFlowActive(false);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }} />
+            {mainTab !== 'cloud' && (
+              <SidebarLink icon={Home} label="Home" active collapsed={sidebarCollapsed} onClick={() => {
+                setIdeFlowActive(false);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }} />
+            )}
             {mainTab === 'build' ? (
               <>
                 <SidebarLink icon={Grid3X3} label="Projects" collapsed={sidebarCollapsed} />
