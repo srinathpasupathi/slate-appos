@@ -908,6 +908,21 @@ const SlateDashboard = () => {
             {layoutMode === 'option1' ? (
               /* === OPTION 1: Original tabbed layout === */
               <div className="w-full flex flex-col items-center pt-[15vh]">
+                {/* Proposal switcher */}
+                <div className="mb-4">
+                  <select
+                    defaultValue="proposal2"
+                    onChange={(e) => {
+                      if (e.target.value === 'proposal1') {
+                        window.location.href = '/om';
+                      }
+                    }}
+                    className="px-3 py-1.5 rounded-lg border border-border bg-card text-sm font-medium text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  >
+                    <option value="proposal1">Proposal 1</option>
+                    <option value="proposal2">Proposal 2</option>
+                  </select>
+                </div>
                 {/* Tabs - fixed position regardless of content */}
                 <div className="inline-flex items-center gap-1 rounded-full bg-background/90 backdrop-blur-md p-1.5 border border-border shadow-md mb-6">
                   {([
