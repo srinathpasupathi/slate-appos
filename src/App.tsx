@@ -20,7 +20,6 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Om />} />
-          <Route path="/om" element={<Om />} />
           
           <Route path="/project" element={<OmProjectPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
