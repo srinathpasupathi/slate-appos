@@ -43,7 +43,7 @@ const CloudSettings = ({ enabled, onToggle, appName = "My App" }: CloudSettingsP
                 </div>
               </div>
               <a
-                href={`/om/project?source=cloud&name=${encodeURIComponent(appName)}&tab=cloud`}
+                href={`/project?source=cloud&name=${encodeURIComponent(appName)}&tab=cloud`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-primary hover:bg-primary/10 transition-colors"

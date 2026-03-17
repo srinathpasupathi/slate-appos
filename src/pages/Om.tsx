@@ -1022,7 +1022,7 @@ const SlateDashboard = () => {
                 {!sidebarCollapsed && (
                   <div className="pl-8 space-y-0.5 overflow-hidden">
                     {recentProjects.map((p) => (
-                      <button key={p.name} onClick={() => navigate(`/om/project?source=${p.source}&name=${encodeURIComponent(p.name)}`)} className="block w-full text-left px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
+                      <button key={p.name} onClick={() => navigate(`/project?source=${p.source}&name=${encodeURIComponent(p.name)}`)} className="block w-full text-left px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors truncate">
                         {p.name}
                       </button>
                     ))}
@@ -1399,7 +1399,7 @@ const SlateDashboard = () => {
                               <button
                                 onClick={() => {
                                   if (prompt.trim()) {
-                                    navigate(`/om/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
+                                    navigate(`/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
                                   }
                                 }}
                                 className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
@@ -1445,7 +1445,7 @@ const SlateDashboard = () => {
                           {projectCards.map((project) => (
                             <button
                               key={project.title}
-                              onClick={() => navigate(`/om/project?source=build&name=${encodeURIComponent(project.title)}`)}
+                              onClick={() => navigate(`/project?source=build&name=${encodeURIComponent(project.title)}`)}
                               className="rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-md transition-all text-left group overflow-hidden"
                             >
                               {/* Thumbnail preview */}
@@ -1581,7 +1581,7 @@ const SlateDashboard = () => {
                             <button
                               onClick={() => {
                                 if (prompt.trim()) {
-                                  navigate(`/om/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
+                                  navigate(`/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
                                 }
                               }}
                               className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
@@ -1684,7 +1684,7 @@ const SlateDashboard = () => {
                             <button
                               onClick={() => {
                                 if (prompt.trim()) {
-                                  navigate(`/om/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
+                                  navigate(`/project?source=build&prompt=${encodeURIComponent(prompt.trim())}`);
                                 }
                               }}
                               className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity disabled:opacity-40"
