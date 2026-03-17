@@ -1207,7 +1207,7 @@ const SlateDashboard = () => {
                     <PlatformIDESelector
                       onCreateUntitled={handleCreateUntitled}
                       onRenameProject={handleRenameProject}
-                      title="Connect Om Cloud to your AI IDE"
+                      title="Connect Slate Cloud to your AI IDE"
                     />
                   </div>
                 </div>
