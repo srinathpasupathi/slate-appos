@@ -495,9 +495,9 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
             <p className="text-xs text-muted-foreground font-medium">App URL</p>
             <div className="flex items-center gap-2 rounded-lg border border-input bg-muted/30 px-3 py-2">
               <Globe className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-              <span className="text-sm text-foreground flex-1">real-estate.us.omcloud.ai</span>
+              <span className="text-sm text-foreground flex-1">real-estate.us.onslate.com</span>
               <button
-                onClick={() => navigator.clipboard.writeText('https://real-estate.us.omcloud.ai')}
+                onClick={() => navigator.clipboard.writeText('https://real-estate.us.onslate.com')}
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Copy className="h-3.5 w-3.5" />
