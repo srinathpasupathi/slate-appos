@@ -916,7 +916,7 @@ const SlateDashboard = () => {
         {/* Left: Logo + Om + collapse/expand */}
         <div className="flex items-center gap-2.5">
           <img src={slateLogo} alt="Slate" className="h-5 w-auto" />
-          <span className="text-base font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Om</span>
+          <span className="text-base font-bold text-foreground" style={{ fontFamily: "'Lato', sans-serif" }}>Slate</span>
           <button
             onClick={() => {
               setUserToggledSidebar(true);
