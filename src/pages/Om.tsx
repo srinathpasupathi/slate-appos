@@ -680,9 +680,9 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
               <div className="flex flex-col items-center gap-3 max-w-lg w-full">
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Installation Command</p>
                 <div className="w-full relative flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border font-mono text-xs text-muted-foreground">
-                  <span className="truncate flex-1 select-all">claude mcp add --transport http om https://mcp.us.om.ai/mcp/message?key=***************</span>
+                  <span className="truncate flex-1 select-all">claude mcp add --transport http slate https://mcp.us.onslate.com/mcp/message?key=***************</span>
                   <button
-                    onClick={(e) => handleCopyAndConnect('claude mcp add --transport http om https://mcp.us.om.ai/mcp/message?key=***************', e)}
+                    onClick={(e) => handleCopyAndConnect('claude mcp add --transport http slate https://mcp.us.onslate.com/mcp/message?key=***************', e)}
                     className="shrink-0 relative h-8 w-8 rounded-md flex items-center justify-center hover:bg-foreground/10 transition-colors group"
                     title="Copy command"
                   >
@@ -1207,7 +1207,7 @@ const SlateDashboard = () => {
                     <PlatformIDESelector
                       onCreateUntitled={handleCreateUntitled}
                       onRenameProject={handleRenameProject}
-                      title="Connect Om Cloud to your AI IDE"
+                      title="Connect Slate Cloud to your AI IDE"
                     />
                   </div>
                 </div>
@@ -1295,7 +1295,7 @@ const SlateDashboard = () => {
                   {mainTab === 'build' ? (
                     <></>
                   ) : showIdeSelector === mainTab || hideCards ? (
-                    <PlatformIDESelector onCreateUntitled={handleCreateUntitled} onRenameProject={handleRenameProject} title={mainTab === 'platform' ? 'Connect AppOS to your AI IDE' : 'Connect Om Cloud to your AI IDE'} />
+                    <PlatformIDESelector onCreateUntitled={handleCreateUntitled} onRenameProject={handleRenameProject} title={mainTab === 'platform' ? 'Connect AppOS to your AI IDE' : 'Connect Slate Cloud to your AI IDE'} />
                   ) : (
                     <BackendProjectsListing
                       type={mainTab}
@@ -1707,7 +1707,7 @@ const SlateDashboard = () => {
                     {/* IDE alternative path with background container */}
                     <div className="w-full rounded-2xl border border-border bg-muted/50 backdrop-blur-sm p-8 flex flex-col items-center">
                       <p className="text-lg md:text-xl font-semibold text-foreground mb-1.5 tracking-tight">Use your AI IDE to build on AppOS</p>
-                      <p className="text-sm md:text-base text-muted-foreground mb-6">Connect your IDE to develop directly on the Om platform</p>
+                      <p className="text-sm md:text-base text-muted-foreground mb-6">Connect your IDE to develop directly on the Slate platform</p>
                       <button
                         onClick={() => document.getElementById('ide-section-opt3')?.scrollIntoView({ behavior: 'smooth' })}
                         className="flex items-center gap-5 px-7 py-4 rounded-xl border border-border/60 hover:border-border hover:shadow-lg bg-card hover:bg-card/90 transition-all cursor-pointer group"
