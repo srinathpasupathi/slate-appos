@@ -101,7 +101,7 @@ const SettingsOverlay = ({ open, onClose, initialTab, initialOmContext, appOsEna
   };
 
   const omContextOptions: { key: OmContext; label: string; icon: typeof Zap; description: string }[] = [
-    { key: 'prompt', label: 'Om Builder', icon: Zap, description: 'App generation & prompts' },
+    { key: 'prompt', label: 'AI Builder', icon: Zap, description: 'App generation & prompts' },
     { key: 'appos', label: 'AppOS', icon: Boxes, description: 'Backend modules & workflows' },
     { key: 'cloud', label: 'Cloud', icon: DatabaseZap, description: 'Infrastructure & services' },
   ];
