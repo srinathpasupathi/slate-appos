@@ -1295,7 +1295,7 @@ const SlateDashboard = () => {
                   {mainTab === 'build' ? (
                     <></>
                   ) : showIdeSelector === mainTab || hideCards ? (
-                    <PlatformIDESelector onCreateUntitled={handleCreateUntitled} onRenameProject={handleRenameProject} title={mainTab === 'platform' ? 'Connect AppOS to your AI IDE' : 'Connect Slate Cloud to your AI IDE'} />
+                    <PlatformIDESelector onCreateUntitled={handleCreateUntitled} onRenameProject={handleRenameProject} title={mainTab === 'platform' ? 'Connect AppOS to your AI IDE' : 'Connect Cloud to your AI IDE'} />
                   ) : (
                     <BackendProjectsListing
                       type={mainTab}
