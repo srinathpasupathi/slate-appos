@@ -186,31 +186,50 @@ const ProjectPage = () => {
     return () => clearInterval(interval);
   }, [generationDone, previewReady]);
 
-  // After generation completes, show success message then reveal preview
+  // 3 seconds after backend prompt shown, reveal the preview
   useEffect(() => {
-    if (!generationDone || previewReady) return;
-
-    // Show success message
-    const successTimer = setTimeout(() => {
-      setMessages((prev) => [...prev, {
-        id: `frontend-ready-${Date.now()}`,
-        role: "assistant",
-        content: `Your **frontend app is ready** 🎉\n\nLoading your preview now...`,
-        timestamp: new Date(),
-      }]);
-    }, 500);
-
-    // Then reveal the preview
-    const previewTimer = setTimeout(() => {
+    if (!backendPromptShown) return;
+    const timer = setTimeout(() => {
       setGenerationProgress(100);
       setPreviewReady(true);
     }, 3000);
+    return () => clearTimeout(timer);
+  }, [backendPromptShown]);
 
-    return () => {
-      clearTimeout(successTimer);
-      clearTimeout(previewTimer);
-    };
-  }, [generationDone, previewReady]);
+  // After generation completes, ask user what kind of backend they need
+  useEffect(() => {
+    if (!generationDone || appOsPromoShownRef.current || source !== "build") return;
+    appOsPromoShownRef.current = true;
+
+    const lowerPrompt = initialPrompt.toLowerCase();
+    const isLikelyInternal = /\b(internal|employee|team|crm|erp|hrm|business|franchise|inventory|operations|management|admin panel|dashboard)\b/.test(lowerPrompt);
+
+    const timer = setTimeout(() => {
+      setBackendPromptShown(true);
+      setMessages((prev) => [...prev, {
+        id: `backend-choice-${Date.now()}`,
+        role: "assistant",
+        content: isLikelyInternal
+          ? `Your **frontend is ready** 🎉\n\nBased on your prompt, it looks like you're building a business app — **AppOS** would be a great fit since your team can sign in with their existing **Zoho accounts** via SSO, no separate credentials needed.\n\nIf you'd prefer a fully independent app with its own signup and login, you can go with **Cloud** instead.`
+          : `Your **frontend is ready** 🎉\n\nNow let's wire up the backend. You have two options depending on how you want users to sign in:`,
+        timestamp: new Date(),
+        actionCard: {
+          type: "backend-choice",
+          title: "Add a backend to your app",
+          description: "",
+          features: [
+            { icon: "server", label: isLikelyInternal ? "AppOS · Zoho SSO · Best for internal/business apps (Recommended)" : "AppOS · Zoho SSO · Best for internal/business apps" },
+            { icon: "cloud", label: "Cloud · Own signup/login · Best for standalone apps" },
+          ],
+          ctaLabel: isLikelyInternal ? "Use AppOS (Recommended)" : "Use AppOS",
+          secondaryCtaLabel: "Use Cloud",
+          dismissLabel: "I'll integrate backend later",
+        },
+      }]);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [generationDone, source, initialPrompt]);
 
   // Build mode: seed initial prompt
   useEffect(() => {
