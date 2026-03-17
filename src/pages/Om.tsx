@@ -296,7 +296,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
   };
 
   const handleCopyDeployPrompt = () => {
-    navigator.clipboard.writeText('Deploy my app to Om');
+    navigator.clipboard.writeText('Deploy my app to AppOS');
     setDeployCopied(true);
     setTimeout(() => startDeployFlow(), 3000);
   };
