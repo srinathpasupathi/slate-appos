@@ -328,7 +328,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
             Building your app…
           </h2>
           <p className="text-sm text-muted-foreground">
-            Om is provisioning backend resources.
+            AppOS is provisioning backend resources.
           </p>
         </div>
 
