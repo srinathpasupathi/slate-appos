@@ -653,7 +653,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
               <div className="flex flex-col items-center gap-4 p-6 rounded-xl border border-border bg-card max-w-lg w-full">
                 <Server className="h-6 w-6 text-muted-foreground" />
                 <div className="text-center space-y-1">
-                  <p className="text-sm font-medium text-foreground">Om MCP Server</p>
+                  <p className="text-sm font-medium text-foreground">AppOS MCP Server</p>
                   <p className="text-xs text-muted-foreground">
                     Copy the MCP server URL below and add it to your preferred tool manually.
                   </p>
