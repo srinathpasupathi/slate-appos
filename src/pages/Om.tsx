@@ -707,7 +707,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
             )}
             <p className="text-xs text-muted-foreground flex items-center gap-1.5">
               <User className="h-3.5 w-3.5" />
-              Make sure you login &amp; authorize Om upon install
+              Make sure you login &amp; authorize AppOS upon install
             </p>
           </div>
         )}
