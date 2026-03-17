@@ -296,7 +296,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
   };
 
   const handleCopyDeployPrompt = () => {
-    navigator.clipboard.writeText('Deploy my app to Om');
+    navigator.clipboard.writeText('Deploy my app to AppOS');
     setDeployCopied(true);
     setTimeout(() => startDeployFlow(), 3000);
   };
@@ -328,7 +328,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
             Building your app…
           </h2>
           <p className="text-sm text-muted-foreground">
-            Om is provisioning backend resources.
+            AppOS is provisioning backend resources.
           </p>
         </div>
 
@@ -392,7 +392,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
           className="w-full flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-border bg-card animate-in fade-in slide-in-from-bottom-3 duration-500"
           style={{ animationDelay: '150ms', animationFillMode: 'both' }}
         >
-          <code className="text-sm text-muted-foreground font-mono">Deploy my app to Om</code>
+          <code className="text-sm text-muted-foreground font-mono">Deploy my app to AppOS</code>
           <button
             onClick={handleCopyDeployPrompt}
             className={`shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all duration-200 ${
@@ -533,16 +533,16 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
             You're connected. Let's build something.
           </h2>
           <p className="text-sm text-muted-foreground max-w-md mx-auto">
-            Build directly from your AI IDE. Om will provision the backend automatically.
+            Build directly from your AI IDE. AppOS will provision the backend automatically.
           </p>
         </div>
 
         {/* Prompt example cards */}
         <div className="flex flex-col gap-2.5 w-full">
           {[
-            { title: "Build a Real Estate CRM using the Om platform.", appName: "Real Estate CRM", prompt: "Build a Real Estate CRM using the Om platform.\nUse Om MCP to create modules for Properties, Leads, and Deals.\nAdd workflows for lead assignment and follow-ups." },
-            { title: "Build a Franchise Sales Management app using the Om platform.", appName: "Franchise Sales Management", prompt: "Build a Franchise Sales Management app using the Om platform. Use Om MCP to create modules for Leads, Franchise Opportunities, and Approvals with workflow-based review." },
-            { title: "Create a backend API service using the Om platform.", appName: "Cloud API Backend", prompt: "Create a backend API service using the Om platform. Use Om MCP to provision a database, storage, and REST APIs for a scalable cloud backend." },
+            { title: "Build a Real Estate CRM using the AppOS platform.", appName: "Real Estate CRM", prompt: "Build a Real Estate CRM using the AppOS platform.\nUse AppOS MCP to create modules for Properties, Leads, and Deals.\nAdd workflows for lead assignment and follow-ups." },
+            { title: "Build a Franchise Sales Management app using the AppOS platform.", appName: "Franchise Sales Management", prompt: "Build a Franchise Sales Management app using the AppOS platform. Use AppOS MCP to create modules for Leads, Franchise Opportunities, and Approvals with workflow-based review." },
+            { title: "Create a backend API service using the AppOS platform.", appName: "Cloud API Backend", prompt: "Create a backend API service using the AppOS platform. Use AppOS MCP to provision a database, storage, and REST APIs for a scalable cloud backend." },
           ].map((card) => {
             const isCopied = copiedPrompt === card.prompt;
             const isExpanded = expandedCard === card.title;
@@ -610,10 +610,10 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
     <div ref={containerRef} className="flex flex-col items-center gap-8 w-full max-w-3xl pt-16">
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-          {title || 'Connect Om Platform to your AI IDE'}
+          {title || 'Connect AppOS Platform to your AI IDE'}
         </h2>
         <p className="text-sm text-muted-foreground mt-2">
-          Choose the development tool you want to use with Om
+          Choose the development tool you want to use with AppOS
         </p>
       </div>
 
@@ -653,7 +653,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
               <div className="flex flex-col items-center gap-4 p-6 rounded-xl border border-border bg-card max-w-lg w-full">
                 <Server className="h-6 w-6 text-muted-foreground" />
                 <div className="text-center space-y-1">
-                  <p className="text-sm font-medium text-foreground">Om MCP Server</p>
+                  <p className="text-sm font-medium text-foreground">AppOS MCP Server</p>
                   <p className="text-xs text-muted-foreground">
                     Copy the MCP server URL below and add it to your preferred tool manually.
                   </p>
@@ -702,12 +702,12 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
                 onClick={handleInstallClick}
                 className="h-11 px-8 rounded-lg bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-colors shadow-sm"
               >
-                Install {title?.includes('AppOS') ? 'AppOS' : title?.includes('Om Cloud') ? 'Om Cloud' : 'Om'} on {selected.name}
+                Install {title?.includes('AppOS') ? 'AppOS' : title?.includes('Cloud') ? 'Cloud' : 'AppOS'} on {selected.name}
               </button>
             )}
             <p className="text-xs text-muted-foreground flex items-center gap-1.5">
               <User className="h-3.5 w-3.5" />
-              Make sure you login &amp; authorize Om upon install
+              Make sure you login &amp; authorize AppOS upon install
             </p>
           </div>
         )}
@@ -1189,7 +1189,7 @@ const SlateDashboard = () => {
                 </div>
               ) : (
                 <div className="px-6 py-6">
-                  {appOsSection === "overview" && <OverviewTab projectName={selectedBackend || ''} appUrl={`${(selectedBackend || '').toLowerCase().replace(/\s+/g, '-')}.us.omcloud.ai`} copied={copied} onCopy={handleCopy} />}
+                  {appOsSection === "overview" && <OverviewTab projectName={selectedBackend || ''} appUrl={`${(selectedBackend || '').toLowerCase().replace(/\s+/g, '-')}.us.apposcloud.ai`} copied={copied} onCopy={handleCopy} />}
                   {appOsSection === "users" && <UsersTab users={APP_USERS} />}
                   {appOsSection === "resources" && <ResourcesTab />}
                   {appOsSection === "query-console" && <QueryConsoleTab />}
@@ -1706,7 +1706,7 @@ const SlateDashboard = () => {
 
                     {/* IDE alternative path with background container */}
                     <div className="w-full rounded-2xl border border-border bg-muted/50 backdrop-blur-sm p-8 flex flex-col items-center">
-                      <p className="text-lg md:text-xl font-semibold text-foreground mb-1.5 tracking-tight">Use your AI IDE to build on Om</p>
+                      <p className="text-lg md:text-xl font-semibold text-foreground mb-1.5 tracking-tight">Use your AI IDE to build on AppOS</p>
                       <p className="text-sm md:text-base text-muted-foreground mb-6">Connect your IDE to develop directly on the Om platform</p>
                       <button
                         onClick={() => document.getElementById('ide-section-opt3')?.scrollIntoView({ behavior: 'smooth' })}
