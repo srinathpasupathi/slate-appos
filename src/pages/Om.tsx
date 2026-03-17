@@ -533,7 +533,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
             You're connected. Let's build something.
           </h2>
           <p className="text-sm text-muted-foreground max-w-md mx-auto">
-            Build directly from your AI IDE. Om will provision the backend automatically.
+            Build directly from your AI IDE. AppOS will provision the backend automatically.
           </p>
         </div>
 
