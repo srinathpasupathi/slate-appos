@@ -743,9 +743,9 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
 };
 
 const appOsBackends = [
-  { name: "Default Project", url: "default-project.us.omcloud.ai", status: "Active", createdAt: "Jan 01, 2026" },
-  { name: "franchise-sales-mgmt", url: "franchise-sales.us.omcloud.ai", status: "Active", createdAt: "Feb 10, 2026" },
-  { name: "crm-analytics-dashboard", url: "crm-analytics.us.omcloud.ai", status: "Active", createdAt: "Jan 18, 2026" },
+  { name: "Default Project", url: "default-project.us.onslate.com", status: "Active", createdAt: "Jan 01, 2026" },
+  { name: "franchise-sales-mgmt", url: "franchise-sales.us.onslate.com", status: "Active", createdAt: "Feb 10, 2026" },
+  { name: "crm-analytics-dashboard", url: "crm-analytics.us.onslate.com", status: "Active", createdAt: "Jan 18, 2026" },
 ];
 
 const cloudProjects = [
