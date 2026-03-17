@@ -613,7 +613,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
           {title || 'Connect AppOS Platform to your AI IDE'}
         </h2>
         <p className="text-sm text-muted-foreground mt-2">
-          Choose the development tool you want to use with Om
+          Choose the development tool you want to use with AppOS
         </p>
       </div>
 
