@@ -161,12 +161,12 @@ const GitHubConnectDialog = ({ open, onOpenChange, onConnected }: GitHubConnectD
                   </button>
                 )}
                 <DialogTitle className="text-base font-semibold">
-                  {step === "orgs" ? "Continue on Om Console" : "srinathpasupathi157"}
+                  {step === "orgs" ? "Continue on Slate Console" : "srinathpasupathi157"}
                 </DialogTitle>
               </div>
               <p className="text-sm text-muted-foreground mt-1">
                 {step === "orgs"
-                  ? "Continue your development on Om Console. Connect your repository to proceed."
+                  ? "Continue your development on Slate Console. Connect your repository to proceed."
                   : "Choose a repository to connect. We'll check compatibility after selection."}
               </p>
             </DialogHeader>
