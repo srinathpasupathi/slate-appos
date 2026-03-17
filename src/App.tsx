@@ -22,7 +22,7 @@ const App = () => (
           <Route path="/" element={<Om />} />
           <Route path="/om" element={<Om />} />
           <Route path="/om/project" element={<OmProjectPage />} />
-          <Route path="/project" element={<ProjectPage />} />
+          <Route path="/project" element={<OmProjectPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
