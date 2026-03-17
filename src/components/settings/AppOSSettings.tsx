@@ -43,7 +43,7 @@ const AppOSSettings = ({ enabled, onToggle, appName = "My App" }: AppOSSettingsP
                 </div>
               </div>
               <a
-                href={`/om/project?source=platform&name=${encodeURIComponent(appName)}&tab=appos`}
+                href={`/project?source=platform&name=${encodeURIComponent(appName)}&tab=appos`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-primary hover:bg-primary/10 transition-colors"
