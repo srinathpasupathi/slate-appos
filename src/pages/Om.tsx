@@ -392,7 +392,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
           className="w-full flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-border bg-card animate-in fade-in slide-in-from-bottom-3 duration-500"
           style={{ animationDelay: '150ms', animationFillMode: 'both' }}
         >
-          <code className="text-sm text-muted-foreground font-mono">Deploy my app to Om</code>
+          <code className="text-sm text-muted-foreground font-mono">Deploy my app to AppOS</code>
           <button
             onClick={handleCopyDeployPrompt}
             className={`shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all duration-200 ${
