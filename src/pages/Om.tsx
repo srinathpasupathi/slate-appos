@@ -540,9 +540,9 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
         {/* Prompt example cards */}
         <div className="flex flex-col gap-2.5 w-full">
           {[
-            { title: "Build a Real Estate CRM using the Om platform.", appName: "Real Estate CRM", prompt: "Build a Real Estate CRM using the Om platform.\nUse Om MCP to create modules for Properties, Leads, and Deals.\nAdd workflows for lead assignment and follow-ups." },
-            { title: "Build a Franchise Sales Management app using the Om platform.", appName: "Franchise Sales Management", prompt: "Build a Franchise Sales Management app using the Om platform. Use Om MCP to create modules for Leads, Franchise Opportunities, and Approvals with workflow-based review." },
-            { title: "Create a backend API service using the Om platform.", appName: "Cloud API Backend", prompt: "Create a backend API service using the Om platform. Use Om MCP to provision a database, storage, and REST APIs for a scalable cloud backend." },
+            { title: "Build a Real Estate CRM using the AppOS platform.", appName: "Real Estate CRM", prompt: "Build a Real Estate CRM using the AppOS platform.\nUse AppOS MCP to create modules for Properties, Leads, and Deals.\nAdd workflows for lead assignment and follow-ups." },
+            { title: "Build a Franchise Sales Management app using the AppOS platform.", appName: "Franchise Sales Management", prompt: "Build a Franchise Sales Management app using the AppOS platform. Use AppOS MCP to create modules for Leads, Franchise Opportunities, and Approvals with workflow-based review." },
+            { title: "Create a backend API service using the AppOS platform.", appName: "Cloud API Backend", prompt: "Create a backend API service using the AppOS platform. Use AppOS MCP to provision a database, storage, and REST APIs for a scalable cloud backend." },
           ].map((card) => {
             const isCopied = copiedPrompt === card.prompt;
             const isExpanded = expandedCard === card.title;
