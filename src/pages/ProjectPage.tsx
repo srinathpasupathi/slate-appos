@@ -183,7 +183,7 @@ const ProjectPage = () => {
   const [leftPanelWidth, setLeftPanelWidth] = useState(25); // percentage
   const [chatPanelCollapsed, setChatPanelCollapsed] = useState(false);
 
-  const appUrl = `${projectName.toLowerCase().replace(/\s+/g, "-")}.us.omcloud.ai`;
+  const appUrl = `${projectName.toLowerCase().replace(/\s+/g, "-")}.us.onslate.com`;
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);

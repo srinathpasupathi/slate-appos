@@ -1189,7 +1189,7 @@ const SlateDashboard = () => {
                 </div>
               ) : (
                 <div className="px-6 py-6">
-                  {appOsSection === "overview" && <OverviewTab projectName={selectedBackend || ''} appUrl={`${(selectedBackend || '').toLowerCase().replace(/\s+/g, '-')}.us.apposcloud.ai`} copied={copied} onCopy={handleCopy} />}
+                  {appOsSection === "overview" && <OverviewTab projectName={selectedBackend || ''} appUrl={`${(selectedBackend || '').toLowerCase().replace(/\s+/g, '-')}.us.onslate.com`} copied={copied} onCopy={handleCopy} />}
                   {appOsSection === "users" && <UsersTab users={APP_USERS} />}
                   {appOsSection === "resources" && <ResourcesTab />}
                   {appOsSection === "query-console" && <QueryConsoleTab />}

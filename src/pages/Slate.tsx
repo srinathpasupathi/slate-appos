@@ -494,7 +494,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject 
 
           <div className="flex gap-3">
             <a
-              href="https://real-estate.us.omcloud.ai"
+              href="https://real-estate.us.onslate.com"
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 flex items-center justify-center gap-2 h-10 rounded-lg bg-foreground text-background text-sm font-medium hover:bg-foreground/90 transition-colors"

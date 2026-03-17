@@ -71,7 +71,7 @@ const OmDeveloperSettings = () => {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1.5">
                       <Link2 className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span className="font-mono text-xs text-foreground">franchise-sales.us.omcloud.ai</span>
+                      <span className="font-mono text-xs text-foreground">franchise-sales.us.onslate.com</span>
                     </div>
                   </td>
                   <td className="px-4 py-3 font-mono text-xs text-muted-foreground">Next.js</td>
