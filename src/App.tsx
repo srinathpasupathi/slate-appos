@@ -19,7 +19,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Slate />} />
+          <Route path="/" element={<Om />} />
           <Route path="/om" element={<Om />} />
           <Route path="/om/project" element={<OmProjectPage />} />
           <Route path="/project" element={<ProjectPage />} />
