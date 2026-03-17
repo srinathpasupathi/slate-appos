@@ -610,7 +610,7 @@ const PlatformIDESelector = ({ onPhaseChange, onCreateUntitled, onRenameProject,
     <div ref={containerRef} className="flex flex-col items-center gap-8 w-full max-w-3xl pt-16">
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-          {title || 'Connect Om Platform to your AI IDE'}
+          {title || 'Connect AppOS Platform to your AI IDE'}
         </h2>
         <p className="text-sm text-muted-foreground mt-2">
           Choose the development tool you want to use with Om
